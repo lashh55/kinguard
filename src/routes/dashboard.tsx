@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import { useAuth } from "@/lib/auth";
 import { supabase } from "@/integrations/supabase/client";
 import { ScreenShell, ScoreBadge } from "@/components/ScreenShell";
+import { toast } from "sonner";
 
 export const Route = createFileRoute("/dashboard")({
   component: Dashboard,
@@ -106,7 +107,7 @@ function Dashboard() {
       <section className="px-5 mt-5 space-y-3">
         <Link to="/check" className="btn-base btn-primary w-full">🔍 Check a Suspicious Message</Link>
         <Link to="/ssn" className="btn-base btn-primary w-full">🛡️ Protect My SSN</Link>
-        <button className="btn-base btn-danger w-full" onClick={() => alert("Your guardian has been alerted. Help is on the way.")}>
+        <button className="btn-base btn-danger w-full" onClick={() => toast("✅ Your guardian has been notified")}>
           🆘 I Need Help
         </button>
       </section>

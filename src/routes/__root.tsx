@@ -1,6 +1,7 @@
 import { Outlet, Link, createRootRoute, HeadContent, Scripts } from "@tanstack/react-router";
 import appCss from "../styles.css?url";
 import { AuthProvider } from "@/lib/auth";
+import { Toaster } from "@/components/ui/sonner";
 
 function NotFoundComponent() {
   return (
@@ -31,7 +32,26 @@ export const Route = createRootRoute({
     ],
   }),
   shellComponent: RootShell,
-  component: () => <AuthProvider><Outlet /></AuthProvider>,
+  component: () => (
+    <AuthProvider>
+      <Outlet />
+      <Toaster
+        position="top-center"
+        duration={3000}
+        toastOptions={{
+          style: {
+            background: "#B27F7C",
+            color: "#fff",
+            border: "none",
+            fontSize: "18px",
+            fontWeight: 700,
+            padding: "16px 20px",
+            borderRadius: "16px",
+          },
+        }}
+      />
+    </AuthProvider>
+  ),
   notFoundComponent: NotFoundComponent,
 });
 

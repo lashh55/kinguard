@@ -1,5 +1,6 @@
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useState } from "react";
+import { toast } from "sonner";
 import { useAuth } from "@/lib/auth";
 import { supabase } from "@/integrations/supabase/client";
 import { ScreenShell, scoreColor } from "@/components/ScreenShell";
@@ -125,9 +126,9 @@ function CheckScreen() {
           </div>
 
           <div className="grid grid-cols-1 gap-2">
-            <button className="btn-base btn-sky" onClick={() => alert("Your guardian has been notified.")}>Alert My Guardian</button>
-            <button className="btn-base btn-safe" onClick={() => alert("Marked safe.")}>Mark as Safe</button>
-            <button className="btn-base btn-primary" onClick={() => alert("Sender blocked.")}>Block This Sender</button>
+            <button className="btn-base btn-sky" onClick={() => toast("✅ Your guardian has been notified")}>Alert My Guardian</button>
+            <button className="btn-base btn-safe" onClick={() => toast("✅ Marked as safe")}>Mark as Safe</button>
+            <button className="btn-base btn-primary" onClick={() => toast("✅ Sender blocked")}>Block This Sender</button>
           </div>
 
           <Link to="/dashboard" className="btn-base btn-outline w-full">← Back to dashboard</Link>

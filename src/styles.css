@@ -57,7 +57,7 @@
   --warn: oklch(0.76 0.16 70);        /* #F39C12 */
   --danger: oklch(0.64 0.22 27);      /* #E74C3C */
 
-  --background: var(--cream);
+  --background: oklch(0.96 0 0); /* #F5F5F5 soft neutral gray */
   --foreground: var(--brown);
   --card: oklch(1 0 0);
   --card-foreground: var(--brown);
