@@ -14,13 +14,151 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      guardian_relationships: {
+        Row: {
+          created_at: string
+          guardian_id: string
+          id: string
+          invite_code: string | null
+          relationship_label: string | null
+          senior_id: string
+          status: string
+        }
+        Insert: {
+          created_at?: string
+          guardian_id: string
+          id?: string
+          invite_code?: string | null
+          relationship_label?: string | null
+          senior_id: string
+          status?: string
+        }
+        Update: {
+          created_at?: string
+          guardian_id?: string
+          id?: string
+          invite_code?: string | null
+          relationship_label?: string | null
+          senior_id?: string
+          status?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "guardian_relationships_guardian_id_fkey"
+            columns: ["guardian_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "guardian_relationships_senior_id_fkey"
+            columns: ["senior_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      profiles: {
+        Row: {
+          created_at: string
+          font_size: string
+          full_name: string
+          id: string
+          invite_code: string | null
+          phone_number: string | null
+          quiz_progress: Json
+          role: string
+          ssn_shield_progress: Json
+        }
+        Insert: {
+          created_at?: string
+          font_size?: string
+          full_name: string
+          id: string
+          invite_code?: string | null
+          phone_number?: string | null
+          quiz_progress?: Json
+          role: string
+          ssn_shield_progress?: Json
+        }
+        Update: {
+          created_at?: string
+          font_size?: string
+          full_name?: string
+          id?: string
+          invite_code?: string | null
+          phone_number?: string | null
+          quiz_progress?: Json
+          role?: string
+          ssn_shield_progress?: Json
+        }
+        Relationships: []
+      }
+      scam_alerts: {
+        Row: {
+          ai_recommendation: string | null
+          ai_urgency: string | null
+          channel: string
+          content_preview: string | null
+          created_at: string
+          guardian_notified: boolean
+          id: string
+          scam_flags: Json
+          scam_score: number
+          scam_type: string | null
+          senior_id: string
+          status: string
+        }
+        Insert: {
+          ai_recommendation?: string | null
+          ai_urgency?: string | null
+          channel: string
+          content_preview?: string | null
+          created_at?: string
+          guardian_notified?: boolean
+          id?: string
+          scam_flags?: Json
+          scam_score?: number
+          scam_type?: string | null
+          senior_id: string
+          status?: string
+        }
+        Update: {
+          ai_recommendation?: string | null
+          ai_urgency?: string | null
+          channel?: string
+          content_preview?: string | null
+          created_at?: string
+          guardian_notified?: boolean
+          id?: string
+          scam_flags?: Json
+          scam_score?: number
+          scam_type?: string | null
+          senior_id?: string
+          status?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "scam_alerts_senior_id_fkey"
+            columns: ["senior_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
     }
     Views: {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      gen_invite_code: { Args: never; Returns: string }
+      is_guardian_of: { Args: { _senior: string }; Returns: boolean }
+      link_guardian_by_code: {
+        Args: { _code: string; _label: string }
+        Returns: string
+      }
     }
     Enums: {
       [_ in never]: never
