@@ -62,7 +62,7 @@ const BUREAUS = [
 ];
 
 function SsnShield() {
-  const { profile, refresh } = useAuth() as any;
+  const { profile, refreshProfile } = useAuth();
   const [asker, setAsker] = useState<Asker | null>(null);
   const [dir, setDir] = useState<Direction | null>(null);
   const [progress, setProgress] = useState<Record<string, boolean>>({});
@@ -80,7 +80,7 @@ function SsnShield() {
     if (profile?.id) {
       await supabase.from("profiles").update({ ssn_shield_progress: next }).eq("id", profile.id);
       if (next[key]) toast("✅ Step marked complete");
-      refresh?.();
+      refreshProfile?.();
     }
   };
 
