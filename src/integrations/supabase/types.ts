@@ -95,6 +95,86 @@ export type Database = {
         }
         Relationships: []
       }
+      quiz_attempts: {
+        Row: {
+          created_at: string
+          id: string
+          question_id: string
+          user_id: string
+          was_correct: boolean
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          question_id: string
+          user_id: string
+          was_correct: boolean
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          question_id?: string
+          user_id?: string
+          was_correct?: boolean
+        }
+        Relationships: [
+          {
+            foreignKeyName: "quiz_attempts_question_id_fkey"
+            columns: ["question_id"]
+            isOneToOne: false
+            referencedRelation: "quiz_questions"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      quiz_questions: {
+        Row: {
+          answer_a: string
+          answer_b: string
+          answer_c: string
+          answer_d: string
+          correct_answer: string
+          created_at: string
+          explanation: string
+          id: string
+          last_shown_date: string | null
+          question_text: string
+          rotation_group: number
+          scam_category: string
+          times_shown: number
+        }
+        Insert: {
+          answer_a: string
+          answer_b: string
+          answer_c: string
+          answer_d: string
+          correct_answer: string
+          created_at?: string
+          explanation: string
+          id?: string
+          last_shown_date?: string | null
+          question_text: string
+          rotation_group?: number
+          scam_category: string
+          times_shown?: number
+        }
+        Update: {
+          answer_a?: string
+          answer_b?: string
+          answer_c?: string
+          answer_d?: string
+          correct_answer?: string
+          created_at?: string
+          explanation?: string
+          id?: string
+          last_shown_date?: string | null
+          question_text?: string
+          rotation_group?: number
+          scam_category?: string
+          times_shown?: number
+        }
+        Relationships: []
+      }
       scam_alerts: {
         Row: {
           ai_recommendation: string | null
