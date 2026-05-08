@@ -1,13 +1,15 @@
 import { Link, useRouterState } from "@tanstack/react-router";
 import { ReactNode } from "react";
 import { useAuth } from "@/lib/auth";
+import { PhotoPanel } from "@/components/PhotoPanel";
 
-export function ScreenShell({ children }: { children: ReactNode }) {
+export function ScreenShell({ children, withPhotoPanel = false }: { children: ReactNode; withPhotoPanel?: boolean }) {
   const { profile } = useAuth();
   const isGuardian = profile?.role === "guardian";
   return (
     <div className="min-h-screen bg-background flex flex-col">
-      <main className="flex-1 pb-28 max-w-xl w-full mx-auto">{children}</main>
+      {withPhotoPanel && <PhotoPanel widthPct={35} />}
+      <main className={`flex-1 pb-28 max-w-xl w-full mx-auto ${withPhotoPanel ? "sm:mr-[35%] sm:ml-0" : ""}`}>{children}</main>
       <nav
         className="fixed bottom-0 left-0 right-0 border-t z-30"
         style={{ background: "var(--color-sky)" }}
