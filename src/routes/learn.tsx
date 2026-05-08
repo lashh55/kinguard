@@ -3,6 +3,7 @@ import { useEffect, useMemo, useState } from "react";
 import { ScreenShell } from "@/components/ScreenShell";
 import { useAuth } from "@/lib/auth";
 import { supabase } from "@/integrations/supabase/client";
+import { SENIOR_PHOTOS } from "@/lib/photos";
 import { toast } from "sonner";
 
 export const Route = createFileRoute("/learn")({
