@@ -2,6 +2,8 @@ import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import { useAuth } from "@/lib/auth";
 import { supabase } from "@/integrations/supabase/client";
+import { PhotoPanel } from "@/components/PhotoPanel";
+import { formatPhone, isValidPhone } from "@/lib/phone";
 import logo from "@/assets/scamshield-logo.png";
 
 export const Route = createFileRoute("/")({
@@ -25,21 +27,24 @@ function Onboarding() {
   }
 
   return (
-    <div className="min-h-screen px-5 py-8 max-w-xl mx-auto">
-      <div className="flex flex-col items-center text-center">
-        <img src={logo} alt="ScamShield logo" className="w-44 h-44 object-contain" />
-        <h1 className="mt-2" style={{ color: "var(--color-rose)", fontSize: 38 }}>ScamShield</h1>
-        <p className="mt-1" style={{ color: "var(--color-rose)", letterSpacing: "0.08em", textTransform: "uppercase", fontSize: 14, fontWeight: 700 }}>
-          Protecting the people you love
-        </p>
-      </div>
+    <div className="min-h-screen relative">
+      <PhotoPanel widthPct={35} />
+      <div className="px-5 py-8 max-w-xl mx-auto sm:mr-[35%] sm:ml-0 sm:pl-8">
+        <div className="flex flex-col items-center text-center">
+          <img src={logo} alt="ScamShield logo" className="w-44 h-44 object-contain" />
+          <h1 className="mt-2" style={{ color: "var(--color-rose)", fontSize: 38 }}>ScamShield</h1>
+          <p className="mt-1" style={{ color: "var(--color-rose)", letterSpacing: "0.08em", textTransform: "uppercase", fontSize: 14, fontWeight: 700 }}>
+            Protecting the people you love
+          </p>
+        </div>
 
-      <div className="mt-8">
-        {step === "role" && <RoleStep onPick={setStep} />}
-        {step === "senior" && <SeniorForm onCreated={(c) => { setCode(c); setStep("invite"); }} onBack={() => setStep("role")} />}
-        {step === "guardian" && <GuardianForm onLinked={() => setStep("linked")} onBack={() => setStep("role")} />}
-        {step === "invite" && <InviteCodeView code={code!} onContinue={() => navigate({ to: "/dashboard" })} />}
-        {step === "linked" && <LinkedView onContinue={() => navigate({ to: "/dashboard" })} />}
+        <div className="mt-8">
+          {step === "role" && <RoleStep onPick={setStep} />}
+          {step === "senior" && <SeniorForm onCreated={(c) => { setCode(c); setStep("invite"); }} onBack={() => setStep("role")} />}
+          {step === "guardian" && <GuardianForm onLinked={() => setStep("linked")} onBack={() => setStep("role")} />}
+          {step === "invite" && <InviteCodeView code={code!} onContinue={() => navigate({ to: "/dashboard" })} />}
+          {step === "linked" && <LinkedView onContinue={() => navigate({ to: "/dashboard" })} />}
+        </div>
       </div>
     </div>
   );
@@ -54,6 +59,9 @@ function RoleStep({ onPick }: { onPick: (s: Step) => void }) {
       <button className="btn-base btn-primary w-full" onClick={() => onPick("guardian")}>
         💙 I want to protect someone
       </button>
+      <p className="text-center italic px-2" style={{ color: "#3D2B2B", fontSize: 16 }}>
+        You will need an invite code from the person you want to protect. Ask them to create their account first — they will receive a code to share with you.
+      </p>
       <p className="text-center text-sm mt-2" style={{ color: "var(--color-muted-foreground)" }}>
         Already have an account?{" "}
         <button className="underline font-bold" onClick={() => onPick("senior")}>Sign in below</button>
@@ -62,11 +70,12 @@ function RoleStep({ onPick }: { onPick: (s: Step) => void }) {
   );
 }
 
-function FormRow({ label, children }: { label: string; children: React.ReactNode }) {
+function FormRow({ label, children, hint }: { label: string; children: React.ReactNode; hint?: string }) {
   return (
     <label className="block">
       <span className="block font-bold mb-2">{label}</span>
       {children}
+      {hint && <span className="block text-sm italic mt-1" style={{ color: "var(--color-muted-foreground)" }}>{hint}</span>}
     </label>
   );
 }
@@ -77,18 +86,23 @@ function SeniorForm({ onCreated, onBack }: { onCreated: (code: string) => void; 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [phone, setPhone] = useState("");
+  const [phoneErr, setPhoneErr] = useState<string | null>(null);
   const [font, setFont] = useState<"large" | "extra_large">("large");
   const [busy, setBusy] = useState(false);
   const [err, setErr] = useState<string | null>(null);
 
   const submit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setErr(null); setBusy(true);
+    setErr(null); setPhoneErr(null);
+    if (mode === "signup") {
+      if (!phone.trim()) { setPhoneErr("Phone number is required"); return; }
+      if (!isValidPhone(phone)) { setPhoneErr("Please enter a valid 10-digit phone number"); return; }
+    }
+    setBusy(true);
     try {
       if (mode === "signin") {
         const { error } = await supabase.auth.signInWithPassword({ email, password });
         if (error) throw error;
-        // AuthProvider will load profile and Onboarding will redirect
         return;
       }
       const redirectUrl = `${window.location.origin}/dashboard`;
@@ -100,7 +114,7 @@ function SeniorForm({ onCreated, onBack }: { onCreated: (code: string) => void; 
       const uid = data.user?.id;
       if (!uid) throw new Error("Account created — please check your email to confirm, then sign in.");
       const { error: pErr } = await supabase.from("profiles").insert({
-        id: uid, full_name: name, role: "senior", phone_number: phone || null, font_size: font,
+        id: uid, full_name: name, role: "senior", phone_number: phone, font_size: font,
       });
       if (pErr) throw pErr;
       const { data: prof } = await supabase.from("profiles").select("invite_code").eq("id", uid).maybeSingle();
@@ -121,24 +135,32 @@ function SeniorForm({ onCreated, onBack }: { onCreated: (code: string) => void; 
           <input className="input-large" required value={name} onChange={(e) => setName(e.target.value)} />
         </FormRow>
       )}
-      <FormRow label="Email">
+      <FormRow label="Email address">
         <input className="input-large" type="email" required value={email} onChange={(e) => setEmail(e.target.value)} />
       </FormRow>
+      {mode === "signup" && (
+        <FormRow label="Phone Number — so your guardian can reach you">
+          <input
+            className="input-large"
+            type="tel"
+            placeholder="(555) 555-5555"
+            required
+            value={phone}
+            onChange={(e) => { setPhone(formatPhone(e.target.value)); setPhoneErr(null); }}
+          />
+          {phoneErr && <span className="block text-sm font-bold mt-1" style={{ color: "var(--color-danger)" }}>{phoneErr}</span>}
+        </FormRow>
+      )}
       <FormRow label="Password">
         <input className="input-large" type="password" required minLength={6} value={password} onChange={(e) => setPassword(e.target.value)} />
       </FormRow>
       {mode === "signup" && (
-        <>
-          <FormRow label="Phone number (optional)">
-            <input className="input-large" type="tel" value={phone} onChange={(e) => setPhone(e.target.value)} />
-          </FormRow>
-          <FormRow label="Text size">
-            <div className="flex gap-2">
-              <button type="button" className={`btn-base flex-1 ${font==="large"?"btn-sky":"btn-outline"}`} onClick={() => setFont("large")}>Large</button>
-              <button type="button" className={`btn-base flex-1 ${font==="extra_large"?"btn-sky":"btn-outline"}`} onClick={() => setFont("extra_large")}>Extra Large</button>
-            </div>
-          </FormRow>
-        </>
+        <FormRow label="Text size">
+          <div className="flex gap-2">
+            <button type="button" className={`btn-base flex-1 ${font==="large"?"btn-sky":"btn-outline"}`} onClick={() => setFont("large")}>Large</button>
+            <button type="button" className={`btn-base flex-1 ${font==="extra_large"?"btn-sky":"btn-outline"}`} onClick={() => setFont("extra_large")}>Extra Large</button>
+          </div>
+        </FormRow>
       )}
       {err && <p className="text-sm font-bold" style={{ color: "var(--color-danger)" }}>{err}</p>}
       <button className="btn-base btn-primary w-full" disabled={busy}>
@@ -154,6 +176,8 @@ function GuardianForm({ onLinked, onBack }: { onLinked: () => void; onBack: () =
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [phone, setPhone] = useState("");
+  const [phoneErr, setPhoneErr] = useState<string | null>(null);
   const [rel, setRel] = useState("");
   const [code, setCode] = useState("");
   const [busy, setBusy] = useState(false);
@@ -161,7 +185,12 @@ function GuardianForm({ onLinked, onBack }: { onLinked: () => void; onBack: () =
 
   const submit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setErr(null); setBusy(true);
+    setErr(null); setPhoneErr(null);
+    if (mode === "signup") {
+      if (!phone.trim()) { setPhoneErr("Phone number is required"); return; }
+      if (!isValidPhone(phone)) { setPhoneErr("Please enter a valid 10-digit phone number"); return; }
+    }
+    setBusy(true);
     try {
       let uid: string | undefined;
       if (mode === "signin") {
@@ -178,7 +207,7 @@ function GuardianForm({ onLinked, onBack }: { onLinked: () => void; onBack: () =
         uid = data.user?.id;
         if (!uid) throw new Error("Check your email to confirm, then sign in.");
         const { error: pErr } = await supabase.from("profiles").insert({
-          id: uid, full_name: name, role: "guardian",
+          id: uid, full_name: name, role: "guardian", phone_number: phone,
         });
         if (pErr) throw pErr;
       }
@@ -202,16 +231,29 @@ function GuardianForm({ onLinked, onBack }: { onLinked: () => void; onBack: () =
           <input className="input-large" required value={name} onChange={(e) => setName(e.target.value)} />
         </FormRow>
       )}
-      <FormRow label="Email">
+      <FormRow label="Email address">
         <input className="input-large" type="email" required value={email} onChange={(e) => setEmail(e.target.value)} />
       </FormRow>
+      {mode === "signup" && (
+        <FormRow label="Phone Number — so we can alert you by call or text">
+          <input
+            className="input-large"
+            type="tel"
+            placeholder="(555) 555-5555"
+            required
+            value={phone}
+            onChange={(e) => { setPhone(formatPhone(e.target.value)); setPhoneErr(null); }}
+          />
+          {phoneErr && <span className="block text-sm font-bold mt-1" style={{ color: "var(--color-danger)" }}>{phoneErr}</span>}
+        </FormRow>
+      )}
       <FormRow label="Password">
         <input className="input-large" type="password" required minLength={6} value={password} onChange={(e) => setPassword(e.target.value)} />
       </FormRow>
-      <FormRow label="Relationship to senior (e.g. Daughter)">
+      <FormRow label="Relationship to senior (e.g. Daughter, Son, Friend)">
         <input className="input-large" required value={rel} onChange={(e) => setRel(e.target.value)} />
       </FormRow>
-      <FormRow label="Invite code from your loved one">
+      <FormRow label="Invite code" hint="Ask the person you want to protect for their invite code. They must create their account first.">
         <input className="input-large uppercase tracking-widest" required value={code} onChange={(e) => setCode(e.target.value.toUpperCase())} />
       </FormRow>
       {err && <p className="text-sm font-bold" style={{ color: "var(--color-danger)" }}>{err}</p>}
@@ -232,6 +274,9 @@ function InviteCodeView({ code, onContinue }: { code: string; onContinue: () => 
         style={{ background: "var(--color-sky)", color: "var(--color-brown)" }}>
         {code}
       </div>
+      <p className="text-sm" style={{ color: "var(--color-muted-foreground)" }}>
+        Multiple family members can use this same code.
+      </p>
       <button className="btn-base btn-primary w-full" onClick={onContinue}>Continue to my dashboard</button>
     </div>
   );

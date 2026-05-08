@@ -23,6 +23,7 @@ export function ScreenShell({ children }: { children: ReactNode }) {
               <NavItem to="/dashboard" icon="🏠" label="Home" />
               <NavItem to="/check" icon="🔍" label="Check" />
               <NavItem to="/ssn" icon="🛡️" label="SSN" />
+              <NavItem to="/learn" icon="🎓" label="Learn" />
               <NavItem to="/profile" icon="👤" label="Profile" />
             </>
           )}
