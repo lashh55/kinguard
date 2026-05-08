@@ -26,7 +26,7 @@ type Verdict = { level: "safe" | "warn" | "danger"; title: string; body: string 
 
 function decide(a: Asker, d: Direction): Verdict {
   if (a === "employer")
-    return { level: "safe", title: "✅ SAFE", body: "Employers are legally required to collect your SSN for payroll and taxes. This is normal and safe." };
+    return { level: "safe", title: "✅ SAFE", body: "Employers are legally required to collect your SSN for payroll and taxes. This is normal and safe.\n\n💡 Tip: Always make sure the email asking for your information comes from your official employer email address (example: name@yourcompany.com). If you are unsure, contact your HR department directly by phone before responding." };
   if (a === "bank" && d === "self")
     return { level: "safe", title: "✅ SAFE", body: "Banks need your SSN to verify your identity. Since you called them, this is safe." };
   if (a === "bank" && d === "them")
@@ -124,7 +124,7 @@ function SsnShield() {
             <div className="mt-4 space-y-3">
               <div className="rounded-2xl p-4 text-white" style={{ background: levelColor(verdict.level) }}>
                 <p className="font-extrabold" style={{ fontSize: 22 }}>{verdict.title}</p>
-                <p className="mt-2" style={{ fontSize: 18 }}>{verdict.body}</p>
+                <p className="mt-2" style={{ fontSize: 18, whiteSpace: "pre-line" }}>{verdict.body}</p>
               </div>
               {verdict.level === "safe" ? (
                 <button className="btn-base btn-safe w-full" onClick={reset}>I'm Safe, Thanks</button>

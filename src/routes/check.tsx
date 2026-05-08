@@ -5,6 +5,7 @@ import { useAuth } from "@/lib/auth";
 import { supabase } from "@/integrations/supabase/client";
 import { ScreenShell, scoreColor } from "@/components/ScreenShell";
 import { analyzeScam } from "@/server/scam.functions";
+import { notifyGuardianScam } from "@/lib/guardianAlerts";
 
 export const Route = createFileRoute("/check")({
   component: CheckScreen,
@@ -126,7 +127,15 @@ function CheckScreen() {
           </div>
 
           <div className="grid grid-cols-1 gap-2">
-            <button className="btn-base btn-sky" onClick={() => toast("✅ Your guardian has been notified")}>Alert My Guardian</button>
+            <button className="btn-base btn-sky" onClick={() => {
+              if (result && profile) notifyGuardianScam({
+                seniorName: profile.full_name,
+                scamType: result.type,
+                score: result.score,
+                channel,
+              });
+              toast("✅ Your guardian has been notified");
+            }}>Alert My Guardian</button>
             <button className="btn-base btn-safe" onClick={() => toast("✅ Marked as safe")}>Mark as Safe</button>
             <button className="btn-base btn-primary" onClick={() => toast("✅ Sender blocked")}>Block This Sender</button>
           </div>

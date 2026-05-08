@@ -11,6 +11,7 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as SsnRouteImport } from './routes/ssn'
 import { Route as ProfileRouteImport } from './routes/profile'
+import { Route as LearnRouteImport } from './routes/learn'
 import { Route as DashboardRouteImport } from './routes/dashboard'
 import { Route as CheckRouteImport } from './routes/check'
 import { Route as IndexRouteImport } from './routes/index'
@@ -23,6 +24,11 @@ const SsnRoute = SsnRouteImport.update({
 const ProfileRoute = ProfileRouteImport.update({
   id: '/profile',
   path: '/profile',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const LearnRoute = LearnRouteImport.update({
+  id: '/learn',
+  path: '/learn',
   getParentRoute: () => rootRouteImport,
 } as any)
 const DashboardRoute = DashboardRouteImport.update({
@@ -45,6 +51,7 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/check': typeof CheckRoute
   '/dashboard': typeof DashboardRoute
+  '/learn': typeof LearnRoute
   '/profile': typeof ProfileRoute
   '/ssn': typeof SsnRoute
 }
@@ -52,6 +59,7 @@ export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/check': typeof CheckRoute
   '/dashboard': typeof DashboardRoute
+  '/learn': typeof LearnRoute
   '/profile': typeof ProfileRoute
   '/ssn': typeof SsnRoute
 }
@@ -60,21 +68,30 @@ export interface FileRoutesById {
   '/': typeof IndexRoute
   '/check': typeof CheckRoute
   '/dashboard': typeof DashboardRoute
+  '/learn': typeof LearnRoute
   '/profile': typeof ProfileRoute
   '/ssn': typeof SsnRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/check' | '/dashboard' | '/profile' | '/ssn'
+  fullPaths: '/' | '/check' | '/dashboard' | '/learn' | '/profile' | '/ssn'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/check' | '/dashboard' | '/profile' | '/ssn'
-  id: '__root__' | '/' | '/check' | '/dashboard' | '/profile' | '/ssn'
+  to: '/' | '/check' | '/dashboard' | '/learn' | '/profile' | '/ssn'
+  id:
+    | '__root__'
+    | '/'
+    | '/check'
+    | '/dashboard'
+    | '/learn'
+    | '/profile'
+    | '/ssn'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   CheckRoute: typeof CheckRoute
   DashboardRoute: typeof DashboardRoute
+  LearnRoute: typeof LearnRoute
   ProfileRoute: typeof ProfileRoute
   SsnRoute: typeof SsnRoute
 }
@@ -93,6 +110,13 @@ declare module '@tanstack/react-router' {
       path: '/profile'
       fullPath: '/profile'
       preLoaderRoute: typeof ProfileRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/learn': {
+      id: '/learn'
+      path: '/learn'
+      fullPath: '/learn'
+      preLoaderRoute: typeof LearnRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/dashboard': {
@@ -123,6 +147,7 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   CheckRoute: CheckRoute,
   DashboardRoute: DashboardRoute,
+  LearnRoute: LearnRoute,
   ProfileRoute: ProfileRoute,
   SsnRoute: SsnRoute,
 }
