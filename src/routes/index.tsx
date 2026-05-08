@@ -13,7 +13,7 @@ export const Route = createFileRoute("/")({
 type Step = "role" | "senior" | "guardian" | "invite" | "linked";
 
 function Onboarding() {
-  const { user, profile, loading } = useAuth();
+  const { user, profile, loading, refreshProfile } = useAuth();
   const navigate = useNavigate();
   const [step, setStep] = useState<Step>("role");
   const [code, setCode] = useState<string | null>(null);
