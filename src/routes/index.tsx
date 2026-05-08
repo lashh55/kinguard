@@ -299,3 +299,34 @@ function LinkedView({ onContinue }: { onContinue: () => void }) {
     </div>
   );
 }
+
+function ForgotPassword({ email }: { email: string }) {
+  const [busy, setBusy] = useState(false);
+  const [msg, setMsg] = useState<string | null>(null);
+  const [err, setErr] = useState<string | null>(null);
+
+  const send = async () => {
+    setMsg(null); setErr(null);
+    if (!email.trim()) { setErr("Enter your email above first, then click Forgot password."); return; }
+    setBusy(true);
+    try {
+      const { error } = await supabase.auth.resetPasswordForEmail(email, {
+        redirectTo: `${window.location.origin}/reset-password`,
+      });
+      if (error) throw error;
+      setMsg("Check your email for a link to reset your password.");
+    } catch (e: any) {
+      setErr(e?.message || "Could not send reset email");
+    } finally { setBusy(false); }
+  };
+
+  return (
+    <div className="text-center">
+      <button type="button" className="text-sm underline" onClick={send} disabled={busy}>
+        {busy ? "Sending…" : "Forgot password?"}
+      </button>
+      {msg && <p className="text-sm mt-2" style={{ color: "var(--color-rose)" }}>{msg}</p>}
+      {err && <p className="text-sm font-bold mt-2" style={{ color: "var(--color-danger)" }}>{err}</p>}
+    </div>
+  );
+}
