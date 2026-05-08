@@ -13,7 +13,7 @@ export const Route = createFileRoute("/")({
 type Step = "role" | "senior" | "guardian" | "invite" | "linked";
 
 function Onboarding() {
-  const { user, profile, loading } = useAuth();
+  const { user, profile, loading, refreshProfile } = useAuth();
   const navigate = useNavigate();
   const [step, setStep] = useState<Step>("role");
   const [code, setCode] = useState<string | null>(null);
@@ -83,6 +83,7 @@ function FormRow({ label, children, hint }: { label: string; children: React.Rea
 }
 
 function SeniorForm({ onCreated, onBack }: { onCreated: (code: string) => void; onBack: () => void }) {
+  const { refreshProfile } = useAuth();
   const [mode, setMode] = useState<"signup" | "signin">("signup");
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
@@ -120,6 +121,7 @@ function SeniorForm({ onCreated, onBack }: { onCreated: (code: string) => void; 
       });
       if (pErr) throw pErr;
       const { data: prof } = await supabase.from("profiles").select("invite_code").eq("id", uid).maybeSingle();
+      await refreshProfile();
       onCreated(prof?.invite_code || "—");
     } catch (e: any) {
       setErr(e?.message || "Something went wrong");
@@ -174,6 +176,7 @@ function SeniorForm({ onCreated, onBack }: { onCreated: (code: string) => void; 
 }
 
 function GuardianForm({ onLinked, onBack }: { onLinked: () => void; onBack: () => void }) {
+  const { refreshProfile } = useAuth();
   const [mode, setMode] = useState<"signup" | "signin">("signup");
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
@@ -216,6 +219,7 @@ function GuardianForm({ onLinked, onBack }: { onLinked: () => void; onBack: () =
       if (!uid) throw new Error("Sign in failed");
       const { error: linkErr } = await supabase.rpc("link_guardian_by_code", { _code: code, _label: rel });
       if (linkErr) throw linkErr;
+      await refreshProfile();
       onLinked();
     } catch (e: any) {
       setErr(e?.message || "Something went wrong");
