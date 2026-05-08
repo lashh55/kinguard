@@ -11,6 +11,7 @@ export type Profile = {
   invite_code: string | null;
   quiz_progress: Record<string, unknown>;
   ssn_shield_progress: Record<string, unknown>;
+  challenge_stats?: Record<string, unknown> | null;
 };
 
 type Ctx = {
