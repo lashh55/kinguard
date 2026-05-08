@@ -61,6 +61,7 @@ export type Database = {
       }
       profiles: {
         Row: {
+          challenge_stats: Json
           created_at: string
           font_size: string
           full_name: string
@@ -72,6 +73,7 @@ export type Database = {
           ssn_shield_progress: Json
         }
         Insert: {
+          challenge_stats?: Json
           created_at?: string
           font_size?: string
           full_name: string
@@ -83,6 +85,7 @@ export type Database = {
           ssn_shield_progress?: Json
         }
         Update: {
+          challenge_stats?: Json
           created_at?: string
           font_size?: string
           full_name?: string
