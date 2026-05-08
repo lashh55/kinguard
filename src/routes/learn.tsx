@@ -66,12 +66,20 @@ function Slides() {
   return (
     <section className="px-5 mt-2">
       <h2 className="mb-2">ScamShield Lessons</h2>
-      <div className="rounded-2xl p-5" style={{ background: "var(--color-cream)", minHeight: 280 }}>
-        <p className="font-extrabold" style={{ fontSize: 24 }}>{s.title}</p>
-        <p className="mt-1 italic">{s.subtitle}</p>
-        <ul className="mt-3 space-y-1 list-disc pl-5">
-          {s.points.map((p) => <li key={p}>{p}</li>)}
-        </ul>
+      <div className="rounded-2xl overflow-hidden" style={{ background: "var(--color-cream)", minHeight: 280 }}>
+        <img
+          src={SENIOR_PHOTOS[i % SENIOR_PHOTOS.length]}
+          alt=""
+          className="w-full object-cover"
+          style={{ height: 200 }}
+        />
+        <div className="p-5">
+          <p className="font-extrabold" style={{ fontSize: 24 }}>{s.title}</p>
+          <p className="mt-1 italic">{s.subtitle}</p>
+          <ul className="mt-3 space-y-1 list-disc pl-5">
+            {s.points.map((p) => <li key={p}>{p}</li>)}
+          </ul>
+        </div>
       </div>
       <div className="flex items-center justify-between mt-3">
         <button className="btn-base btn-outline" style={{ minHeight: 44, padding: "8px 14px" }} onClick={() => setI((p) => (p - 1 + SLIDES.length) % SLIDES.length)}>←</button>
