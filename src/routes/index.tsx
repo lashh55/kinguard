@@ -219,6 +219,7 @@ function GuardianForm({ onLinked, onBack }: { onLinked: () => void; onBack: () =
       if (!uid) throw new Error("Sign in failed");
       const { error: linkErr } = await supabase.rpc("link_guardian_by_code", { _code: code, _label: rel });
       if (linkErr) throw linkErr;
+      await refreshProfile();
       onLinked();
     } catch (e: any) {
       setErr(e?.message || "Something went wrong");
