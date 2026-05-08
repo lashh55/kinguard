@@ -4,6 +4,9 @@ import { ScreenShell } from "@/components/ScreenShell";
 import { useAuth } from "@/lib/auth";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
+import { ScoreCard } from "@/components/ScoreCard";
+import { BadgeCelebration, useBadgeQueue, useNotifyGuardiansOfBadge } from "@/components/BadgeCelebration";
+import { applyAnswer, applyPerfectWeek, normalizeStats } from "@/lib/badges";
 import slide1 from "@/assets/slide-1.png";
 import slide2 from "@/assets/slide-2.png";
 import slide3 from "@/assets/slide-3.png";
@@ -20,17 +23,7 @@ export const Route = createFileRoute("/learn")({
   component: LearnScreen,
 });
 
-const SLIDES = [
-  { title: "Welcome to AI Empowerment", subtitle: "Tools for connection, confidence, and everyday living", points: ["Discover what AI can do for you", "Learn at your own pace", "You're never too late to start"] },
-  { title: "Using AI Safely", subtitle: "Be Aware. Be Smart. Be Safe.", points: ["Know what to share", "Know what to skip", "Always verify before you trust"] },
-  { title: "Keep Learning", subtitle: "Your journey with AI starts today", points: ["Small steps each week", "Ask questions freely", "Practice makes confidence"] },
-  { title: "AI in Your Everyday Life", subtitle: "Communicate. Plan. Create. Explore.", points: ["Write emails faster", "Plan your day", "Find ideas and recipes"] },
-  { title: "Your Data Matters", subtitle: "Secure Your Data. Control Your Info. Stay Informed.", points: ["Protect your passwords", "Limit what you share", "Check your privacy settings"] },
-  { title: "Hands-On AI", subtitle: "Try it. Explore it. Make it yours.", points: ["Start with simple questions", "Use voice if it's easier", "Save what works for you"] },
-  { title: "Capabilities and Limitations", subtitle: "What AI Can Do vs What AI Can't Do", points: ["Great at drafts and ideas", "Not always accurate", "Always double-check facts"] },
-  { title: "Empowered Together", subtitle: "Learning Together. Thriving Together.", points: ["Lean on family and friends", "Share what you learn", "Help others stay safe too"] },
-  { title: "Thank You", subtitle: "Keep exploring. Keep learning. Keep growing.", points: ["You did it!", "Come back anytime", "Stay curious"] },
-];
+const SLIDES = Array.from({ length: 9 }).map((_, i) => ({ title: `Slide ${i + 1}` }));
 
 const SCAM_CARDS = [
   { id: "irs", icon: "🏛️", title: "IRS / Government Scams", look: "You get a call or email saying you owe back taxes and will be arrested if you don't pay immediately.", flags: ["Demands payment", "Gift cards", "Threatens arrest", "Unexpected contact"], doIt: "Hang up. The real IRS contacts you by mail first, never by phone.", accent: "var(--color-sky)" },
@@ -59,27 +52,43 @@ type Question = {
 };
 
 function LearnScreen() {
+  const { profile, refreshProfile } = useAuth();
+  const { current, enqueue, dismiss } = useBadgeQueue();
+  const notifyGuardians = useNotifyGuardiansOfBadge();
   return (
     <ScreenShell>
       <header className="px-5 pt-6 pb-3"><h1>🎓 Learn</h1></header>
       <Slides />
       <Cards />
+      {profile && (
+        <section className="px-5 mt-6">
+          <h2 className="mb-2">My Progress 🏅</h2>
+          <ScoreCard stats={profile.challenge_stats} />
+        </section>
+      )}
+      <Quiz onBadges={(badges) => {
+        if (!badges.length || !profile) return;
+        enqueue(badges);
+        badges.forEach((b) => notifyGuardians(profile.full_name, b));
+        refreshProfile();
+      }} />
       <Videos />
-      <Quiz />
+      {current && profile && (
+        <BadgeCelebration badge={current} name={profile.full_name} onDismiss={dismiss} />
+      )}
     </ScreenShell>
   );
 }
 
 function Slides() {
   const [i, setI] = useState(0);
-  const s = SLIDES[i];
   return (
     <section className="px-5 mt-2">
       <h2 className="mb-2">ScamShield Lessons</h2>
       <div className="rounded-2xl overflow-hidden" style={{ background: "var(--color-cream)" }}>
         <img
           src={SLIDE_IMAGES[i % SLIDE_IMAGES.length]}
-          alt={s.title}
+          alt={`Lesson slide ${i + 1}`}
           className="w-full h-auto block"
         />
       </div>
@@ -98,13 +107,32 @@ function Slides() {
 
 function Cards() {
   const navigate = useNavigate();
+  const { profile, refreshProfile } = useAuth();
+  const [opened, setOpened] = useState<Set<string>>(new Set());
+
+  const handleOpen = async (id: string) => {
+    const next = new Set(opened);
+    next.add(id);
+    setOpened(next);
+    if (!profile || profile.role !== "senior") return;
+    if (next.size >= SCAM_CARDS.length) {
+      const stats = normalizeStats(profile.challenge_stats);
+      if (!stats.badges_earned.includes("scholar")) {
+        const updated = { ...stats, badges_earned: [...stats.badges_earned, "scholar"] };
+        await supabase.from("profiles").update({ challenge_stats: updated as any }).eq("id", profile.id);
+        toast("📚 You earned the Scholar badge!");
+        refreshProfile();
+      }
+    }
+  };
+
   return (
     <section className="px-5 mt-6">
       <h2>Know Your Scams</h2>
       <p className="mt-1" style={{ color: "var(--color-muted-foreground)" }}>Tap any card to learn more</p>
       <div className="mt-3 space-y-3">
         {SCAM_CARDS.map((c) => (
-          <details key={c.id} className="card-soft" style={{ borderTop: `6px solid ${c.accent}` }}>
+          <details key={c.id} className="card-soft" style={{ borderTop: `6px solid ${c.accent}` }} onToggle={(e) => { if ((e.target as HTMLDetailsElement).open) handleOpen(c.id); }}>
             <summary className="font-extrabold cursor-pointer" style={{ fontSize: 19 }}>
               {c.icon} {c.title}
             </summary>
@@ -134,9 +162,9 @@ function Cards() {
 
 function Videos() {
   return (
-    <section className="px-5 mt-6">
+    <section className="px-5 mt-6 mb-4">
       <h2>Watch & Learn 🎥</h2>
-      <p className="mt-1" style={{ color: "var(--color-muted-foreground)" }}>Real scam situations explained in plain language</p>
+      <p className="mt-1" style={{ color: "var(--color-muted-foreground)" }}>Real scam situations explained in plain language — coming soon</p>
       <div className="mt-3 grid grid-cols-2 gap-3">
         {VIDEOS.map((v) => (
           <button
@@ -160,11 +188,12 @@ function Videos() {
   );
 }
 
-function Quiz() {
+function Quiz({ onBadges }: { onBadges: (b: ReturnType<typeof applyAnswer>["newBadges"]) => void }) {
   const { profile } = useAuth();
   const [questions, setQuestions] = useState<Question[]>([]);
   const [idx, setIdx] = useState(0);
   const [picked, setPicked] = useState<string | null>(null);
+  const [correctCount, setCorrectCount] = useState(0);
 
   const group = useMemo(() => {
     const weeks = Math.floor(Date.now() / (1000 * 60 * 60 * 24 * 14));
@@ -182,19 +211,42 @@ function Quiz() {
     })();
   }, [group]);
 
-  if (questions.length === 0) return null;
+  if (questions.length === 0) {
+    return (
+      <section className="px-5 mt-6">
+        <h2>This Week's Challenge 🧠</h2>
+        <p className="mt-1" style={{ color: "var(--color-muted-foreground)" }}>Loading questions…</p>
+      </section>
+    );
+  }
   const q = questions[idx];
 
   const choose = async (l: "a"|"b"|"c"|"d") => {
-    if (picked) return;
+    if (picked || !profile) return;
     setPicked(l);
-    if (profile?.id) {
-      await supabase.from("quiz_attempts").insert({
-        user_id: profile.id,
-        question_id: q.id,
-        was_correct: l === q.correct_answer,
-      });
+    const wasCorrect = l === q.correct_answer;
+    if (wasCorrect) setCorrectCount((c) => c + 1);
+    await supabase.from("quiz_attempts").insert({
+      user_id: profile.id,
+      question_id: q.id,
+      was_correct: wasCorrect,
+    });
+    if (profile.role !== "senior") return;
+
+    const stats = normalizeStats(profile.challenge_stats);
+    let { next, newBadges } = applyAnswer(stats, wasCorrect);
+
+    // Perfect week check
+    const isLast = idx === questions.length - 1;
+    const willBePerfect = wasCorrect && isLast && (correctCount + 1) === questions.length;
+    if (willBePerfect) {
+      const pw = applyPerfectWeek(next, group);
+      next = pw.next;
+      newBadges = [...newBadges, ...pw.newBadges];
     }
+
+    await supabase.from("profiles").update({ challenge_stats: next as any }).eq("id", profile.id);
+    if (newBadges.length) onBadges(newBadges);
   };
 
   const next = () => {
@@ -203,7 +255,7 @@ function Quiz() {
   };
 
   return (
-    <section className="px-5 mt-6 mb-4">
+    <section className="px-5 mt-6">
       <h2>This Week's Challenge 🧠</h2>
       <p className="mt-1" style={{ color: "var(--color-muted-foreground)" }}>Test what you know. Questions change every two weeks.</p>
       <div className="card-soft mt-3" style={{ background: "var(--color-cream)" }}>
