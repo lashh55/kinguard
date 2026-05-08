@@ -29,21 +29,23 @@ function Onboarding() {
   return (
     <div className="min-h-screen relative">
       <PhotoPanel widthPct={35} />
-      <div className="px-5 py-8 max-w-xl mx-auto sm:mr-[35%] sm:ml-0 sm:pl-8">
-        <div className="flex flex-col items-center text-center">
-          <img src={logo} alt="ScamShield logo" className="w-44 h-44 object-contain" />
-          <h1 className="mt-2" style={{ color: "var(--color-rose)", fontSize: 38 }}>ScamShield</h1>
-          <p className="mt-1" style={{ color: "var(--color-rose)", letterSpacing: "0.08em", textTransform: "uppercase", fontSize: 14, fontWeight: 700 }}>
-            Protecting the people you love
-          </p>
-        </div>
+      <div className="sm:w-[65%]">
+        <div className="px-5 py-8 max-w-xl mx-auto">
+          <div className="flex flex-col items-center text-center">
+            <img src={logo} alt="ScamShield logo" className="w-44 h-44 object-contain" />
+            <h1 className="mt-2" style={{ color: "var(--color-rose)", fontSize: 38 }}>ScamShield</h1>
+            <p className="mt-1" style={{ color: "var(--color-rose)", letterSpacing: "0.08em", textTransform: "uppercase", fontSize: 14, fontWeight: 700 }}>
+              Protecting the people you love
+            </p>
+          </div>
 
-        <div className="mt-8">
-          {step === "role" && <RoleStep onPick={setStep} />}
-          {step === "senior" && <SeniorForm onCreated={(c) => { setCode(c); setStep("invite"); }} onBack={() => setStep("role")} />}
-          {step === "guardian" && <GuardianForm onLinked={() => setStep("linked")} onBack={() => setStep("role")} />}
-          {step === "invite" && <InviteCodeView code={code!} onContinue={() => navigate({ to: "/dashboard" })} />}
-          {step === "linked" && <LinkedView onContinue={() => navigate({ to: "/dashboard" })} />}
+          <div className="mt-8">
+            {step === "role" && <RoleStep onPick={setStep} />}
+            {step === "senior" && <SeniorForm onCreated={(c) => { setCode(c); setStep("invite"); }} onBack={() => setStep("role")} />}
+            {step === "guardian" && <GuardianForm onLinked={() => setStep("linked")} onBack={() => setStep("role")} />}
+            {step === "invite" && <InviteCodeView code={code!} onContinue={() => navigate({ to: "/dashboard" })} />}
+            {step === "linked" && <LinkedView onContinue={() => navigate({ to: "/dashboard" })} />}
+          </div>
         </div>
       </div>
     </div>
