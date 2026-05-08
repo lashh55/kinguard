@@ -121,6 +121,7 @@ function SeniorForm({ onCreated, onBack }: { onCreated: (code: string) => void; 
       });
       if (pErr) throw pErr;
       const { data: prof } = await supabase.from("profiles").select("invite_code").eq("id", uid).maybeSingle();
+      await refreshProfile();
       onCreated(prof?.invite_code || "—");
     } catch (e: any) {
       setErr(e?.message || "Something went wrong");
