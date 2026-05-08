@@ -4,6 +4,7 @@ import { ScreenShell } from "@/components/ScreenShell";
 import { useAuth } from "@/lib/auth";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
+import { normalizeStats } from "@/lib/badges";
 
 export const Route = createFileRoute("/ssn")({
   component: SsnShield,
@@ -80,6 +81,18 @@ function SsnShield() {
     if (profile?.id) {
       await supabase.from("profiles").update({ ssn_shield_progress: next }).eq("id", profile.id);
       if (next[key]) toast("✅ Step marked complete");
+
+      const allDone =
+        IRS_STEPS.every((s) => next[s.id]) &&
+        BUREAUS.every((b) => next[`freeze_${b.id}`]);
+      if (allDone && profile.role === "senior") {
+        const stats = normalizeStats(profile.challenge_stats);
+        if (!stats.badges_earned.includes("ssn_hero")) {
+          const updated = { ...stats, badges_earned: [...stats.badges_earned, "ssn_hero"] };
+          await supabase.from("profiles").update({ challenge_stats: updated as any }).eq("id", profile.id);
+          toast("🛡️ You earned the SSN Hero badge!");
+        }
+      }
       refreshProfile?.();
     }
   };
