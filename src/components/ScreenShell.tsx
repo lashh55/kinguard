@@ -9,7 +9,9 @@ export function ScreenShell({ children, withPhotoPanel = false }: { children: Re
   return (
     <div className="min-h-screen bg-background flex flex-col">
       {withPhotoPanel && <PhotoPanel widthPct={35} />}
-      <main className={`flex-1 pb-28 max-w-xl w-full mx-auto ${withPhotoPanel ? "sm:mr-[35%] sm:ml-0" : ""}`}>{children}</main>
+      <div className={`flex-1 ${withPhotoPanel ? "sm:w-[65%]" : "w-full"}`}>
+        <main className="pb-28 max-w-xl w-full mx-auto">{children}</main>
+      </div>
       <nav
         className="fixed bottom-0 left-0 right-0 border-t z-30"
         style={{ background: "var(--color-sky)" }}
