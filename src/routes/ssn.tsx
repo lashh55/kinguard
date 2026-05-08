@@ -124,7 +124,7 @@ function SsnShield() {
             <div className="mt-4 space-y-3">
               <div className="rounded-2xl p-4 text-white" style={{ background: levelColor(verdict.level) }}>
                 <p className="font-extrabold" style={{ fontSize: 22 }}>{verdict.title}</p>
-                <p className="mt-2" style={{ fontSize: 18 }}>{verdict.body}</p>
+                <p className="mt-2" style={{ fontSize: 18, whiteSpace: "pre-line" }}>{verdict.body}</p>
               </div>
               {verdict.level === "safe" ? (
                 <button className="btn-base btn-safe w-full" onClick={reset}>I'm Safe, Thanks</button>
