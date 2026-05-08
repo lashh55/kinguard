@@ -3,7 +3,8 @@ import { useEffect, useState } from "react";
 import { useAuth } from "@/lib/auth";
 import { supabase } from "@/integrations/supabase/client";
 import { ScreenShell, ScoreBadge } from "@/components/ScreenShell";
-import { toast } from "sonner";
+import { notifyGuardianSOS } from "@/lib/guardianAlerts";
+import logo from "@/assets/scamshield-logo.png";
 
 export const Route = createFileRoute("/dashboard")({
   component: Dashboard,
@@ -17,6 +18,14 @@ type Alert = {
   content_preview: string | null;
   status: string;
   created_at: string;
+};
+
+type Question = {
+  id: string;
+  question_text: string;
+  answer_a: string; answer_b: string; answer_c: string; answer_d: string;
+  correct_answer: "a" | "b" | "c" | "d";
+  explanation: string;
 };
 
 const TIPS = [
@@ -33,6 +42,8 @@ function Dashboard() {
   const { user, profile, loading } = useAuth();
   const navigate = useNavigate();
   const [alerts, setAlerts] = useState<Alert[]>([]);
+  const [question, setQuestion] = useState<Question | null>(null);
+  const [picked, setPicked] = useState<string | null>(null);
 
   useEffect(() => {
     if (!loading && !user) navigate({ to: "/" });
@@ -40,7 +51,7 @@ function Dashboard() {
 
   useEffect(() => {
     if (!profile) return;
-    if (profile.role === "guardian") return; // guardian view not in v1
+    if (profile.role === "guardian") return;
     (async () => {
       const { data } = await supabase
         .from("scam_alerts")
@@ -49,6 +60,17 @@ function Dashboard() {
         .order("created_at", { ascending: false })
         .limit(3);
       setAlerts((data as Alert[]) ?? []);
+    })();
+    (async () => {
+      // Pick rotation_group based on biweekly cycle
+      const weeks = Math.floor(Date.now() / (1000 * 60 * 60 * 24 * 14));
+      const group = (weeks % 6) + 1;
+      const { data } = await supabase
+        .from("quiz_questions")
+        .select("id,question_text,answer_a,answer_b,answer_c,answer_d,correct_answer,explanation")
+        .eq("rotation_group", group)
+        .limit(1);
+      if (data?.[0]) setQuestion(data[0] as Question);
     })();
   }, [profile]);
 
@@ -59,29 +81,33 @@ function Dashboard() {
     flagged.some((a) => a.scam_score >= 71) ? "danger" :
     flagged.length > 0 ? "warn" : "safe";
 
-  const shieldColor = status === "safe" ? "var(--color-safe)" : status === "warn" ? "var(--color-warn)" : "var(--color-danger)";
-  const shieldText = status === "safe" ? "You're protected today" : status === "warn" ? `${flagged.length} alert${flagged.length>1?"s":""} flagged` : "Action needed";
+  const statusText = status === "safe" ? "You're protected today" : status === "warn" ? `${flagged.length} alert${flagged.length>1?"s":""} flagged` : "Action needed";
+  const statusColor = status === "safe" ? "var(--color-safe)" : status === "warn" ? "var(--color-warn)" : "var(--color-danger)";
 
   const tip = TIPS[new Date().getDay() % TIPS.length];
-
   const blocked = alerts.filter((a) => a.status === "blocked").length;
   const checked = alerts.length;
 
+  const choose = async (letter: "a"|"b"|"c"|"d") => {
+    if (!question || picked) return;
+    setPicked(letter);
+    await supabase.from("quiz_attempts").insert({
+      user_id: profile.id,
+      question_id: question.id,
+      was_correct: letter === question.correct_answer,
+    });
+  };
+
   return (
-    <ScreenShell>
+    <ScreenShell withPhotoPanel>
       <header className="px-5 pt-6 pb-4">
         <h1>Hello, {profile.full_name.split(" ")[0]} 👋</h1>
       </header>
 
       <section className="px-5">
         <div className="card-soft text-center" style={{ background: "#fff" }}>
-          <div
-            className="mx-auto flex items-center justify-center rounded-3xl"
-            style={{ width: 140, height: 160, background: shieldColor, clipPath: "polygon(50% 0, 100% 18%, 100% 70%, 50% 100%, 0 70%, 0 18%)" }}
-          >
-            <span style={{ fontSize: 64 }}>🛡️</span>
-          </div>
-          <p className="font-bold mt-3" style={{ fontSize: 22 }}>{shieldText}</p>
+          <img src={logo} alt="ScamShield" style={{ width: 120, height: "auto" }} className="mx-auto" />
+          <p className="font-extrabold mt-3" style={{ fontSize: 22, color: statusColor }}>{statusText}</p>
         </div>
       </section>
 
@@ -94,8 +120,8 @@ function Dashboard() {
       <section className="px-5 mt-5">
         <h2 className="mb-2">Recent alerts</h2>
         {alerts.length === 0 ? (
-          <div className="card-soft text-center" style={{ color: "var(--color-muted-foreground)" }}>
-            No alerts yet. You're all clear!
+          <div className="card-soft text-center font-bold" style={{ color: "#2ECC71" }}>
+            ✅ No alerts yet. You're all clear!
           </div>
         ) : (
           <ul className="space-y-2">
@@ -107,10 +133,45 @@ function Dashboard() {
       <section className="px-5 mt-5 space-y-3">
         <Link to="/check" className="btn-base btn-primary w-full">🔍 Check a Suspicious Message</Link>
         <Link to="/ssn" className="btn-base btn-primary w-full">🛡️ Protect My SSN</Link>
-        <button className="btn-base btn-danger w-full" onClick={() => toast("✅ Your guardian has been notified")}>
+        <button className="btn-base btn-danger w-full" onClick={() => notifyGuardianSOS(profile.full_name)}>
           🆘 I Need Help
         </button>
       </section>
+
+      {question && (
+        <section className="px-5 mt-5">
+          <div className="card-soft" style={{ background: "var(--color-cream)" }}>
+            <p className="font-bold mb-1">🧠 This Week's Question</p>
+            <p className="font-bold" style={{ fontSize: 18 }}>{question.question_text}</p>
+            <div className="mt-3 space-y-2">
+              {(["a","b","c","d"] as const).map((l) => {
+                const txt = question[`answer_${l}` as const];
+                const isPicked = picked === l;
+                const isCorrect = l === question.correct_answer;
+                let cls = "btn-base btn-sky w-full justify-start text-left";
+                let style: React.CSSProperties = {};
+                if (picked) {
+                  if (isPicked && isCorrect) style = { background: "#2ECC71", color: "#fff" };
+                  else if (isPicked && !isCorrect) style = { background: "#E74C3C", color: "#fff" };
+                  else if (isCorrect) style = { background: "#2ECC71", color: "#fff", opacity: 0.85 };
+                }
+                return (
+                  <button key={l} className={cls} style={style} disabled={!!picked} onClick={() => choose(l)}>
+                    <span className="font-extrabold mr-2">{l.toUpperCase()}.</span> {txt}
+                  </button>
+                );
+              })}
+            </div>
+            {picked && (
+              <p className="mt-3" style={{ fontSize: 16 }}>
+                {picked === question.correct_answer ? "✅ Correct! " : "❌ Not quite. "}
+                {question.explanation}
+              </p>
+            )}
+            <Link to="/learn" className="btn-base btn-outline w-full mt-3">See All Questions</Link>
+          </div>
+        </section>
+      )}
 
       <section className="px-5 mt-5">
         <div className="card-soft" style={{ background: "var(--color-sky)" }}>
