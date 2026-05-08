@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { useMemo, useState } from "react";
 import { BadgeDef } from "@/lib/badges";
 import { toast } from "sonner";
 
@@ -128,4 +128,4 @@ export function useNotifyGuardiansOfBadge() {
   };
 }
 
-useEffect; // keep import (no-op for tree-shake friendliness in some bundlers)
+
