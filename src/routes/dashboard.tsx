@@ -4,6 +4,7 @@ import { useAuth } from "@/lib/auth";
 import { supabase } from "@/integrations/supabase/client";
 import { ScreenShell, ScoreBadge } from "@/components/ScreenShell";
 import { notifyGuardianSOS } from "@/lib/guardianAlerts";
+import { normalizeStats } from "@/lib/badges";
 import logo from "@/assets/scamshield-logo.png";
 
 export const Route = createFileRoute("/dashboard")({
@@ -18,6 +19,7 @@ type Alert = {
   content_preview: string | null;
   status: string;
   created_at: string;
+  senior_id: string;
 };
 
 type Question = {
@@ -41,28 +43,34 @@ const TIPS = [
 function Dashboard() {
   const { user, profile, loading } = useAuth();
   const navigate = useNavigate();
-  const [alerts, setAlerts] = useState<Alert[]>([]);
-  const [question, setQuestion] = useState<Question | null>(null);
-  const [picked, setPicked] = useState<string | null>(null);
 
   useEffect(() => {
     if (!loading && !user) navigate({ to: "/" });
   }, [loading, user, navigate]);
 
+  if (!profile) return <div className="min-h-screen flex items-center justify-center">Loading…</div>;
+
+  return profile.role === "guardian" ? <GuardianDashboard /> : <SeniorDashboard />;
+}
+
+function SeniorDashboard() {
+  const { profile } = useAuth();
+  const [alerts, setAlerts] = useState<Alert[]>([]);
+  const [question, setQuestion] = useState<Question | null>(null);
+  const [picked, setPicked] = useState<string | null>(null);
+
   useEffect(() => {
     if (!profile) return;
-    if (profile.role === "guardian") return;
     (async () => {
       const { data } = await supabase
         .from("scam_alerts")
-        .select("id,channel,scam_type,scam_score,content_preview,status,created_at")
+        .select("id,channel,scam_type,scam_score,content_preview,status,created_at,senior_id")
         .eq("senior_id", profile.id)
         .order("created_at", { ascending: false })
         .limit(3);
       setAlerts((data as Alert[]) ?? []);
     })();
     (async () => {
-      // Pick rotation_group based on biweekly cycle
       const weeks = Math.floor(Date.now() / (1000 * 60 * 60 * 24 * 14));
       const group = (weeks % 6) + 1;
       const { data } = await supabase
@@ -74,7 +82,7 @@ function Dashboard() {
     })();
   }, [profile]);
 
-  if (!profile) return <div className="min-h-screen flex items-center justify-center">Loading…</div>;
+  if (!profile) return null;
 
   const flagged = alerts.filter((a) => a.status === "flagged");
   const status: "safe" | "warn" | "danger" =
@@ -87,6 +95,9 @@ function Dashboard() {
   const tip = TIPS[new Date().getDay() % TIPS.length];
   const blocked = alerts.filter((a) => a.status === "blocked").length;
   const checked = alerts.length;
+
+  const stats = normalizeStats(profile.challenge_stats);
+  const streak = stats.current_streak_weeks;
 
   const choose = async (letter: "a"|"b"|"c"|"d") => {
     if (!question || picked) return;
@@ -108,6 +119,14 @@ function Dashboard() {
         <div className="card-soft text-center" style={{ background: "#fff" }}>
           <img src={logo} alt="ScamShield" style={{ width: 120, height: "auto" }} className="mx-auto" />
           <p className="font-extrabold mt-3" style={{ fontSize: 22, color: statusColor }}>{statusText}</p>
+        </div>
+      </section>
+
+      <section className="px-5 mt-4">
+        <div className="card-soft text-center" style={{ background: "var(--color-cream)" }}>
+          {streak > 0
+            ? <p className="font-bold" style={{ fontSize: 18 }}>🔥 {streak}-week streak! Keep it up!</p>
+            : <p className="font-bold" style={{ fontSize: 18 }}>Start a new streak this week! You've got this 💪</p>}
         </div>
       </section>
 
@@ -148,7 +167,6 @@ function Dashboard() {
                 const txt = question[`answer_${l}` as const];
                 const isPicked = picked === l;
                 const isCorrect = l === question.correct_answer;
-                let cls = "btn-base btn-sky w-full justify-start text-left";
                 let style: React.CSSProperties = {};
                 if (picked) {
                   if (isPicked && isCorrect) style = { background: "#2ECC71", color: "#fff" };
@@ -156,7 +174,7 @@ function Dashboard() {
                   else if (isCorrect) style = { background: "#2ECC71", color: "#fff", opacity: 0.85 };
                 }
                 return (
-                  <button key={l} className={cls} style={style} disabled={!!picked} onClick={() => choose(l)}>
+                  <button key={l} className="btn-base btn-sky w-full justify-start text-left" style={style} disabled={!!picked} onClick={() => choose(l)}>
                     <span className="font-extrabold mr-2">{l.toUpperCase()}.</span> {txt}
                   </button>
                 );
@@ -183,6 +201,169 @@ function Dashboard() {
   );
 }
 
+type LinkedSenior = {
+  id: string;
+  full_name: string;
+  invite_code: string | null;
+  relationship_label: string | null;
+  alertCount: number;
+  lastAlert?: Alert;
+  challenge_stats?: any;
+};
+
+function GuardianDashboard() {
+  const { profile } = useAuth();
+  const [seniors, setSeniors] = useState<LinkedSenior[]>([]);
+  const [recentAlerts, setRecentAlerts] = useState<Alert[]>([]);
+  const [seniorMap, setSeniorMap] = useState<Record<string, string>>({});
+
+  useEffect(() => {
+    if (!profile) return;
+    (async () => {
+      const { data: links } = await supabase
+        .from("guardian_relationships")
+        .select("senior_id,relationship_label")
+        .eq("guardian_id", profile.id)
+        .eq("status", "active");
+      const ids = (links ?? []).map((l: any) => l.senior_id as string);
+      if (!ids.length) { setSeniors([]); setRecentAlerts([]); return; }
+
+      const { data: profs } = await supabase
+        .from("profiles")
+        .select("id,full_name,invite_code,challenge_stats")
+        .in("id", ids);
+      const nameMap: Record<string, string> = {};
+      (profs ?? []).forEach((p: any) => { nameMap[p.id] = p.full_name; });
+      setSeniorMap(nameMap);
+
+      const { data: alerts } = await supabase
+        .from("scam_alerts")
+        .select("id,channel,scam_type,scam_score,content_preview,status,created_at,senior_id")
+        .in("senior_id", ids)
+        .order("created_at", { ascending: false })
+        .limit(10);
+      const allAlerts = (alerts ?? []) as Alert[];
+      setRecentAlerts(allAlerts);
+
+      const relMap = new Map((links ?? []).map((l: any) => [l.senior_id, l.relationship_label]));
+      const enriched: LinkedSenior[] = ids.map((id) => {
+        const p = (profs ?? []).find((p: any) => p.id === id) as any;
+        const sa = allAlerts.filter((a) => a.senior_id === id);
+        return {
+          id,
+          full_name: p?.full_name ?? "Senior",
+          invite_code: p?.invite_code ?? null,
+          relationship_label: relMap.get(id) ?? null,
+          alertCount: sa.filter((a) => a.status === "flagged").length,
+          lastAlert: sa[0],
+          challenge_stats: p?.challenge_stats,
+        };
+      });
+      setSeniors(enriched);
+    })();
+  }, [profile]);
+
+  if (!profile) return null;
+
+  return (
+    <ScreenShell withPhotoPanel>
+      <header className="px-5 pt-6 pb-4">
+        <h1>Hello, {profile.full_name.split(" ")[0]} 💙</h1>
+        <p className="mt-1" style={{ color: "var(--color-muted-foreground)" }}>
+          You're protecting {seniors.length} {seniors.length === 1 ? "loved one" : "loved ones"}.
+        </p>
+      </header>
+
+      <section className="px-5">
+        <h2 className="mb-2">My loved ones</h2>
+        {seniors.length === 0 ? (
+          <div className="card-soft text-center">
+            <p className="font-bold mb-2">No one linked yet</p>
+            <p className="text-sm" style={{ color: "var(--color-muted-foreground)" }}>
+              Ask your loved one for their 6-letter invite code, then sign in again to link.
+            </p>
+          </div>
+        ) : (
+          <ul className="space-y-3">
+            {seniors.map((s) => {
+              const stats = normalizeStats(s.challenge_stats);
+              return (
+                <li key={s.id} className="card-soft">
+                  <div className="flex items-start justify-between gap-3">
+                    <div>
+                      <p className="font-extrabold" style={{ fontSize: 19 }}>{s.full_name}</p>
+                      <p className="text-sm" style={{ color: "var(--color-muted-foreground)" }}>{s.relationship_label || "Family"}</p>
+                    </div>
+                    {s.alertCount > 0 ? (
+                      <span className="badge-score-danger px-3 py-1 rounded-full text-sm font-bold">{s.alertCount} flagged</span>
+                    ) : (
+                      <span className="badge-score-safe px-3 py-1 rounded-full text-sm font-bold">All clear</span>
+                    )}
+                  </div>
+                  <div className="grid grid-cols-3 gap-2 mt-3 text-center">
+                    <MiniStat label="Correct" value={stats.total_correct} />
+                    <MiniStat label="Streak" value={`${stats.current_streak_weeks}🔥`} />
+                    <MiniStat label="Badges" value={stats.badges_earned.length} />
+                  </div>
+                  {s.lastAlert && (
+                    <p className="text-sm mt-3" style={{ color: "var(--color-muted-foreground)" }}>
+                      Last alert: <span className="font-bold">{s.lastAlert.scam_type || "Suspicious message"}</span> · {timeAgo(s.lastAlert.created_at)}
+                    </p>
+                  )}
+                </li>
+              );
+            })}
+          </ul>
+        )}
+      </section>
+
+      <section className="px-5 mt-6">
+        <h2 className="mb-2">Recent alerts</h2>
+        {recentAlerts.length === 0 ? (
+          <div className="card-soft text-center font-bold" style={{ color: "#2ECC71" }}>
+            ✅ No alerts across your loved ones.
+          </div>
+        ) : (
+          <ul className="space-y-2">
+            {recentAlerts.slice(0, 5).map((a) => (
+              <li key={a.id} className="card-soft flex items-start gap-3">
+                <div style={{ fontSize: 28 }}>{channelIcon(a.channel)}</div>
+                <div className="flex-1 min-w-0">
+                  <div className="flex items-center gap-2">
+                    <span className="font-bold truncate">{seniorMap[a.senior_id] || "Senior"}</span>
+                    <ScoreBadge score={a.scam_score} />
+                  </div>
+                  <p className="text-sm truncate" style={{ color: "var(--color-muted-foreground)" }}>
+                    {a.scam_type || "Suspicious message"} — {a.content_preview}
+                  </p>
+                  <p className="text-xs mt-1" style={{ color: "var(--color-muted-foreground)" }}>{timeAgo(a.created_at)}</p>
+                </div>
+              </li>
+            ))}
+          </ul>
+        )}
+      </section>
+
+      <section className="px-5 mt-6 mb-4">
+        <Link to="/profile" className="btn-base btn-outline w-full">Manage my profile</Link>
+      </section>
+    </ScreenShell>
+  );
+}
+
+function MiniStat({ label, value }: { label: string; value: React.ReactNode }) {
+  return (
+    <div className="rounded-xl py-2" style={{ background: "var(--color-cream)" }}>
+      <p className="font-extrabold" style={{ fontSize: 18 }}>{value}</p>
+      <p className="text-xs" style={{ color: "var(--color-muted-foreground)" }}>{label}</p>
+    </div>
+  );
+}
+
+function channelIcon(channel: string) {
+  return channel === "ssn_request" ? "🛡️" : channel === "email" ? "📧" : channel === "sms" ? "📱" : channel === "call" ? "📞" : "🔍";
+}
+
 function Stat({ icon, label, value }: { icon: string; label: string; value: React.ReactNode }) {
   return (
     <div className="card-soft text-center" style={{ padding: 12 }}>
@@ -194,10 +375,9 @@ function Stat({ icon, label, value }: { icon: string; label: string; value: Reac
 }
 
 function AlertCard({ a }: { a: Alert }) {
-  const icon = a.channel === "ssn_request" ? "🛡️" : a.channel === "email" ? "📧" : a.channel === "sms" ? "📱" : a.channel === "call" ? "📞" : "🔍";
   return (
     <li className="card-soft flex items-start gap-3">
-      <div style={{ fontSize: 28 }}>{icon}</div>
+      <div style={{ fontSize: 28 }}>{channelIcon(a.channel)}</div>
       <div className="flex-1 min-w-0">
         <div className="flex items-center gap-2">
           <span className="font-bold truncate">{a.scam_type || "Suspicious message"}</span>
