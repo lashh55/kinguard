@@ -176,6 +176,7 @@ function SeniorForm({ onCreated, onBack }: { onCreated: (code: string) => void; 
 }
 
 function GuardianForm({ onLinked, onBack }: { onLinked: () => void; onBack: () => void }) {
+  const { refreshProfile } = useAuth();
   const [mode, setMode] = useState<"signup" | "signin">("signup");
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
