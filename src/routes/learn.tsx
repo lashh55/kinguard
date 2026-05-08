@@ -78,7 +78,7 @@ function Slides() {
       <h2 className="mb-2">ScamShield Lessons</h2>
       <div className="rounded-2xl overflow-hidden" style={{ background: "var(--color-cream)", minHeight: 280 }}>
         <img
-          src={SENIOR_PHOTOS[i % SENIOR_PHOTOS.length]}
+          src={SLIDE_IMAGES[i % SLIDE_IMAGES.length]}
           alt=""
           className="w-full object-cover"
           style={{ height: 200 }}
