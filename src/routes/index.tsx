@@ -158,6 +158,7 @@ function SeniorForm({ onCreated, onBack }: { onCreated: (code: string) => void; 
       <FormRow label="Password">
         <input className="input-large" type="password" required minLength={6} value={password} onChange={(e) => setPassword(e.target.value)} />
       </FormRow>
+      {mode === "signin" && <ForgotPassword email={email} />}
       {mode === "signup" && (
         <FormRow label="Text size">
           <div className="flex gap-2">
@@ -256,6 +257,7 @@ function GuardianForm({ onLinked, onBack }: { onLinked: () => void; onBack: () =
       <FormRow label="Password">
         <input className="input-large" type="password" required minLength={6} value={password} onChange={(e) => setPassword(e.target.value)} />
       </FormRow>
+      {mode === "signin" && <ForgotPassword email={email} />}
       <FormRow label="Relationship to senior (e.g. Daughter, Son, Friend)">
         <input className="input-large" required value={rel} onChange={(e) => setRel(e.target.value)} />
       </FormRow>
@@ -294,6 +296,37 @@ function LinkedView({ onContinue }: { onContinue: () => void }) {
       <h2>Connected! 💙</h2>
       <p>You're now protecting your loved one. You'll see their alerts in your dashboard.</p>
       <button className="btn-base btn-primary w-full" onClick={onContinue}>Go to dashboard</button>
+    </div>
+  );
+}
+
+function ForgotPassword({ email }: { email: string }) {
+  const [busy, setBusy] = useState(false);
+  const [msg, setMsg] = useState<string | null>(null);
+  const [err, setErr] = useState<string | null>(null);
+
+  const send = async () => {
+    setMsg(null); setErr(null);
+    if (!email.trim()) { setErr("Enter your email above first, then click Forgot password."); return; }
+    setBusy(true);
+    try {
+      const { error } = await supabase.auth.resetPasswordForEmail(email, {
+        redirectTo: `${window.location.origin}/reset-password`,
+      });
+      if (error) throw error;
+      setMsg("Check your email for a link to reset your password.");
+    } catch (e: any) {
+      setErr(e?.message || "Could not send reset email");
+    } finally { setBusy(false); }
+  };
+
+  return (
+    <div className="text-center">
+      <button type="button" className="text-sm underline" onClick={send} disabled={busy}>
+        {busy ? "Sending…" : "Forgot password?"}
+      </button>
+      {msg && <p className="text-sm mt-2" style={{ color: "var(--color-rose)" }}>{msg}</p>}
+      {err && <p className="text-sm font-bold mt-2" style={{ color: "var(--color-danger)" }}>{err}</p>}
     </div>
   );
 }
