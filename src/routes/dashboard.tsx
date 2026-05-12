@@ -5,7 +5,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { ScreenShell, ScoreBadge } from "@/components/ScreenShell";
 import { notifyGuardianSOS } from "@/lib/guardianAlerts";
 import { normalizeStats } from "@/lib/badges";
-import logo from "@/assets/scamshield-logo.png";
+import logo from "@/assets/kinguard-logo.png";
 
 export const Route = createFileRoute("/dashboard")({
   component: Dashboard,
@@ -117,7 +117,7 @@ function SeniorDashboard() {
 
       <section className="px-5">
         <div className="card-soft text-center" style={{ background: "#fff" }}>
-          <img src={logo} alt="ScamShield" style={{ width: 120, height: "auto" }} className="mx-auto" />
+          <img src={logo} alt="KinGuard" style={{ width: 120, height: "auto" }} className="mx-auto" />
           <p className="font-extrabold mt-3" style={{ fontSize: 22, color: statusColor }}>{statusText}</p>
         </div>
       </section>

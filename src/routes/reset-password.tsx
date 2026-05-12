@@ -1,7 +1,7 @@
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
-import logo from "@/assets/scamshield-logo.png";
+import logo from "@/assets/kinguard-logo.png";
 
 export const Route = createFileRoute("/reset-password")({
   component: ResetPassword,
@@ -47,7 +47,7 @@ function ResetPassword() {
     <div className="min-h-screen flex items-center justify-center px-5 py-8">
       <div className="w-full max-w-md">
         <div className="flex flex-col items-center text-center mb-6">
-          <img src={logo} alt="ScamShield logo" className="w-32 h-32 object-contain" />
+          <img src={logo} alt="KinGuard logo" className="w-32 h-32 object-contain" />
           <h1 className="mt-2" style={{ color: "var(--color-rose)", fontSize: 32 }}>Reset Password</h1>
         </div>
         {done ? (

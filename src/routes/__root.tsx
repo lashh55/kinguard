@@ -21,7 +21,7 @@ export const Route = createRootRoute({
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1, viewport-fit=cover" },
       { name: "theme-color", content: "#ACD0DC" },
-      { title: "ScamShield — Protecting the people you love" },
+      { title: "KinGuard — Protecting the people you love" },
       { name: "description", content: "Senior-focused scam protection with AI scam detection, caregiver alerts, and SSN Shield." },
     ],
     links: [

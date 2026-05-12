@@ -9,7 +9,7 @@ type AnalysisResult = {
   ssn_requested: boolean;
 };
 
-const SYSTEM_PROMPT = `You are ScamShield, a warm and trustworthy scam protection assistant for seniors. Analyze the provided content and return ONLY valid JSON with no extra text, no markdown, no backticks:
+const SYSTEM_PROMPT = `You are KinGuard, a warm and trustworthy scam protection assistant for seniors. Analyze the provided content and return ONLY valid JSON with no extra text, no markdown, no backticks:
 { "score": integer 0-100 (scam likelihood), "type": string (scam category, e.g. IRS Impersonation), "flags": array of strings (each red flag in plain language, starting with a warning emoji), "recommendation": string (1-2 sentences, warm and clear, written for a 70-year-old, tell them exactly what to do), "urgency": one of: "low", "medium", "high", "critical", "ssn_requested": boolean (true if the message asks for a Social Security Number) }`;
 
 export const analyzeScam = createServerFn({ method: "POST" })

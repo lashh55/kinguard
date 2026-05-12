@@ -4,7 +4,7 @@ import { useAuth } from "@/lib/auth";
 import { supabase } from "@/integrations/supabase/client";
 import { PhotoPanel } from "@/components/PhotoPanel";
 import { formatPhone, isValidPhone } from "@/lib/phone";
-import logo from "@/assets/scamshield-logo.png";
+import logo from "@/assets/kinguard-logo.png";
 
 export const Route = createFileRoute("/")({
   component: Onboarding,
@@ -32,8 +32,8 @@ function Onboarding() {
       <div className="sm:w-[65%]">
         <div className="px-5 py-8 max-w-xl mx-auto">
           <div className="flex flex-col items-center text-center">
-            <img src={logo} alt="ScamShield logo" className="w-44 h-44 object-contain" />
-            <h1 className="mt-2" style={{ color: "var(--color-rose)", fontSize: 38 }}>ScamShield</h1>
+            <img src={logo} alt="KinGuard logo" className="w-44 h-44 object-contain" />
+            <h1 className="mt-2" style={{ color: "var(--color-rose)", fontSize: 38 }}>KinGuard</h1>
             <p className="mt-1" style={{ color: "var(--color-rose)", letterSpacing: "0.08em", textTransform: "uppercase", fontSize: 14, fontWeight: 700 }}>
               Protecting the people you love
             </p>

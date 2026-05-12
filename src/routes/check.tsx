@@ -84,7 +84,7 @@ function CheckScreen() {
           </select>
         </label>
         <button className="btn-base btn-primary w-full" disabled={busy || !content.trim()}>
-          {busy ? "ScamShield is analyzing this for you…" : "🔍 Check This Now"}
+          {busy ? "KinGuard is analyzing this for you…" : "🔍 Check This Now"}
         </button>
         {err && <p className="font-bold" style={{ color: "var(--color-danger)" }}>{err}</p>}
       </form>
