@@ -16,7 +16,7 @@ const channelLabel = (c: string) =>
 /** Show formatted scam alert (mirrors what the guardian would see). */
 export function notifyGuardianScam(a: ScamAlertInput) {
   const msg =
-    `🚨 ScamShield Alert\n` +
+    `🚨 KinGuard Alert\n` +
     `${a.seniorName} flagged a suspicious message.\n\n` +
     `Type: ${a.scamType}\n` +
     `Risk Score: ${a.score}/100\n` +

@@ -84,7 +84,7 @@ function Slides() {
   const [i, setI] = useState(0);
   return (
     <section className="px-5 mt-2">
-      <h2 className="mb-2">ScamShield Lessons</h2>
+      <h2 className="mb-2">KinGuard Lessons</h2>
       <div className="rounded-2xl overflow-hidden" style={{ background: "var(--color-cream)" }}>
         <img
           src={SLIDE_IMAGES[i % SLIDE_IMAGES.length]}

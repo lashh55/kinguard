@@ -28,7 +28,7 @@ export function BadgeCelebration({
   );
 
   const share = async () => {
-    const text = `I just earned the ${badge.name} badge on ScamShield! I'm learning to stay safe from scams. 🛡️`;
+    const text = `I just earned the ${badge.name} badge on KinGuard! I'm learning to stay safe from scams. 🛡️`;
     try {
       await navigator.clipboard.writeText(text);
       toast("✅ Copied! Share with friends and family.");
@@ -123,7 +123,7 @@ export function useBadgeQueue() {
 export function useNotifyGuardiansOfBadge() {
   // Surfaced as toast for now (mirrors guardianAlerts pattern).
   return (seniorName: string, badge: BadgeDef) => {
-    const msg = `🌟 ${seniorName} just earned the ${badge.name} badge on ScamShield! They are building their scam protection skills.`;
+    const msg = `🌟 ${seniorName} just earned the ${badge.name} badge on KinGuard! They are building their scam protection skills.`;
     toast(msg, { duration: 4500, style: { whiteSpace: "pre-line" } });
   };
 }

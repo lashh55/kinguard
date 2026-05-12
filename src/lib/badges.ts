@@ -39,7 +39,7 @@ export const LEVEL_BADGES: BadgeDef[] = [
   { id: "scam_fighter",   name: "Scam Fighter",     icon: "⭐", color: "#F39C12", threshold: 50,  description: "Answer 50 questions correctly" },
   { id: "scam_guardian",  name: "Scam Guardian",    icon: "🏆", color: "#B27F7C", threshold: 100, description: "Answer 100 questions correctly" },
   { id: "scam_champion",  name: "Scam Champion",    icon: "💎", color: "#9B59B6", threshold: 200, description: "Answer 200 questions correctly" },
-  { id: "scamshield_legend", name: "ScamShield Legend", icon: "👑", color: "#FFD700", threshold: 500, description: "Answer 500 questions correctly" },
+  { id: "scamshield_legend", name: "KinGuard Legend", icon: "👑", color: "#FFD700", threshold: 500, description: "Answer 500 questions correctly" },
 ];
 
 export const BONUS_BADGES: BadgeDef[] = [

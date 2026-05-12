@@ -160,7 +160,7 @@ function ProfileScreen() {
           <p className="font-bold mb-1">Switch role</p>
           <p className="text-sm mb-3" style={{ color: "var(--color-muted-foreground)" }}>
             You're currently a <span className="font-bold">{isSenior ? "Protected Senior" : "Guardian"}</span>.
-            {isSenior ? " Switch to Guardian to help protect someone else." : " Switch to Protected Senior to use the full ScamShield tools."}
+            {isSenior ? " Switch to Guardian to help protect someone else." : " Switch to Protected Senior to use the full KinGuard tools."}
           </p>
           <button className="btn-base btn-sky w-full" disabled={switching} onClick={switchRole}>
             {switching ? "Switching…" : isSenior ? "🔄 Switch to Guardian" : "🔄 Switch to Protected Senior"}
