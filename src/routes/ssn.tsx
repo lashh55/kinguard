@@ -131,6 +131,9 @@ function SsnShield() {
 
           {asker && asker !== "unsure" && !dir && (
             <div className="mt-4 space-y-2">
+              <div className="rounded-2xl px-4 py-3 text-center font-extrabold" style={{ background: "#ACD0DC", fontSize: 17 }}>
+                You selected: {ASKERS.find((a) => a.id === asker)?.label}
+              </div>
               <p className="font-bold">Did YOU contact them first, or did they contact you?</p>
               <button className="btn-base btn-sky w-full" onClick={() => setDir("self")}>✅ I contacted them first</button>
               <button className="btn-base btn-sky w-full" onClick={() => setDir("them")}>⚠️ They contacted me</button>
