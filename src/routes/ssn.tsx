@@ -143,6 +143,16 @@ function SsnShield() {
 
           {verdict && (
             <div className="mt-4 space-y-3">
+              {asker && asker !== "unsure" && (
+                <div className="rounded-2xl px-4 py-3 text-center font-extrabold" style={{ background: "#ACD0DC", fontSize: 17 }}>
+                  You selected: {ASKERS.find((a) => a.id === asker)?.label}
+                </div>
+              )}
+              {dir && (
+                <div className="rounded-2xl px-4 py-3 text-center font-extrabold" style={{ background: "#ACD0DC", fontSize: 17 }}>
+                  You selected: {dir === "self" ? "I contacted them first" : "They contacted me"}
+                </div>
+              )}
               <div className="rounded-2xl p-4 text-white" style={{ background: levelColor(verdict.level) }}>
                 <p className="font-extrabold" style={{ fontSize: 22 }}>{verdict.title}</p>
                 <p className="mt-2" style={{ fontSize: 18, whiteSpace: "pre-line" }}>{verdict.body}</p>
