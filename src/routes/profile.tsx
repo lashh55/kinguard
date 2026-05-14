@@ -1,4 +1,4 @@
-import { createFileRoute, useNavigate } from "@tanstack/react-router";
+import { createFileRoute, useNavigate, Link } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import { useAuth } from "@/lib/auth";
 import { ScreenShell } from "@/components/ScreenShell";
@@ -23,7 +23,8 @@ function ProfileScreen() {
   const { user, profile, loading, signOut, refreshProfile } = useAuth();
   const navigate = useNavigate();
   const [guardians, setGuardians] = useState<GuardianRow[]>([]);
-  const [switching, setSwitching] = useState(false);
+  const [confirmDelete, setConfirmDelete] = useState(false);
+  const [deleting, setDeleting] = useState(false);
 
   useEffect(() => { if (!loading && !user) navigate({ to: "/" }); }, [loading, user, navigate]);
 
@@ -44,7 +45,6 @@ function ProfileScreen() {
       }
       setGuardians(rows);
 
-      // Team Player bonus badge
       if (rows.length >= 2) {
         const stats = normalizeStats(profile.challenge_stats);
         if (!stats.badges_earned.includes("team_player")) {
@@ -71,23 +71,18 @@ function ProfileScreen() {
     toast("✅ Guardian removed");
   };
 
-  const switchRole = async () => {
-    if (!profile) return;
-    const target: "senior" | "guardian" = profile.role === "senior" ? "guardian" : "senior";
-    const confirmMsg = target === "guardian"
-      ? "Switch to Guardian mode? You'll be helping protect a loved one."
-      : "Switch to Protected Senior mode? You'll get scam protection tools and a personal invite code.";
-    if (!confirm(confirmMsg)) return;
-    setSwitching(true);
+  const deleteAccount = async () => {
+    setDeleting(true);
     try {
-      await supabase.from("profiles").update({ role: target }).eq("id", profile.id);
-      await refreshProfile();
-      toast(`✅ Switched to ${target === "senior" ? "Protected Senior" : "Guardian"}`);
-      navigate({ to: "/dashboard" });
-    } catch {
-      toast("Could not switch. Try again.");
+      const { error } = await supabase.rpc("delete_my_account");
+      if (error) throw error;
+      await supabase.auth.signOut();
+      toast("Your account has been deleted.");
+      navigate({ to: "/" });
+    } catch (e: any) {
+      toast(e?.message || "Could not delete account. Try again.");
     } finally {
-      setSwitching(false);
+      setDeleting(false);
     }
   };
 
@@ -107,7 +102,7 @@ function ProfileScreen() {
               <div className="text-3xl font-extrabold tracking-widest text-center py-3 rounded-xl"
                 style={{ background: "var(--color-sky)" }}>{profile.invite_code}</div>
               <p className="text-sm mt-2" style={{ color: "var(--color-muted-foreground)" }}>
-                Share this with as many family members as you want — they can each link to you.
+                Share this with up to 5 family members. Each can link to you with this same code.
               </p>
             </div>
           )}
@@ -126,7 +121,7 @@ function ProfileScreen() {
             </div>
 
             <div className="card-soft">
-              <h2 className="mb-2">My Guardians</h2>
+              <h2 className="mb-2">My Guardians: {guardians.length}/5</h2>
               {guardians.length === 0 ? (
                 <p style={{ color: "var(--color-muted-foreground)" }}>
                   No one is linked yet. Share your invite code above.
@@ -144,32 +139,61 @@ function ProfileScreen() {
                   ))}
                 </ul>
               )}
+              {guardians.length >= 5 && (
+                <p className="text-sm mt-3 font-bold" style={{ color: "var(--color-warn)" }}>
+                  You've reached the maximum of 5 guardians. Remove one before adding another.
+                </p>
+              )}
+            </div>
+
+            <div className="card-soft">
+              <p className="font-bold mb-2">Text size</p>
+              <div className="flex gap-2">
+                <button className={`btn-base flex-1 ${profile.font_size==="large"?"btn-sky":"btn-outline"}`} onClick={() => setFont("large")}>Large</button>
+                <button className={`btn-base flex-1 ${profile.font_size==="extra_large"?"btn-sky":"btn-outline"}`} onClick={() => setFont("extra_large")}>Extra Large</button>
+              </div>
             </div>
           </>
         )}
 
-        <div className="card-soft">
-          <p className="font-bold mb-2">Text size</p>
-          <div className="flex gap-2">
-            <button className={`btn-base flex-1 ${profile.font_size==="large"?"btn-sky":"btn-outline"}`} onClick={() => setFont("large")}>Large</button>
-            <button className={`btn-base flex-1 ${profile.font_size==="extra_large"?"btn-sky":"btn-outline"}`} onClick={() => setFont("extra_large")}>Extra Large</button>
-          </div>
-        </div>
-
-        <div className="card-soft">
-          <p className="font-bold mb-1">Switch role</p>
-          <p className="text-sm mb-3" style={{ color: "var(--color-muted-foreground)" }}>
-            You're currently a <span className="font-bold">{isSenior ? "Protected Senior" : "Guardian"}</span>.
-            {isSenior ? " Switch to Guardian to help protect someone else." : " Switch to Protected Senior to use the full KinGuard tools."}
-          </p>
-          <button className="btn-base btn-sky w-full" disabled={switching} onClick={switchRole}>
-            {switching ? "Switching…" : isSenior ? "🔄 Switch to Guardian" : "🔄 Switch to Protected Senior"}
-          </button>
-        </div>
+        <Link to="/privacy" className="btn-base btn-outline w-full">🔒 Privacy & Safety</Link>
 
         <button className="btn-base btn-outline w-full" onClick={async () => { await signOut(); navigate({ to: "/" }); }}>
           Sign Out
         </button>
+
+        {!confirmDelete ? (
+          <button
+            className="btn-base w-full"
+            style={{ background: "#E74C3C", color: "#fff" }}
+            onClick={() => setConfirmDelete(true)}
+          >
+            🗑️ Delete My Account
+          </button>
+        ) : (
+          <div className="card-soft" style={{ border: "2px solid #E74C3C" }}>
+            <p className="font-extrabold" style={{ fontSize: 19, color: "#E74C3C" }}>Are you sure?</p>
+            <p className="mt-2">This will permanently delete your account and all your data. This cannot be undone.</p>
+            <div className="grid grid-cols-1 gap-2 mt-4">
+              <button
+                className="btn-base w-full"
+                style={{ background: "#E74C3C", color: "#fff" }}
+                disabled={deleting}
+                onClick={deleteAccount}
+              >
+                {deleting ? "Deleting…" : "Yes, Delete My Account"}
+              </button>
+              <button
+                className="btn-base w-full"
+                style={{ background: "#9b9b9b", color: "#fff" }}
+                disabled={deleting}
+                onClick={() => setConfirmDelete(false)}
+              >
+                Cancel
+              </button>
+            </div>
+          </div>
+        )}
       </section>
     </ScreenShell>
   );

@@ -102,7 +102,12 @@ function SsnShield() {
 
   return (
     <ScreenShell>
-      <header className="px-5 pt-6 pb-3">
+      <section className="px-5 pt-4">
+        <div className="rounded-2xl p-3 text-center" style={{ background: "#E74C3C", color: "#fff", fontSize: 15 }}>
+          🚨 KinGuard will <span className="font-extrabold">NEVER</span> ask for your Social Security Number. We do not collect it, store it, or transmit it — ever. If you see any field asking for your Social Security Number you are NOT on KinGuard. Leave that page immediately and report it to us at <span className="underline">safety@getkinguard.com</span>.
+        </div>
+      </section>
+      <header className="px-5 pt-4 pb-3">
         <h1 style={{ color: "var(--color-rose)" }}>🛡️ SSN Shield</h1>
         <p className="mt-1">You have the power to protect yourself. We'll show you how.</p>
       </header>
