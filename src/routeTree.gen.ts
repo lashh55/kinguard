@@ -11,8 +11,8 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as SsnRouteImport } from './routes/ssn'
 import { Route as ResetPasswordRouteImport } from './routes/reset-password'
-import { Route as ProfileRouteImport } from './routes/profile'
 import { Route as PrivacyRouteImport } from './routes/privacy'
+import { Route as ProfileRouteImport } from './routes/profile'
 import { Route as LearnRouteImport } from './routes/learn'
 import { Route as DashboardRouteImport } from './routes/dashboard'
 import { Route as CheckRouteImport } from './routes/check'
@@ -28,14 +28,14 @@ const ResetPasswordRoute = ResetPasswordRouteImport.update({
   path: '/reset-password',
   getParentRoute: () => rootRouteImport,
 } as any)
-const ProfileRoute = ProfileRouteImport.update({
-  id: '/profile',
-  path: '/profile',
-  getParentRoute: () => rootRouteImport,
-} as any)
 const PrivacyRoute = PrivacyRouteImport.update({
   id: '/privacy',
   path: '/privacy',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ProfileRoute = ProfileRouteImport.update({
+  id: '/profile',
+  path: '/profile',
   getParentRoute: () => rootRouteImport,
 } as any)
 const LearnRoute = LearnRouteImport.update({
@@ -64,8 +64,8 @@ export interface FileRoutesByFullPath {
   '/check': typeof CheckRoute
   '/dashboard': typeof DashboardRoute
   '/learn': typeof LearnRoute
-  '/privacy': typeof PrivacyRoute
   '/profile': typeof ProfileRoute
+  '/privacy': typeof PrivacyRoute
   '/reset-password': typeof ResetPasswordRoute
   '/ssn': typeof SsnRoute
 }
@@ -74,8 +74,8 @@ export interface FileRoutesByTo {
   '/check': typeof CheckRoute
   '/dashboard': typeof DashboardRoute
   '/learn': typeof LearnRoute
-  '/privacy': typeof PrivacyRoute
   '/profile': typeof ProfileRoute
+  '/privacy': typeof PrivacyRoute
   '/reset-password': typeof ResetPasswordRoute
   '/ssn': typeof SsnRoute
 }
@@ -85,8 +85,8 @@ export interface FileRoutesById {
   '/check': typeof CheckRoute
   '/dashboard': typeof DashboardRoute
   '/learn': typeof LearnRoute
-  '/privacy': typeof PrivacyRoute
   '/profile': typeof ProfileRoute
+  '/privacy': typeof PrivacyRoute
   '/reset-password': typeof ResetPasswordRoute
   '/ssn': typeof SsnRoute
 }
@@ -97,8 +97,8 @@ export interface FileRouteTypes {
     | '/check'
     | '/dashboard'
     | '/learn'
-    | '/privacy'
     | '/profile'
+    | '/privacy'
     | '/reset-password'
     | '/ssn'
   fileRoutesByTo: FileRoutesByTo
@@ -107,8 +107,8 @@ export interface FileRouteTypes {
     | '/check'
     | '/dashboard'
     | '/learn'
-    | '/privacy'
     | '/profile'
+    | '/privacy'
     | '/reset-password'
     | '/ssn'
   id:
@@ -117,8 +117,8 @@ export interface FileRouteTypes {
     | '/check'
     | '/dashboard'
     | '/learn'
-    | '/privacy'
     | '/profile'
+    | '/privacy'
     | '/reset-password'
     | '/ssn'
   fileRoutesById: FileRoutesById
@@ -128,8 +128,8 @@ export interface RootRouteChildren {
   CheckRoute: typeof CheckRoute
   DashboardRoute: typeof DashboardRoute
   LearnRoute: typeof LearnRoute
-  PrivacyRoute: typeof PrivacyRoute
   ProfileRoute: typeof ProfileRoute
+  PrivacyRoute: typeof PrivacyRoute
   ResetPasswordRoute: typeof ResetPasswordRoute
   SsnRoute: typeof SsnRoute
 }
@@ -150,18 +150,18 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ResetPasswordRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/profile': {
-      id: '/profile'
-      path: '/profile'
-      fullPath: '/profile'
-      preLoaderRoute: typeof ProfileRouteImport
-      parentRoute: typeof rootRouteImport
-    }
     '/privacy': {
       id: '/privacy'
       path: '/privacy'
       fullPath: '/privacy'
       preLoaderRoute: typeof PrivacyRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/profile': {
+      id: '/profile'
+      path: '/profile'
+      fullPath: '/profile'
+      preLoaderRoute: typeof ProfileRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/learn': {
@@ -200,20 +200,11 @@ const rootRouteChildren: RootRouteChildren = {
   CheckRoute: CheckRoute,
   DashboardRoute: DashboardRoute,
   LearnRoute: LearnRoute,
-  PrivacyRoute: PrivacyRoute,
   ProfileRoute: ProfileRoute,
+  PrivacyRoute: PrivacyRoute,
   ResetPasswordRoute: ResetPasswordRoute,
   SsnRoute: SsnRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
-
-import type { getRouter } from './router.tsx'
-import type { createStart } from '@tanstack/react-start'
-declare module '@tanstack/react-start' {
-  interface Register {
-    ssr: true
-    router: Awaited<ReturnType<typeof getRouter>>
-  }
-}
