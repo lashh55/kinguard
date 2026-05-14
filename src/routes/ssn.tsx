@@ -252,23 +252,27 @@ function SsnShield() {
               const done = !!progress[key];
               return (
                 <div key={b.id} className="rounded-2xl p-3 border-2" style={{
-                  borderColor: done ? "var(--color-safe)" : "var(--color-border)",
-                  background: done ? "color-mix(in oklab, var(--color-safe) 12%, #fff)" : "#fff",
+                  borderColor: done ? "#2ECC71" : "var(--color-border)",
+                  background: done ? "#EAFAF1" : "#fff",
                 }}>
                   <div className="flex items-center justify-between">
                     <div className="flex items-center gap-2">
                       <span className="text-2xl">{b.icon}</span>
                       <span className="font-extrabold" style={{ fontSize: 19 }}>{b.name}</span>
                     </div>
-                    {done && <span className="font-bold" style={{ color: "var(--color-safe)" }}>✓ Done</span>}
+                    {done && <span className="font-bold" style={{ color: "#2ECC71" }}>✓ Done</span>}
                   </div>
                   <p className="mt-1 text-sm">📞 {b.phone}</p>
                   <div className="mt-3 grid grid-cols-1 gap-2">
                     <a href={b.url} target="_blank" rel="noopener noreferrer" className="btn-base btn-sky w-full">
                       → Freeze on {b.name}
                     </a>
-                    <button className="btn-base btn-outline w-full" onClick={() => toggle(key)}>
-                      {done ? "Mark not done" : "I froze it ✓"}
+                    <button
+                      className="btn-base w-full"
+                      style={done ? { background: "#2ECC71", color: "#fff" } : undefined}
+                      onClick={() => toggle(key)}
+                    >
+                      {done ? "✅ Frozen — Done!" : "I froze it ✓"}
                     </button>
                   </div>
                 </div>
@@ -277,9 +281,9 @@ function SsnShield() {
           </div>
 
           {freezeDone === 3 && (
-            <div className="rounded-2xl p-4 mt-4 text-white" style={{ background: "var(--color-safe)" }}>
-              <p className="font-extrabold" style={{ fontSize: 20 }}>🎉 All three frozen!</p>
-              <p className="mt-1">Your credit is locked down. Scammers can't open accounts in your name.</p>
+            <div className="rounded-2xl p-4 mt-4 text-white" style={{ background: "#2ECC71" }}>
+              <p className="font-extrabold" style={{ fontSize: 20 }}>🛡️ Excellent!</p>
+              <p className="mt-1">All three credit bureaus are frozen. Your credit is now protected even if someone has your Social Security Number.</p>
             </div>
           )}
         </div>
