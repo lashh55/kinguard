@@ -77,7 +77,7 @@ function PrivacyPage() {
         <ul className="list-disc pl-5 space-y-1">
           <li>Passwords encrypted, never plain text</li>
           <li>All data transmitted over HTTPS</li>
-          <li>Row-level security — only you see your own data</li>
+          <li>Your data is locked to your account only — no other user can see it</li>
           <li>Guardians see only what you permit</li>
           <li>Submitted messages not shared externally</li>
         </ul>
