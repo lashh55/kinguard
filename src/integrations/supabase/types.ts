@@ -236,6 +236,7 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      delete_my_account: { Args: never; Returns: undefined }
       gen_invite_code: { Args: never; Returns: string }
       is_guardian_of: { Args: { _senior: string }; Returns: boolean }
       link_guardian_by_code: {
