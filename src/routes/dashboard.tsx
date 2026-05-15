@@ -245,6 +245,13 @@ function GuardianDashboard() {
       const allAlerts = (alerts ?? []) as Alert[];
       setRecentAlerts(allAlerts);
 
+      // Mark this guardian as having checked alerts now
+      await supabase
+        .from("guardian_relationships")
+        .update({ last_alert_view_at: new Date().toISOString() })
+        .eq("guardian_id", profile.id)
+        .eq("status", "active");
+
       const enriched: LinkedSenior[] = rows.map((r) => {
         const sa = allAlerts.filter((a) => a.senior_id === r.id);
         return {
