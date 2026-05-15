@@ -140,22 +140,55 @@ function ProfileScreen() {
             </div>
 
             <div className="card-soft">
-              <h2 className="mb-2">My Guardians: {guardians.length}/5</h2>
+              <h2 className="mb-2">
+                My Guardians: {guardians.length}/5
+                {guardians.length < 5 && (
+                  <span className="text-sm font-normal" style={{ color: "var(--color-muted-foreground)" }}>
+                    {" "}— {5 - guardians.length} slot{5 - guardians.length === 1 ? "" : "s"} available
+                  </span>
+                )}
+              </h2>
               {guardians.length === 0 ? (
                 <p style={{ color: "var(--color-muted-foreground)" }}>
                   No one is linked yet. Share your invite code above.
                 </p>
               ) : (
-                <ul className="space-y-2">
-                  {guardians.map((g) => (
-                    <li key={g.id} className="flex items-center justify-between gap-3 rounded-xl p-3 border-2" style={{ borderColor: "var(--color-border)" }}>
-                      <div>
-                        <p className="font-bold">{g.guardian_name}</p>
-                        <p className="text-sm" style={{ color: "var(--color-muted-foreground)" }}>{g.relationship_label || "Family"}</p>
-                      </div>
-                      <button className="btn-base btn-outline" style={{ minHeight: 44, padding: "8px 14px", fontSize: 16 }} onClick={() => removeGuardian(g.id)}>Remove</button>
-                    </li>
-                  ))}
+                <ul className="space-y-3">
+                  {guardians.map((g) => {
+                    const active = lastActiveLabel(g.last_alert_view_at);
+                    const dot = active.status === "active" ? "🟢" : active.status === "inactive" ? "🟡" : "🔴";
+                    const dotLabel = active.status === "active" ? "Active" : active.status === "inactive" ? "Inactive" : "Never checked";
+                    const phoneFmt = g.phone_last4 ? `•••-•••-${g.phone_last4}` : "Phone not provided";
+                    return (
+                      <li key={g.link_id} className="rounded-xl p-3 border-2" style={{ borderColor: "var(--color-border)" }}>
+                        <div className="flex items-start justify-between gap-3">
+                          <div className="min-w-0">
+                            <p className="font-extrabold" style={{ fontSize: 18 }}>{g.full_name}</p>
+                            <p className="text-sm font-bold mt-0.5" style={{ color: "var(--color-rose)" }}>
+                              {g.relationship_label || "Family"}
+                            </p>
+                            <p className="text-sm font-mono mt-1">{phoneFmt}</p>
+                            <p className="text-sm mt-2" style={{ color: "var(--color-muted-foreground)" }}>
+                              Linked: {formatDate(g.linked_at)}
+                            </p>
+                            <p className="text-sm" style={{ color: "var(--color-muted-foreground)" }}>
+                              {active.text}
+                            </p>
+                          </div>
+                          <span className="text-sm font-bold whitespace-nowrap" title={dotLabel}>
+                            {dot} {dotLabel}
+                          </span>
+                        </div>
+                        <button
+                          className="btn-base w-full mt-3"
+                          style={{ background: "#E74C3C", color: "#fff", minHeight: 44 }}
+                          onClick={() => removeGuardian(g.link_id)}
+                        >
+                          🗑️ Remove Guardian
+                        </button>
+                      </li>
+                    );
+                  })}
                 </ul>
               )}
               {guardians.length >= 5 && (
