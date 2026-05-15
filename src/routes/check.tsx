@@ -32,7 +32,9 @@ function CheckScreen() {
 
   const submit = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (!channel) { setTypeError(true); return; }
     if (!content.trim()) return;
+    setTypeError(false);
     setBusy(true); setErr(null); setResult(null);
     try {
       const r = await analyzeScam({ data: { content, channel } });
