@@ -14,6 +14,33 @@ export type Database = {
   }
   public: {
     Tables: {
+      guardian_activity: {
+        Row: {
+          action_type: string
+          alert_id: string | null
+          created_at: string
+          guardian_id: string
+          id: string
+          senior_id: string
+        }
+        Insert: {
+          action_type: string
+          alert_id?: string | null
+          created_at?: string
+          guardian_id: string
+          id?: string
+          senior_id: string
+        }
+        Update: {
+          action_type?: string
+          alert_id?: string | null
+          created_at?: string
+          guardian_id?: string
+          id?: string
+          senior_id?: string
+        }
+        Relationships: []
+      }
       guardian_relationships: {
         Row: {
           created_at: string
@@ -241,6 +268,18 @@ export type Database = {
     Functions: {
       delete_my_account: { Args: never; Returns: undefined }
       gen_invite_code: { Args: never; Returns: string }
+      get_guardian_activity_feed: {
+        Args: never
+        Returns: {
+          action_type: string
+          alert_id: string
+          alert_scam_type: string
+          created_at: string
+          guardian_first_name: string
+          guardian_id: string
+          id: string
+        }[]
+      }
       get_linked_seniors: {
         Args: never
         Returns: {
@@ -259,6 +298,7 @@ export type Database = {
           linked_at: string
           phone_last4: string
           relationship_label: string
+          total_alerts_reviewed: number
         }[]
       }
       is_guardian_of: { Args: { _senior: string }; Returns: boolean }
