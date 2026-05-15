@@ -7,6 +7,7 @@ import { toast } from "sonner";
 import { ScoreCard } from "@/components/ScoreCard";
 import { BadgeCelebration, useBadgeQueue, useNotifyGuardiansOfBadge } from "@/components/BadgeCelebration";
 import { applyAnswer, applyPerfectWeek, normalizeStats } from "@/lib/badges";
+import { LearningTreeWithTooltip } from "@/components/LearningTree";
 import slide1 from "@/assets/slide-1.png";
 import slide2 from "@/assets/slide-2.png";
 import slide3 from "@/assets/slide-3.png";
@@ -60,6 +61,16 @@ function LearnScreen() {
       <header className="px-5 pt-6 pb-3"><h1>🎓 Learn</h1></header>
       <Slides />
       <Cards />
+      {profile && (
+        <section className="px-5 mt-6">
+          <h2 className="mb-2">My Tree 🌳</h2>
+          <div className="card-soft">
+            <div style={{ height: 120 }}>
+              <LearningTreeWithTooltip stats={normalizeStats(profile.challenge_stats)} size={120} showLabel />
+            </div>
+          </div>
+        </section>
+      )}
       {profile && (
         <section className="px-5 mt-6">
           <h2 className="mb-2">My Progress 🏅</h2>
