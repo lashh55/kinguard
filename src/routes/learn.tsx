@@ -7,6 +7,7 @@ import { toast } from "sonner";
 import { ScoreCard } from "@/components/ScoreCard";
 import { BadgeCelebration, useBadgeQueue, useNotifyGuardiansOfBadge } from "@/components/BadgeCelebration";
 import { applyAnswer, applyPerfectWeek, normalizeStats } from "@/lib/badges";
+import { LearningTreeWithTooltip } from "@/components/LearningTree";
 import slide1 from "@/assets/slide-1.png";
 import slide2 from "@/assets/slide-2.png";
 import slide3 from "@/assets/slide-3.png";
