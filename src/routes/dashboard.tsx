@@ -252,6 +252,29 @@ function GuardianDashboard() {
         .eq("guardian_id", profile.id)
         .eq("status", "active");
 
+      // Log app_open for each linked senior
+      const openRows = ids.map((sid) => ({
+        guardian_id: profile.id,
+        senior_id: sid,
+        action_type: "app_open" as const,
+      }));
+      if (openRows.length) await supabase.from("guardian_activity").insert(openRows);
+
+      // Log alert_view for the most recent visible alert per senior (counts as "reviewed")
+      const seenSeniors = new Set<string>();
+      const viewRows: { guardian_id: string; senior_id: string; alert_id: string; action_type: "alert_view" }[] = [];
+      for (const a of allAlerts) {
+        if (seenSeniors.has(a.senior_id)) continue;
+        seenSeniors.add(a.senior_id);
+        viewRows.push({
+          guardian_id: profile.id,
+          senior_id: a.senior_id,
+          alert_id: a.id,
+          action_type: "alert_view",
+        });
+      }
+      if (viewRows.length) await supabase.from("guardian_activity").insert(viewRows);
+
       const enriched: LinkedSenior[] = rows.map((r) => {
         const sa = allAlerts.filter((a) => a.senior_id === r.id);
         return {
