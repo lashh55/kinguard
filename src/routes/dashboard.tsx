@@ -324,7 +324,7 @@ function GuardianDashboard() {
                     <ScoreBadge score={a.scam_score} />
                   </div>
                   <p className="text-sm truncate" style={{ color: "var(--color-muted-foreground)" }}>
-                    {a.scam_type || "Suspicious message"} — {a.content_preview}
+                    {a.scam_type || "Suspicious message"} — {(a.content_preview ?? "").slice(0, 100)}{(a.content_preview ?? "").length > 100 ? "…" : ""}
                   </p>
                   <p className="text-xs mt-1" style={{ color: "var(--color-muted-foreground)" }}>{timeAgo(a.created_at)}</p>
                 </div>
