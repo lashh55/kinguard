@@ -21,30 +21,60 @@ type GuardianRow = {
   phone_last4: string | null;
   linked_at: string;
   last_alert_view_at: string | null;
+  total_alerts_reviewed: number;
+};
+
+type ActivityRow = {
+  id: string;
+  guardian_id: string;
+  guardian_first_name: string;
+  alert_id: string | null;
+  alert_scam_type: string | null;
+  action_type: "app_open" | "alert_view" | "acknowledged" | "called_senior" | "blocked_sender";
+  created_at: string;
 };
 
 function formatDate(iso: string) {
   return new Date(iso).toLocaleDateString(undefined, { month: "short", day: "numeric", year: "numeric" });
 }
 
+function timeframe(iso: string | null): string {
+  if (!iso) return "Never";
+  const days = Math.floor((Date.now() - new Date(iso).getTime()) / 86400000);
+  if (days <= 0) {
+    const d = new Date(iso);
+    return `Today ${d.toLocaleTimeString(undefined, { hour: "numeric", minute: "2-digit" }).toLowerCase()}`;
+  }
+  if (days === 1) return "Yesterday";
+  if (days < 7) return `${days} days ago`;
+  if (days < 30) { const w = Math.floor(days / 7); return `${w} week${w === 1 ? "" : "s"} ago`; }
+  if (days < 365) { const m = Math.floor(days / 30); return `${m} month${m === 1 ? "" : "s"} ago`; }
+  const y = Math.floor(days / 365); return `${y} year${y === 1 ? "" : "s"} ago`;
+}
+
 function lastActiveLabel(iso: string | null): { text: string; status: "active" | "inactive" | "never" } {
   if (!iso) return { text: "Never checked alerts", status: "never" };
   const days = Math.floor((Date.now() - new Date(iso).getTime()) / 86400000);
-  let text: string;
-  if (days <= 0) text = "Last active: Today";
-  else if (days === 1) text = "Last active: Yesterday";
-  else if (days < 7) text = `Last active: ${days} days ago`;
-  else if (days < 30) text = `Last active: ${Math.floor(days / 7)} week${Math.floor(days / 7) === 1 ? "" : "s"} ago`;
-  else if (days < 365) text = `Last active: ${Math.floor(days / 30)} month${Math.floor(days / 30) === 1 ? "" : "s"} ago`;
-  else text = `Last active: ${Math.floor(days / 365)} year${Math.floor(days / 365) === 1 ? "" : "s"} ago`;
   const status: "active" | "inactive" = days <= 7 ? "active" : "inactive";
-  return { text, status };
+  return { text: `Last active: ${timeframe(iso)}`, status };
+}
+
+function actionLabel(a: ActivityRow): string {
+  const who = a.guardian_first_name;
+  switch (a.action_type) {
+    case "app_open": return `${who} opened the app`;
+    case "alert_view": return `${who} viewed your ${a.alert_scam_type || "alert"}`;
+    case "acknowledged": return `${who} acknowledged your ${a.alert_scam_type || "alert"}`;
+    case "called_senior": return `${who} called you about your ${a.alert_scam_type || "alert"}`;
+    case "blocked_sender": return `${who} blocked the sender of your ${a.alert_scam_type || "alert"}`;
+  }
 }
 
 function ProfileScreen() {
   const { user, profile, loading, signOut, refreshProfile } = useAuth();
   const navigate = useNavigate();
   const [guardians, setGuardians] = useState<GuardianRow[]>([]);
+  const [activity, setActivity] = useState<ActivityRow[]>([]);
   const [confirmDelete, setConfirmDelete] = useState(false);
   const [deleting, setDeleting] = useState(false);
 
@@ -53,9 +83,13 @@ function ProfileScreen() {
   useEffect(() => {
     if (!profile || profile.role !== "senior") return;
     (async () => {
-      const { data } = await supabase.rpc("get_my_guardians");
-      const rows = (data ?? []) as GuardianRow[];
+      const [{ data: gData }, { data: aData }] = await Promise.all([
+        supabase.rpc("get_my_guardians"),
+        supabase.rpc("get_guardian_activity_feed"),
+      ]);
+      const rows = (gData ?? []) as GuardianRow[];
       setGuardians(rows);
+      setActivity((aData ?? []) as ActivityRow[]);
 
       if (rows.length >= 2) {
         const stats = normalizeStats(profile.challenge_stats);
@@ -174,6 +208,12 @@ function ProfileScreen() {
                             <p className="text-sm" style={{ color: "var(--color-muted-foreground)" }}>
                               {active.text}
                             </p>
+                            <p className="text-sm mt-1">
+                              <span className="font-bold">Last viewed your alerts:</span> {timeframe(g.last_alert_view_at)}
+                            </p>
+                            <p className="text-sm">
+                              <span className="font-bold">Total alerts reviewed:</span> {g.total_alerts_reviewed ?? 0}
+                            </p>
                           </div>
                           <span className="text-sm font-bold whitespace-nowrap" title={dotLabel}>
                             {dot} {dotLabel}
@@ -195,6 +235,51 @@ function ProfileScreen() {
                 <p className="text-sm mt-3 font-bold" style={{ color: "var(--color-warn)" }}>
                   You've reached the maximum of 5 guardians. Remove one before adding another.
                 </p>
+              )}
+            </div>
+
+            {(() => {
+              const slotsAvail = 5 - guardians.length;
+              const neglected = guardians.filter((g) => {
+                if (g.last_alert_view_at) return false;
+                const days = Math.floor((Date.now() - new Date(g.linked_at).getTime()) / 86400000);
+                return days > 30;
+              });
+              if (neglected.length === 0) return null;
+              return (
+                <div className="card-soft" style={{ background: "var(--color-cream)", border: "2px solid var(--color-warn)" }}>
+                  {neglected.map((g) => (
+                    <p key={g.link_id} className="mb-2 last:mb-0">
+                      👋 <span className="font-bold">{g.full_name}</span> hasn't checked your alerts yet. You may want to remind them or add a more active guardian. You have {slotsAvail} guardian slot{slotsAvail === 1 ? "" : "s"} available.
+                    </p>
+                  ))}
+                </div>
+              );
+            })()}
+
+            <div className="card-soft">
+              <h2 className="mb-2">Guardian Activity</h2>
+              {activity.length === 0 && guardians.every((g) => g.last_alert_view_at) ? (
+                <p style={{ color: "var(--color-muted-foreground)" }}>
+                  No guardian activity yet. When your guardians open the app or view your alerts, you'll see it here.
+                </p>
+              ) : (
+                <ul className="space-y-2">
+                  {activity.map((a) => (
+                    <li key={a.id} className="text-sm flex items-start gap-2">
+                      <span style={{ color: "var(--color-muted-foreground)" }}>•</span>
+                      <span className="flex-1">
+                        {actionLabel(a)} — <span style={{ color: "var(--color-muted-foreground)" }}>{timeframe(a.created_at)}</span>
+                      </span>
+                    </li>
+                  ))}
+                  {guardians.filter((g) => !g.last_alert_view_at).map((g) => (
+                    <li key={g.link_id} className="text-sm flex items-start gap-2">
+                      <span>🔴</span>
+                      <span className="flex-1">{g.full_name} has never viewed your alerts</span>
+                    </li>
+                  ))}
+                </ul>
               )}
             </div>
 
