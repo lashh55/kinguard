@@ -74,6 +74,7 @@ function ProfileScreen() {
   const { user, profile, loading, signOut, refreshProfile } = useAuth();
   const navigate = useNavigate();
   const [guardians, setGuardians] = useState<GuardianRow[]>([]);
+  const [activity, setActivity] = useState<ActivityRow[]>([]);
   const [confirmDelete, setConfirmDelete] = useState(false);
   const [deleting, setDeleting] = useState(false);
 
@@ -82,9 +83,13 @@ function ProfileScreen() {
   useEffect(() => {
     if (!profile || profile.role !== "senior") return;
     (async () => {
-      const { data } = await supabase.rpc("get_my_guardians");
-      const rows = (data ?? []) as GuardianRow[];
+      const [{ data: gData }, { data: aData }] = await Promise.all([
+        supabase.rpc("get_my_guardians"),
+        supabase.rpc("get_guardian_activity_feed"),
+      ]);
+      const rows = (gData ?? []) as GuardianRow[];
       setGuardians(rows);
+      setActivity((aData ?? []) as ActivityRow[]);
 
       if (rows.length >= 2) {
         const stats = normalizeStats(profile.challenge_stats);
