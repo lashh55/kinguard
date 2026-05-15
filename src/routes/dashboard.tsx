@@ -138,7 +138,7 @@ function SeniorDashboard() {
           <div style={{ height: 60 }}>
             <LearningTree stats={stats} size={60} />
           </div>
-          <div className="text-xs mt-1" style={{ color: "var(--color-muted-foreground)" }}>My Tree</div>
+          <div className="text-xs mt-1" style={{ color: "var(--color-muted-foreground)" }}>Knowledge Tree</div>
         </Link>
       </section>
 
