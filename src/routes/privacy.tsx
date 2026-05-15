@@ -15,7 +15,7 @@ function PrivacyPage() {
   return (
     <ScreenShell>
       <header className="px-5 pt-6 pb-3">
-        <h1>🔒 Privacy & Safety</h1>
+        <h1>🔒 Privacy &amp; Safety</h1>
       </header>
 
       {/* SSN Banner */}
@@ -61,7 +61,7 @@ function PrivacyPage() {
         </div>
       </Section>
 
-      <Section title="How We Use Your Information">
+      <Section title="How We Use Your Information" bg="#ACD0DC">
         <p>We use your data only to:</p>
         <ul className="list-disc pl-5 mt-2 space-y-1">
           <li>Analyze messages for scam threats</li>
@@ -73,7 +73,7 @@ function PrivacyPage() {
         <p className="mt-2 font-bold">We do not sell, share, or use your data for advertising. Ever.</p>
       </Section>
 
-      <Section title="How Data Is Stored">
+      <Section title="How Data Is Stored" bg="#F6EFC1">
         <ul className="list-disc pl-5 space-y-1">
           <li>Passwords encrypted, never plain text</li>
           <li>All data transmitted over HTTPS</li>
@@ -83,7 +83,7 @@ function PrivacyPage() {
         </ul>
       </Section>
 
-      <Section title="Guardian System & Trust">
+      <Section title="Guardian System &amp; Trust" bg="#DFC18F">
         <ul className="list-disc pl-5 space-y-1">
           <li>Maximum 5 guardians per senior</li>
           <li>Only the senior can invite guardians</li>
@@ -93,7 +93,7 @@ function PrivacyPage() {
         </ul>
       </Section>
 
-      <Section title="AI Analysis">
+      <Section title="AI Analysis" bg="#ACD0DC">
         <ul className="list-disc pl-5 space-y-1">
           <li>Messages analyzed without personal info</li>
           <li>Text content only — no attachments</li>
@@ -102,7 +102,7 @@ function PrivacyPage() {
         </ul>
       </Section>
 
-      <Section title="Your Rights">
+      <Section title="Your Rights" bg="#F6EFC1">
         <ul className="list-disc pl-5 space-y-1">
           <li>Access your data anytime</li>
           <li>Correct name, phone, email in settings</li>
@@ -113,15 +113,15 @@ function PrivacyPage() {
         <p className="mt-2">Contact: <span className="font-bold">privacy@getkinguard.com</span></p>
       </Section>
 
-      <Section title="Children">
+      <Section title="Children" bg="#F5E6E5">
         <p>KinGuard is for adults 18 and older only. Contact <span className="font-bold">safety@getkinguard.com</span> to report underage accounts.</p>
       </Section>
 
-      <Section title="Contact">
+      <Section title="Contact" bg="#B27F7C" color="#fff">
         <p>privacy@getkinguard.com</p>
         <p>safety@getkinguard.com</p>
         <p className="mt-2 font-bold">empowerment4ai | empowerment4life LLC</p>
-        <p className="text-sm mt-2" style={{ color: "var(--color-muted-foreground)" }}>Last updated: May 2026</p>
+        <p className="text-sm mt-2" style={{ color: "rgba(255,255,255,0.8)" }}>Last updated: May 2026</p>
       </Section>
 
       <div className="px-5 mt-6 mb-4">
@@ -131,11 +131,11 @@ function PrivacyPage() {
   );
 }
 
-function Section({ title, children }: { title: string; children: React.ReactNode }) {
+function Section({ title, children, bg, color }: { title: string; children: React.ReactNode; bg?: string; color?: string }) {
   return (
     <section className="px-5 mt-5">
       <h2 className="mb-2">{title}</h2>
-      <div className="card-soft">{children}</div>
+      <div className="card-soft" style={{ background: bg, color: color }}>{children}</div>
     </section>
   );
 }
