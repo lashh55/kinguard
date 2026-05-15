@@ -273,7 +273,7 @@ function GuardianDashboard() {
       </header>
 
       <section className="px-5">
-        <h2 className="mb-2">My loved ones</h2>
+        <h2 className="mb-2">You are protecting</h2>
         {seniors.length === 0 ? (
           <div className="card-soft text-center">
             <p className="font-bold mb-2">No one linked yet</p>
@@ -283,34 +283,26 @@ function GuardianDashboard() {
           </div>
         ) : (
           <ul className="space-y-3">
-            {seniors.map((s) => {
-              const stats = normalizeStats(s.challenge_stats);
-              return (
-                <li key={s.id} className="card-soft">
-                  <div className="flex items-start justify-between gap-3">
-                    <div>
-                      <p className="font-extrabold" style={{ fontSize: 19 }}>{s.full_name}</p>
-                      <p className="text-sm" style={{ color: "var(--color-muted-foreground)" }}>{s.relationship_label || "Family"}</p>
-                    </div>
-                    {s.alertCount > 0 ? (
-                      <span className="badge-score-danger px-3 py-1 rounded-full text-sm font-bold">{s.alertCount} flagged</span>
-                    ) : (
-                      <span className="badge-score-safe px-3 py-1 rounded-full text-sm font-bold">All clear</span>
-                    )}
+            {seniors.map((s) => (
+              <li key={s.id} className="card-soft">
+                <div className="flex items-start justify-between gap-3">
+                  <div>
+                    <p className="font-extrabold" style={{ fontSize: 19 }}>You are protecting: {s.full_name}</p>
+                    <p className="text-sm" style={{ color: "var(--color-muted-foreground)" }}>{s.relationship_label || "Family"}</p>
                   </div>
-                  <div className="grid grid-cols-3 gap-2 mt-3 text-center">
-                    <MiniStat label="Correct" value={stats.total_correct} />
-                    <MiniStat label="Streak" value={`${stats.current_streak_weeks}🔥`} />
-                    <MiniStat label="Badges" value={stats.badges_earned.length} />
-                  </div>
-                  {s.lastAlert && (
-                    <p className="text-sm mt-3" style={{ color: "var(--color-muted-foreground)" }}>
-                      Last alert: <span className="font-bold">{s.lastAlert.scam_type || "Suspicious message"}</span> · {timeAgo(s.lastAlert.created_at)}
-                    </p>
+                  {s.alertCount > 0 ? (
+                    <span className="badge-score-danger px-3 py-1 rounded-full text-sm font-bold">{s.alertCount} flagged</span>
+                  ) : (
+                    <span className="badge-score-safe px-3 py-1 rounded-full text-sm font-bold">All clear</span>
                   )}
-                </li>
-              );
-            })}
+                </div>
+                {s.lastAlert && (
+                  <p className="text-sm mt-3" style={{ color: "var(--color-muted-foreground)" }}>
+                    Last alert: <span className="font-bold">{s.lastAlert.scam_type || "Suspicious message"}</span> · {timeAgo(s.lastAlert.created_at)}
+                  </p>
+                )}
+              </li>
+            ))}
           </ul>
         )}
       </section>
