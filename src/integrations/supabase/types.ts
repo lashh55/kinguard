@@ -238,6 +238,14 @@ export type Database = {
     Functions: {
       delete_my_account: { Args: never; Returns: undefined }
       gen_invite_code: { Args: never; Returns: string }
+      get_linked_seniors: {
+        Args: never
+        Returns: {
+          first_name: string
+          id: string
+          relationship_label: string
+        }[]
+      }
       is_guardian_of: { Args: { _senior: string }; Returns: boolean }
       link_guardian_by_code: {
         Args: { _code: string; _label: string }

@@ -226,20 +226,14 @@ function GuardianDashboard() {
   useEffect(() => {
     if (!profile) return;
     (async () => {
-      const { data: links } = await supabase
-        .from("guardian_relationships")
-        .select("senior_id,relationship_label")
-        .eq("guardian_id", profile.id)
-        .eq("status", "active");
-      const ids = (links ?? []).map((l: any) => l.senior_id as string);
+      // Privacy-safe lookup: returns only id, first_name, relationship_label
+      const { data: linked } = await supabase.rpc("get_linked_seniors");
+      const rows = (linked ?? []) as { id: string; first_name: string; relationship_label: string | null }[];
+      const ids = rows.map((r) => r.id);
       if (!ids.length) { setSeniors([]); setRecentAlerts([]); return; }
 
-      const { data: profs } = await supabase
-        .from("profiles")
-        .select("id,full_name,invite_code,challenge_stats")
-        .in("id", ids);
       const nameMap: Record<string, string> = {};
-      (profs ?? []).forEach((p: any) => { nameMap[p.id] = p.full_name; });
+      rows.forEach((r) => { nameMap[r.id] = r.first_name; });
       setSeniorMap(nameMap);
 
       const { data: alerts } = await supabase
@@ -251,18 +245,16 @@ function GuardianDashboard() {
       const allAlerts = (alerts ?? []) as Alert[];
       setRecentAlerts(allAlerts);
 
-      const relMap = new Map((links ?? []).map((l: any) => [l.senior_id, l.relationship_label]));
-      const enriched: LinkedSenior[] = ids.map((id) => {
-        const p = (profs ?? []).find((p: any) => p.id === id) as any;
-        const sa = allAlerts.filter((a) => a.senior_id === id);
+      const enriched: LinkedSenior[] = rows.map((r) => {
+        const sa = allAlerts.filter((a) => a.senior_id === r.id);
         return {
-          id,
-          full_name: p?.full_name ?? "Senior",
-          invite_code: p?.invite_code ?? null,
-          relationship_label: relMap.get(id) ?? null,
+          id: r.id,
+          full_name: r.first_name,
+          invite_code: null,
+          relationship_label: r.relationship_label,
           alertCount: sa.filter((a) => a.status === "flagged").length,
           lastAlert: sa[0],
-          challenge_stats: p?.challenge_stats,
+          challenge_stats: undefined,
         };
       });
       setSeniors(enriched);
@@ -281,7 +273,7 @@ function GuardianDashboard() {
       </header>
 
       <section className="px-5">
-        <h2 className="mb-2">My loved ones</h2>
+        <h2 className="mb-2">You are protecting</h2>
         {seniors.length === 0 ? (
           <div className="card-soft text-center">
             <p className="font-bold mb-2">No one linked yet</p>
@@ -291,34 +283,26 @@ function GuardianDashboard() {
           </div>
         ) : (
           <ul className="space-y-3">
-            {seniors.map((s) => {
-              const stats = normalizeStats(s.challenge_stats);
-              return (
-                <li key={s.id} className="card-soft">
-                  <div className="flex items-start justify-between gap-3">
-                    <div>
-                      <p className="font-extrabold" style={{ fontSize: 19 }}>{s.full_name}</p>
-                      <p className="text-sm" style={{ color: "var(--color-muted-foreground)" }}>{s.relationship_label || "Family"}</p>
-                    </div>
-                    {s.alertCount > 0 ? (
-                      <span className="badge-score-danger px-3 py-1 rounded-full text-sm font-bold">{s.alertCount} flagged</span>
-                    ) : (
-                      <span className="badge-score-safe px-3 py-1 rounded-full text-sm font-bold">All clear</span>
-                    )}
+            {seniors.map((s) => (
+              <li key={s.id} className="card-soft">
+                <div className="flex items-start justify-between gap-3">
+                  <div>
+                    <p className="font-extrabold" style={{ fontSize: 19 }}>You are protecting: {s.full_name}</p>
+                    <p className="text-sm" style={{ color: "var(--color-muted-foreground)" }}>{s.relationship_label || "Family"}</p>
                   </div>
-                  <div className="grid grid-cols-3 gap-2 mt-3 text-center">
-                    <MiniStat label="Correct" value={stats.total_correct} />
-                    <MiniStat label="Streak" value={`${stats.current_streak_weeks}🔥`} />
-                    <MiniStat label="Badges" value={stats.badges_earned.length} />
-                  </div>
-                  {s.lastAlert && (
-                    <p className="text-sm mt-3" style={{ color: "var(--color-muted-foreground)" }}>
-                      Last alert: <span className="font-bold">{s.lastAlert.scam_type || "Suspicious message"}</span> · {timeAgo(s.lastAlert.created_at)}
-                    </p>
+                  {s.alertCount > 0 ? (
+                    <span className="badge-score-danger px-3 py-1 rounded-full text-sm font-bold">{s.alertCount} flagged</span>
+                  ) : (
+                    <span className="badge-score-safe px-3 py-1 rounded-full text-sm font-bold">All clear</span>
                   )}
-                </li>
-              );
-            })}
+                </div>
+                {s.lastAlert && (
+                  <p className="text-sm mt-3" style={{ color: "var(--color-muted-foreground)" }}>
+                    Last alert: <span className="font-bold">{s.lastAlert.scam_type || "Suspicious message"}</span> · {timeAgo(s.lastAlert.created_at)}
+                  </p>
+                )}
+              </li>
+            ))}
           </ul>
         )}
       </section>
@@ -340,7 +324,7 @@ function GuardianDashboard() {
                     <ScoreBadge score={a.scam_score} />
                   </div>
                   <p className="text-sm truncate" style={{ color: "var(--color-muted-foreground)" }}>
-                    {a.scam_type || "Suspicious message"} — {a.content_preview}
+                    {a.scam_type || "Suspicious message"} — {(a.content_preview ?? "").slice(0, 100)}{(a.content_preview ?? "").length > 100 ? "…" : ""}
                   </p>
                   <p className="text-xs mt-1" style={{ color: "var(--color-muted-foreground)" }}>{timeAgo(a.created_at)}</p>
                 </div>
