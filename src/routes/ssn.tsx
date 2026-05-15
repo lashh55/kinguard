@@ -186,6 +186,14 @@ function SsnShield() {
             <p className="mt-1">Tax-return identity theft costs seniors billions every year. The IP PIN is the single best protection — and it's free.</p>
           </div>
 
+          {/* Progress bar */}
+          <div className="mt-3 rounded-full overflow-hidden" style={{ background: "#EFE6D4", height: 10 }}>
+            <div
+              className="h-full transition-all duration-500"
+              style={{ width: `${(irsDone / IRS_STEPS.length) * 100}%`, background: "#DFC18F" }}
+            />
+          </div>
+
           <ol className="mt-4 space-y-2">
             {IRS_STEPS.map((s, i) => {
               const done = !!progress[s.id];
@@ -193,23 +201,25 @@ function SsnShield() {
                 <li key={s.id}>
                   <button
                     onClick={() => toggle(s.id)}
-                    className="w-full text-left flex items-start gap-3 rounded-2xl p-3 border-2"
+                    className="w-full text-left flex items-start gap-3 rounded-2xl p-3 border-2 transition-colors"
                     style={{
-                      borderColor: done ? "var(--color-safe)" : "var(--color-border)",
-                      background: done ? "color-mix(in oklab, var(--color-safe) 12%, #fff)" : "#fff",
+                      borderColor: done ? "#2ECC71" : "var(--color-border)",
+                      background: done ? "#2ECC71" : "#fff",
+                      color: done ? "#fff" : undefined,
                     }}
                   >
                     <span
                       className="flex-shrink-0 rounded-full flex items-center justify-center font-extrabold"
                       style={{
                         width: 36, height: 36,
-                        background: done ? "var(--color-safe)" : "var(--color-tan)",
+                        background: done ? "#2ECC71" : "var(--color-tan)",
                         color: "#fff",
+                        border: done ? "2px solid #fff" : "none",
                       }}
                     >
-                      {done ? "✓" : i + 1}
+                      {done ? <span key="check" className="inline-block animate-scale-in">✓</span> : i + 1}
                     </span>
-                    <span className="font-bold pt-1" style={{ fontSize: 17 }}>{s.label}</span>
+                    <span className="font-bold pt-1" style={{ fontSize: 17, color: done ? "#fff" : undefined }}>{s.label}</span>
                   </button>
                   {s.url && (
                     <a href={s.url} target="_blank" rel="noopener noreferrer" className="btn-base btn-sky w-full mt-2">
@@ -222,9 +232,8 @@ function SsnShield() {
           </ol>
 
           {irsDone === IRS_STEPS.length && (
-            <div className="rounded-2xl p-4 mt-4 text-white" style={{ background: "var(--color-safe)" }}>
-              <p className="font-extrabold" style={{ fontSize: 20 }}>🎉 You did it!</p>
-              <p className="mt-1">Your IRS IP PIN is set up. Update it every January.</p>
+            <div className="rounded-2xl p-4 mt-4 text-white font-bold text-center" style={{ background: "#2ECC71", fontSize: 17 }}>
+              🎉 All steps complete! Your IRS PIN is set up. You're protected!
             </div>
           )}
         </div>
