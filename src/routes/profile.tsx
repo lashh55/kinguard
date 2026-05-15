@@ -238,6 +238,51 @@ function ProfileScreen() {
               )}
             </div>
 
+            {(() => {
+              const slotsAvail = 5 - guardians.length;
+              const neglected = guardians.filter((g) => {
+                if (g.last_alert_view_at) return false;
+                const days = Math.floor((Date.now() - new Date(g.linked_at).getTime()) / 86400000);
+                return days > 30;
+              });
+              if (neglected.length === 0) return null;
+              return (
+                <div className="card-soft" style={{ background: "var(--color-cream)", border: "2px solid var(--color-warn)" }}>
+                  {neglected.map((g) => (
+                    <p key={g.link_id} className="mb-2 last:mb-0">
+                      👋 <span className="font-bold">{g.full_name}</span> hasn't checked your alerts yet. You may want to remind them or add a more active guardian. You have {slotsAvail} guardian slot{slotsAvail === 1 ? "" : "s"} available.
+                    </p>
+                  ))}
+                </div>
+              );
+            })()}
+
+            <div className="card-soft">
+              <h2 className="mb-2">Guardian Activity</h2>
+              {activity.length === 0 && guardians.every((g) => g.last_alert_view_at) ? (
+                <p style={{ color: "var(--color-muted-foreground)" }}>
+                  No guardian activity yet. When your guardians open the app or view your alerts, you'll see it here.
+                </p>
+              ) : (
+                <ul className="space-y-2">
+                  {activity.map((a) => (
+                    <li key={a.id} className="text-sm flex items-start gap-2">
+                      <span style={{ color: "var(--color-muted-foreground)" }}>•</span>
+                      <span className="flex-1">
+                        {actionLabel(a)} — <span style={{ color: "var(--color-muted-foreground)" }}>{timeframe(a.created_at)}</span>
+                      </span>
+                    </li>
+                  ))}
+                  {guardians.filter((g) => !g.last_alert_view_at).map((g) => (
+                    <li key={g.link_id} className="text-sm flex items-start gap-2">
+                      <span>🔴</span>
+                      <span className="flex-1">{g.full_name} has never viewed your alerts</span>
+                    </li>
+                  ))}
+                </ul>
+              )}
+            </div>
+
             <div className="card-soft">
               <p className="font-bold mb-2">Text size</p>
               <div className="flex gap-2">
