@@ -208,6 +208,12 @@ function ProfileScreen() {
                             <p className="text-sm" style={{ color: "var(--color-muted-foreground)" }}>
                               {active.text}
                             </p>
+                            <p className="text-sm mt-1">
+                              <span className="font-bold">Last viewed your alerts:</span> {timeframe(g.last_alert_view_at)}
+                            </p>
+                            <p className="text-sm">
+                              <span className="font-bold">Total alerts reviewed:</span> {g.total_alerts_reviewed ?? 0}
+                            </p>
                           </div>
                           <span className="text-sm font-bold whitespace-nowrap" title={dotLabel}>
                             {dot} {dotLabel}
