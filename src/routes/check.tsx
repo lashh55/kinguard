@@ -24,10 +24,11 @@ function CheckScreen() {
   const { profile } = useAuth();
   const navigate = useNavigate();
   const [content, setContent] = useState("");
-  const [channel, setChannel] = useState("email");
+  const [channel, setChannel] = useState("");
   const [busy, setBusy] = useState(false);
   const [result, setResult] = useState<Result | null>(null);
   const [err, setErr] = useState<string | null>(null);
+  const [typeError, setTypeError] = useState(false);
 
   const submit = async (e: React.FormEvent) => {
     e.preventDefault();
