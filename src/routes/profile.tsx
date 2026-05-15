@@ -21,24 +21,53 @@ type GuardianRow = {
   phone_last4: string | null;
   linked_at: string;
   last_alert_view_at: string | null;
+  total_alerts_reviewed: number;
+};
+
+type ActivityRow = {
+  id: string;
+  guardian_id: string;
+  guardian_first_name: string;
+  alert_id: string | null;
+  alert_scam_type: string | null;
+  action_type: "app_open" | "alert_view" | "acknowledged" | "called_senior" | "blocked_sender";
+  created_at: string;
 };
 
 function formatDate(iso: string) {
   return new Date(iso).toLocaleDateString(undefined, { month: "short", day: "numeric", year: "numeric" });
 }
 
+function timeframe(iso: string | null): string {
+  if (!iso) return "Never";
+  const days = Math.floor((Date.now() - new Date(iso).getTime()) / 86400000);
+  if (days <= 0) {
+    const d = new Date(iso);
+    return `Today ${d.toLocaleTimeString(undefined, { hour: "numeric", minute: "2-digit" }).toLowerCase()}`;
+  }
+  if (days === 1) return "Yesterday";
+  if (days < 7) return `${days} days ago`;
+  if (days < 30) { const w = Math.floor(days / 7); return `${w} week${w === 1 ? "" : "s"} ago`; }
+  if (days < 365) { const m = Math.floor(days / 30); return `${m} month${m === 1 ? "" : "s"} ago`; }
+  const y = Math.floor(days / 365); return `${y} year${y === 1 ? "" : "s"} ago`;
+}
+
 function lastActiveLabel(iso: string | null): { text: string; status: "active" | "inactive" | "never" } {
   if (!iso) return { text: "Never checked alerts", status: "never" };
   const days = Math.floor((Date.now() - new Date(iso).getTime()) / 86400000);
-  let text: string;
-  if (days <= 0) text = "Last active: Today";
-  else if (days === 1) text = "Last active: Yesterday";
-  else if (days < 7) text = `Last active: ${days} days ago`;
-  else if (days < 30) text = `Last active: ${Math.floor(days / 7)} week${Math.floor(days / 7) === 1 ? "" : "s"} ago`;
-  else if (days < 365) text = `Last active: ${Math.floor(days / 30)} month${Math.floor(days / 30) === 1 ? "" : "s"} ago`;
-  else text = `Last active: ${Math.floor(days / 365)} year${Math.floor(days / 365) === 1 ? "" : "s"} ago`;
   const status: "active" | "inactive" = days <= 7 ? "active" : "inactive";
-  return { text, status };
+  return { text: `Last active: ${timeframe(iso)}`, status };
+}
+
+function actionLabel(a: ActivityRow): string {
+  const who = a.guardian_first_name;
+  switch (a.action_type) {
+    case "app_open": return `${who} opened the app`;
+    case "alert_view": return `${who} viewed your ${a.alert_scam_type || "alert"}`;
+    case "acknowledged": return `${who} acknowledged your ${a.alert_scam_type || "alert"}`;
+    case "called_senior": return `${who} called you about your ${a.alert_scam_type || "alert"}`;
+    case "blocked_sender": return `${who} blocked the sender of your ${a.alert_scam_type || "alert"}`;
+  }
 }
 
 function ProfileScreen() {
