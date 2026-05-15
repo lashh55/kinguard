@@ -226,20 +226,14 @@ function GuardianDashboard() {
   useEffect(() => {
     if (!profile) return;
     (async () => {
-      const { data: links } = await supabase
-        .from("guardian_relationships")
-        .select("senior_id,relationship_label")
-        .eq("guardian_id", profile.id)
-        .eq("status", "active");
-      const ids = (links ?? []).map((l: any) => l.senior_id as string);
+      // Privacy-safe lookup: returns only id, first_name, relationship_label
+      const { data: linked } = await supabase.rpc("get_linked_seniors");
+      const rows = (linked ?? []) as { id: string; first_name: string; relationship_label: string | null }[];
+      const ids = rows.map((r) => r.id);
       if (!ids.length) { setSeniors([]); setRecentAlerts([]); return; }
 
-      const { data: profs } = await supabase
-        .from("profiles")
-        .select("id,full_name,invite_code,challenge_stats")
-        .in("id", ids);
       const nameMap: Record<string, string> = {};
-      (profs ?? []).forEach((p: any) => { nameMap[p.id] = p.full_name; });
+      rows.forEach((r) => { nameMap[r.id] = r.first_name; });
       setSeniorMap(nameMap);
 
       const { data: alerts } = await supabase
@@ -251,18 +245,16 @@ function GuardianDashboard() {
       const allAlerts = (alerts ?? []) as Alert[];
       setRecentAlerts(allAlerts);
 
-      const relMap = new Map((links ?? []).map((l: any) => [l.senior_id, l.relationship_label]));
-      const enriched: LinkedSenior[] = ids.map((id) => {
-        const p = (profs ?? []).find((p: any) => p.id === id) as any;
-        const sa = allAlerts.filter((a) => a.senior_id === id);
+      const enriched: LinkedSenior[] = rows.map((r) => {
+        const sa = allAlerts.filter((a) => a.senior_id === r.id);
         return {
-          id,
-          full_name: p?.full_name ?? "Senior",
-          invite_code: p?.invite_code ?? null,
-          relationship_label: relMap.get(id) ?? null,
+          id: r.id,
+          full_name: r.first_name,
+          invite_code: null,
+          relationship_label: r.relationship_label,
           alertCount: sa.filter((a) => a.status === "flagged").length,
           lastAlert: sa[0],
-          challenge_stats: p?.challenge_stats,
+          challenge_stats: undefined,
         };
       });
       setSeniors(enriched);
