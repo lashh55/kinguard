@@ -20,6 +20,7 @@ export type Database = {
           guardian_id: string
           id: string
           invite_code: string | null
+          last_alert_view_at: string | null
           relationship_label: string | null
           senior_id: string
           status: string
@@ -29,6 +30,7 @@ export type Database = {
           guardian_id: string
           id?: string
           invite_code?: string | null
+          last_alert_view_at?: string | null
           relationship_label?: string | null
           senior_id: string
           status?: string
@@ -38,6 +40,7 @@ export type Database = {
           guardian_id?: string
           id?: string
           invite_code?: string | null
+          last_alert_view_at?: string | null
           relationship_label?: string | null
           senior_id?: string
           status?: string
@@ -243,6 +246,18 @@ export type Database = {
         Returns: {
           first_name: string
           id: string
+          relationship_label: string
+        }[]
+      }
+      get_my_guardians: {
+        Args: never
+        Returns: {
+          full_name: string
+          guardian_id: string
+          last_alert_view_at: string
+          link_id: string
+          linked_at: string
+          phone_last4: string
           relationship_label: string
         }[]
       }

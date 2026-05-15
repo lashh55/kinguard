@@ -14,11 +14,32 @@ export const Route = createFileRoute("/profile")({
 });
 
 type GuardianRow = {
-  id: string;
+  link_id: string;
   guardian_id: string;
+  full_name: string;
   relationship_label: string | null;
-  guardian_name?: string;
+  phone_last4: string | null;
+  linked_at: string;
+  last_alert_view_at: string | null;
 };
+
+function formatDate(iso: string) {
+  return new Date(iso).toLocaleDateString(undefined, { month: "short", day: "numeric", year: "numeric" });
+}
+
+function lastActiveLabel(iso: string | null): { text: string; status: "active" | "inactive" | "never" } {
+  if (!iso) return { text: "Never checked alerts", status: "never" };
+  const days = Math.floor((Date.now() - new Date(iso).getTime()) / 86400000);
+  let text: string;
+  if (days <= 0) text = "Last active: Today";
+  else if (days === 1) text = "Last active: Yesterday";
+  else if (days < 7) text = `Last active: ${days} days ago`;
+  else if (days < 30) text = `Last active: ${Math.floor(days / 7)} week${Math.floor(days / 7) === 1 ? "" : "s"} ago`;
+  else if (days < 365) text = `Last active: ${Math.floor(days / 30)} month${Math.floor(days / 30) === 1 ? "" : "s"} ago`;
+  else text = `Last active: ${Math.floor(days / 365)} year${Math.floor(days / 365) === 1 ? "" : "s"} ago`;
+  const status: "active" | "inactive" = days <= 7 ? "active" : "inactive";
+  return { text, status };
+}
 
 function ProfileScreen() {
   const { user, profile, loading, signOut, refreshProfile } = useAuth();
@@ -32,18 +53,8 @@ function ProfileScreen() {
   useEffect(() => {
     if (!profile || profile.role !== "senior") return;
     (async () => {
-      const { data } = await supabase
-        .from("guardian_relationships")
-        .select("id,guardian_id,relationship_label")
-        .eq("senior_id", profile.id)
-        .eq("status", "active");
+      const { data } = await supabase.rpc("get_my_guardians");
       const rows = (data ?? []) as GuardianRow[];
-      const ids = rows.map((r) => r.guardian_id);
-      if (ids.length) {
-        const { data: profs } = await supabase.from("profiles").select("id,full_name").in("id", ids);
-        const map = new Map((profs ?? []).map((p: any) => [p.id, p.full_name]));
-        rows.forEach((r) => { r.guardian_name = map.get(r.guardian_id) || "Guardian"; });
-      }
       setGuardians(rows);
 
       if (rows.length >= 2) {
@@ -65,10 +76,10 @@ function ProfileScreen() {
     await refreshProfile();
   };
 
-  const removeGuardian = async (id: string) => {
-    const { error } = await supabase.from("guardian_relationships").delete().eq("id", id);
+  const removeGuardian = async (linkId: string) => {
+    const { error } = await supabase.from("guardian_relationships").delete().eq("id", linkId);
     if (error) { toast("Could not remove. Try again."); return; }
-    setGuardians((g) => g.filter((r) => r.id !== id));
+    setGuardians((g) => g.filter((r) => r.link_id !== linkId));
     toast("✅ Guardian removed");
   };
 
@@ -129,22 +140,55 @@ function ProfileScreen() {
             </div>
 
             <div className="card-soft">
-              <h2 className="mb-2">My Guardians: {guardians.length}/5</h2>
+              <h2 className="mb-2">
+                My Guardians: {guardians.length}/5
+                {guardians.length < 5 && (
+                  <span className="text-sm font-normal" style={{ color: "var(--color-muted-foreground)" }}>
+                    {" "}— {5 - guardians.length} slot{5 - guardians.length === 1 ? "" : "s"} available
+                  </span>
+                )}
+              </h2>
               {guardians.length === 0 ? (
                 <p style={{ color: "var(--color-muted-foreground)" }}>
                   No one is linked yet. Share your invite code above.
                 </p>
               ) : (
-                <ul className="space-y-2">
-                  {guardians.map((g) => (
-                    <li key={g.id} className="flex items-center justify-between gap-3 rounded-xl p-3 border-2" style={{ borderColor: "var(--color-border)" }}>
-                      <div>
-                        <p className="font-bold">{g.guardian_name}</p>
-                        <p className="text-sm" style={{ color: "var(--color-muted-foreground)" }}>{g.relationship_label || "Family"}</p>
-                      </div>
-                      <button className="btn-base btn-outline" style={{ minHeight: 44, padding: "8px 14px", fontSize: 16 }} onClick={() => removeGuardian(g.id)}>Remove</button>
-                    </li>
-                  ))}
+                <ul className="space-y-3">
+                  {guardians.map((g) => {
+                    const active = lastActiveLabel(g.last_alert_view_at);
+                    const dot = active.status === "active" ? "🟢" : active.status === "inactive" ? "🟡" : "🔴";
+                    const dotLabel = active.status === "active" ? "Active" : active.status === "inactive" ? "Inactive" : "Never checked";
+                    const phoneFmt = g.phone_last4 ? `•••-•••-${g.phone_last4}` : "Phone not provided";
+                    return (
+                      <li key={g.link_id} className="rounded-xl p-3 border-2" style={{ borderColor: "var(--color-border)" }}>
+                        <div className="flex items-start justify-between gap-3">
+                          <div className="min-w-0">
+                            <p className="font-extrabold" style={{ fontSize: 18 }}>{g.full_name}</p>
+                            <p className="text-sm font-bold mt-0.5" style={{ color: "var(--color-rose)" }}>
+                              {g.relationship_label || "Family"}
+                            </p>
+                            <p className="text-sm font-mono mt-1">{phoneFmt}</p>
+                            <p className="text-sm mt-2" style={{ color: "var(--color-muted-foreground)" }}>
+                              Linked: {formatDate(g.linked_at)}
+                            </p>
+                            <p className="text-sm" style={{ color: "var(--color-muted-foreground)" }}>
+                              {active.text}
+                            </p>
+                          </div>
+                          <span className="text-sm font-bold whitespace-nowrap" title={dotLabel}>
+                            {dot} {dotLabel}
+                          </span>
+                        </div>
+                        <button
+                          className="btn-base w-full mt-3"
+                          style={{ background: "#E74C3C", color: "#fff", minHeight: 44 }}
+                          onClick={() => removeGuardian(g.link_id)}
+                        >
+                          🗑️ Remove Guardian
+                        </button>
+                      </li>
+                    );
+                  })}
                 </ul>
               )}
               {guardians.length >= 5 && (
