@@ -1,6 +1,7 @@
+import { ReactNode } from "react";
 import { ChallengeStats, currentLevelBadge, nextLevelBadge, normalizeStats } from "@/lib/badges";
 
-export function ScoreCard({ stats: raw, compact }: { stats: unknown; compact?: boolean }) {
+export function ScoreCard({ stats: raw, compact, tree }: { stats: unknown; compact?: boolean; tree?: ReactNode }) {
   const stats: ChallengeStats = normalizeStats(raw);
   const current = currentLevelBadge(stats.total_correct);
   const next = nextLevelBadge(stats.total_correct);

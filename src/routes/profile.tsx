@@ -7,7 +7,7 @@ import { toast } from "sonner";
 import { ScoreCard } from "@/components/ScoreCard";
 import { BadgeGrid } from "@/components/BadgeGrid";
 import { normalizeStats } from "@/lib/badges";
-import { LearningTreeWithTooltip } from "@/components/LearningTree";
+import { LearningTree, LearningTreeWithTooltip } from "@/components/LearningTree";
 
 export const Route = createFileRoute("/profile")({
   component: ProfileScreen,
