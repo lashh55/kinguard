@@ -290,7 +290,7 @@ function SsnShield() {
       </section>
 
       <p className="text-center text-sm mt-6 mb-2 px-5" style={{ color: "var(--color-muted-foreground)" }}>
-        🔒 KinGuard never stores or transmits your Social Security Number. We only help you protect it.
+        🔒 KinGuard never requires, stores, or transmits your Social Security Number. We only help you protect it.
       </p>
     </ScreenShell>
   );
