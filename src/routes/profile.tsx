@@ -53,18 +53,8 @@ function ProfileScreen() {
   useEffect(() => {
     if (!profile || profile.role !== "senior") return;
     (async () => {
-      const { data } = await supabase
-        .from("guardian_relationships")
-        .select("id,guardian_id,relationship_label")
-        .eq("senior_id", profile.id)
-        .eq("status", "active");
+      const { data } = await supabase.rpc("get_my_guardians");
       const rows = (data ?? []) as GuardianRow[];
-      const ids = rows.map((r) => r.guardian_id);
-      if (ids.length) {
-        const { data: profs } = await supabase.from("profiles").select("id,full_name").in("id", ids);
-        const map = new Map((profs ?? []).map((p: any) => [p.id, p.full_name]));
-        rows.forEach((r) => { r.guardian_name = map.get(r.guardian_id) || "Guardian"; });
-      }
       setGuardians(rows);
 
       if (rows.length >= 2) {
@@ -86,10 +76,10 @@ function ProfileScreen() {
     await refreshProfile();
   };
 
-  const removeGuardian = async (id: string) => {
-    const { error } = await supabase.from("guardian_relationships").delete().eq("id", id);
+  const removeGuardian = async (linkId: string) => {
+    const { error } = await supabase.from("guardian_relationships").delete().eq("id", linkId);
     if (error) { toast("Could not remove. Try again."); return; }
-    setGuardians((g) => g.filter((r) => r.id !== id));
+    setGuardians((g) => g.filter((r) => r.link_id !== linkId));
     toast("✅ Guardian removed");
   };
 
