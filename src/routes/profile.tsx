@@ -14,11 +14,32 @@ export const Route = createFileRoute("/profile")({
 });
 
 type GuardianRow = {
-  id: string;
+  link_id: string;
   guardian_id: string;
+  full_name: string;
   relationship_label: string | null;
-  guardian_name?: string;
+  phone_last4: string | null;
+  linked_at: string;
+  last_alert_view_at: string | null;
 };
+
+function formatDate(iso: string) {
+  return new Date(iso).toLocaleDateString(undefined, { month: "short", day: "numeric", year: "numeric" });
+}
+
+function lastActiveLabel(iso: string | null): { text: string; status: "active" | "inactive" | "never" } {
+  if (!iso) return { text: "Never checked alerts", status: "never" };
+  const days = Math.floor((Date.now() - new Date(iso).getTime()) / 86400000);
+  let text: string;
+  if (days <= 0) text = "Last active: Today";
+  else if (days === 1) text = "Last active: Yesterday";
+  else if (days < 7) text = `Last active: ${days} days ago`;
+  else if (days < 30) text = `Last active: ${Math.floor(days / 7)} week${Math.floor(days / 7) === 1 ? "" : "s"} ago`;
+  else if (days < 365) text = `Last active: ${Math.floor(days / 30)} month${Math.floor(days / 30) === 1 ? "" : "s"} ago`;
+  else text = `Last active: ${Math.floor(days / 365)} year${Math.floor(days / 365) === 1 ? "" : "s"} ago`;
+  const status: "active" | "inactive" = days <= 7 ? "active" : "inactive";
+  return { text, status };
+}
 
 function ProfileScreen() {
   const { user, profile, loading, signOut, refreshProfile } = useAuth();
