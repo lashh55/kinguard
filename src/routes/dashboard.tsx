@@ -6,6 +6,7 @@ import { ScreenShell, ScoreBadge } from "@/components/ScreenShell";
 import { notifyGuardianSOS } from "@/lib/guardianAlerts";
 import { normalizeStats } from "@/lib/badges";
 import logo from "@/assets/kinguard-logo.png";
+import { LearningTree } from "@/components/LearningTree";
 
 export const Route = createFileRoute("/dashboard")({
   component: Dashboard,
