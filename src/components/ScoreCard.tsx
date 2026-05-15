@@ -1,6 +1,7 @@
+import { ReactNode } from "react";
 import { ChallengeStats, currentLevelBadge, nextLevelBadge, normalizeStats } from "@/lib/badges";
 
-export function ScoreCard({ stats: raw, compact }: { stats: unknown; compact?: boolean }) {
+export function ScoreCard({ stats: raw, compact, tree }: { stats: unknown; compact?: boolean; tree?: ReactNode }) {
   const stats: ChallengeStats = normalizeStats(raw);
   const current = currentLevelBadge(stats.total_correct);
   const next = nextLevelBadge(stats.total_correct);
@@ -35,6 +36,11 @@ export function ScoreCard({ stats: raw, compact }: { stats: unknown; compact?: b
             {current?.name ?? "Just getting started"}
           </p>
         </div>
+        {tree && (
+          <div style={{ width: compact ? 40 : 48, height: compact ? 40 : 48 }}>
+            {tree}
+          </div>
+        )}
       </div>
 
       <div className="grid grid-cols-3 gap-2 mt-4 text-center">
