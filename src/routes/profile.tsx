@@ -156,16 +156,17 @@ function ProfileScreen() {
 
         {isSenior && (
           <>
-            <div className="card-soft">
-              <h2 className="mb-2">My Tree 🌳</h2>
-              <div style={{ height: 120 }}>
-                <LearningTreeWithTooltip stats={normalizeStats(profile.challenge_stats)} size={120} showLabel />
-              </div>
-            </div>
-
             <div>
-              <h2 className="mb-2">My Progress 🏅</h2>
-              <ScoreCard stats={profile.challenge_stats} />
+              <h2 className="mb-2">Knowledge Tree 🌳</h2>
+              <ScoreCard
+                stats={profile.challenge_stats}
+                tree={
+                  <LearningTree
+                    stats={normalizeStats(profile.challenge_stats)}
+                    size={48}
+                  />
+                }
+              />
             </div>
 
             <div>

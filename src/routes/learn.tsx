@@ -63,18 +63,16 @@ function LearnScreen() {
       <Cards />
       {profile && (
         <section className="px-5 mt-6">
-          <h2 className="mb-2">My Tree 🌳</h2>
-          <div className="card-soft">
-            <div style={{ height: 120 }}>
-              <LearningTreeWithTooltip stats={normalizeStats(profile.challenge_stats)} size={120} showLabel />
-            </div>
-          </div>
-        </section>
-      )}
-      {profile && (
-        <section className="px-5 mt-6">
-          <h2 className="mb-2">My Progress 🏅</h2>
-          <ScoreCard stats={profile.challenge_stats} />
+          <h2 className="mb-2">Knowledge Tree 🌳</h2>
+          <ScoreCard
+            stats={profile.challenge_stats}
+            tree={
+              <LearningTree
+                stats={normalizeStats(profile.challenge_stats)}
+                size={48}
+              />
+            }
+          />
         </section>
       )}
       <Quiz onBadges={(badges) => {

@@ -36,6 +36,11 @@ export function ScoreCard({ stats: raw, compact, tree }: { stats: unknown; compa
             {current?.name ?? "Just getting started"}
           </p>
         </div>
+        {tree && (
+          <div style={{ width: compact ? 40 : 48, height: compact ? 40 : 48 }}>
+            {tree}
+          </div>
+        )}
       </div>
 
       <div className="grid grid-cols-3 gap-2 mt-4 text-center">
