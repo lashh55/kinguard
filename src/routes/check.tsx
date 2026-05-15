@@ -24,14 +24,17 @@ function CheckScreen() {
   const { profile } = useAuth();
   const navigate = useNavigate();
   const [content, setContent] = useState("");
-  const [channel, setChannel] = useState("email");
+  const [channel, setChannel] = useState("");
   const [busy, setBusy] = useState(false);
   const [result, setResult] = useState<Result | null>(null);
   const [err, setErr] = useState<string | null>(null);
+  const [typeError, setTypeError] = useState(false);
 
   const submit = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (!channel) { setTypeError(true); return; }
     if (!content.trim()) return;
+    setTypeError(false);
     setBusy(true); setErr(null); setResult(null);
     try {
       const r = await analyzeScam({ data: { content, channel } });
@@ -76,14 +79,24 @@ function CheckScreen() {
         />
         <label className="block">
           <span className="block font-bold mb-2">What type is this?</span>
-          <select className="input-large" value={channel} onChange={(e) => setChannel(e.target.value)}>
+          <select className="input-large" value={channel} onChange={(e) => { setChannel(e.target.value); setTypeError(false); }}>
+            <option value="">--- Select a type ---</option>
             <option value="email">Email</option>
             <option value="sms">Text Message</option>
             <option value="call">Phone Call</option>
             <option value="manual">Not Sure</option>
           </select>
         </label>
-        <button className="btn-base btn-primary w-full" disabled={busy || !content.trim()}>
+        {typeError && (
+          <p className="font-bold text-center" style={{ color: "#F39C12", fontSize: 15 }}>
+            Please select what type of message this is before checking
+          </p>
+        )}
+        <button
+          className="btn-base w-full font-extrabold"
+          disabled={busy || !content.trim() || !channel}
+          style={channel && content.trim() ? { background: "#DFC18F", color: "#3D2B2B" } : undefined}
+        >
           {busy ? "KinGuard is analyzing this for you…" : "🔍 Check This Now"}
         </button>
         {err && <p className="font-bold" style={{ color: "var(--color-danger)" }}>{err}</p>}
