@@ -133,7 +133,12 @@ function SeniorDashboard() {
       <section className="px-5 mt-4 grid grid-cols-3 gap-2">
         <Stat icon="🔒" label="Blocked" value={blocked} />
         <Stat icon="📧" label="Checked" value={checked} />
-        <Stat icon="🛡️" label="SSN Safe" value="✓" />
+        <Link to="/learn" className="card-soft text-center block" style={{ padding: 12, textDecoration: "none", color: "inherit" }}>
+          <div style={{ height: 60 }}>
+            <LearningTree stats={stats} size={60} />
+          </div>
+          <div className="text-xs mt-1" style={{ color: "var(--color-muted-foreground)" }}>My Tree</div>
+        </Link>
       </section>
 
       <section className="px-5 mt-5">
