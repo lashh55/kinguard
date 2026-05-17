@@ -87,6 +87,9 @@
   h2 { font-size: 24px; }
   button { font-size: 18px; }
 
+  /* Hide Lovable badge globally */
+  #lovable-badge { display: none !important; }
+
   /* Senior-friendly large text mode */
   .text-xl-mode body { font-size: 22px; }
   .text-xl-mode button { font-size: 22px; }
