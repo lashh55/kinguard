@@ -182,19 +182,19 @@ function ScamGuide() {
 
       <Section title="How the scam works">
         <ol className="list-decimal pl-6 space-y-2">
-          {guide.howItWorks.map((s, i) => <li key={i}>{s}</li>)}
+          {guide.howItWorks.map((s: string, i: number) => <li key={i}>{s}</li>)}
         </ol>
       </Section>
 
       <Section title="Red flags" bg="color-mix(in oklab, #E74C3C 12%, #fff)">
         <ul className="list-disc pl-6 space-y-2">
-          {guide.redFlags.map((s, i) => <li key={i}>{s}</li>)}
+          {guide.redFlags.map((s: string, i: number) => <li key={i}>{s}</li>)}
         </ul>
       </Section>
 
       <Section title="What to do" bg="color-mix(in oklab, #2ECC71 14%, #fff)">
         <ol className="list-decimal pl-6 space-y-2">
-          {guide.whatToDo.map((s, i) => <li key={i}>{s}</li>)}
+          {guide.whatToDo.map((s: string, i: number) => <li key={i}>{s}</li>)}
         </ol>
       </Section>
 
