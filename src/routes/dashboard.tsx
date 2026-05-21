@@ -57,6 +57,7 @@ function Dashboard() {
 
 function SeniorDashboard() {
   const { profile } = useAuth();
+  const { t } = useI18n();
   const [alerts, setAlerts] = useState<Alert[]>([]);
   const [question, setQuestion] = useState<Question | null>(null);
   const [picked, setPicked] = useState<string | null>(null);
