@@ -6,6 +6,7 @@ import { useI18n } from "@/lib/i18n";
 
 export function ScreenShell({ children, withPhotoPanel = false }: { children: ReactNode; withPhotoPanel?: boolean }) {
   const { profile } = useAuth();
+  const { t } = useI18n();
   const isGuardian = profile?.role === "guardian";
   return (
     <div className="min-h-screen bg-background flex flex-col">
