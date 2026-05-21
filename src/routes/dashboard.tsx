@@ -45,19 +45,20 @@ const TIPS = [
 function Dashboard() {
   const { user, profile, loading } = useAuth();
   const navigate = useNavigate();
+  const { t } = useI18n();
 
   useEffect(() => {
     if (!loading && !user) navigate({ to: "/" });
   }, [loading, user, navigate]);
 
-  if (!profile) return <div className="min-h-screen flex items-center justify-center">Loading…</div>;
+  if (!profile) return <div className="min-h-screen flex items-center justify-center">{t("Loading…")}</div>;
 
   return profile.role === "guardian" ? <GuardianDashboard /> : <SeniorDashboard />;
 }
 
 function SeniorDashboard() {
   const { profile } = useAuth();
-  const { t } = useI18n();
+  const { t, lang } = useI18n();
   const [alerts, setAlerts] = useState<Alert[]>([]);
   const [question, setQuestion] = useState<Question | null>(null);
   const [picked, setPicked] = useState<string | null>(null);
@@ -92,7 +93,7 @@ function SeniorDashboard() {
     flagged.some((a) => a.scam_score >= 71) ? "danger" :
     flagged.length > 0 ? "warn" : "safe";
 
-  const statusText = status === "safe" ? t("You're protected today") : status === "warn" ? `${flagged.length} alert${flagged.length>1?"s":""} flagged` : "Action needed";
+  const statusText = status === "safe" ? t("You're protected today") : status === "warn" ? `${flagged.length} ${t("flagged")}` : t("Action needed");
   const statusColor = status === "safe" ? "var(--color-safe)" : status === "warn" ? "var(--color-warn)" : "var(--color-danger)";
 
   const tip = TIPS[new Date().getDay() % TIPS.length];
@@ -128,8 +129,8 @@ function SeniorDashboard() {
       <section className="px-5 mt-4">
         <div className="card-soft text-center" style={{ background: "var(--color-cream)" }}>
           {streak > 0
-            ? <p className="font-bold" style={{ fontSize: 18 }}>🔥 {streak}-week streak! Keep it up!</p>
-            : <p className="font-bold" style={{ fontSize: 18 }}>Start a new streak this week! You've got this 💪</p>}
+            ? <p className="font-bold" style={{ fontSize: 18 }}>🔥 {streak}{lang === "es" ? "-semanas de racha! ¡Sigue así!" : "-week streak! Keep it up!"}</p>
+            : <p className="font-bold" style={{ fontSize: 18 }}>{t("Start a new streak this week! You've got this 💪")}</p>}
         </div>
       </section>
 
@@ -158,17 +159,17 @@ function SeniorDashboard() {
       </section>
 
       <section className="px-5 mt-5 space-y-3">
-        <Link to="/check" className="btn-base btn-primary w-full">🔍 Check a Suspicious Message</Link>
-        <Link to="/ssn" className="btn-base btn-primary w-full">🛡️ Protect My SSN</Link>
+        <Link to="/check" className="btn-base btn-primary w-full">🔍 {t("Check a Suspicious Message")}</Link>
+        <Link to="/ssn" className="btn-base btn-primary w-full">🛡️ {t("Protect My SSN")}</Link>
         <button className="btn-base btn-danger w-full" onClick={() => notifyGuardianSOS(profile.full_name)}>
-          🆘 I Need Help
+          🆘 {t("I Need Help")}
         </button>
       </section>
 
       {question && (
         <section className="px-5 mt-5">
           <div className="card-soft" style={{ background: "var(--color-cream)" }}>
-            <p className="font-bold mb-1">🧠 This Week's Question</p>
+            <p className="font-bold mb-1">{t("🧠 This Week's Question")}</p>
             <p className="font-bold" style={{ fontSize: 18 }}>{question.question_text}</p>
             <div className="mt-3 space-y-2">
               {(["a","b","c","d"] as const).map((l) => {
@@ -190,18 +191,18 @@ function SeniorDashboard() {
             </div>
             {picked && (
               <p className="mt-3" style={{ fontSize: 16 }}>
-                {picked === question.correct_answer ? "✅ Correct! " : "❌ Not quite. "}
+                {picked === question.correct_answer ? `${t("✅ Correct!")} ` : `${t("❌ Not quite.")} `}
                 {question.explanation}
               </p>
             )}
-            <Link to="/learn" className="btn-base btn-outline w-full mt-3">See All Questions</Link>
+            <Link to="/learn" className="btn-base btn-outline w-full mt-3">{t("See All Questions")}</Link>
           </div>
         </section>
       )}
 
       <section className="px-5 mt-5">
         <div className="card-soft" style={{ background: "var(--color-sky)" }}>
-          <p className="font-bold mb-1">💡 Today's scam tip</p>
+          <p className="font-bold mb-1">{t("💡 Today's scam tip")}</p>
           <p>{tip}</p>
         </div>
       </section>

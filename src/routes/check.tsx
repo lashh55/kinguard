@@ -6,6 +6,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { ScreenShell, scoreColor } from "@/components/ScreenShell";
 import { analyzeScam } from "@/server/scam.functions";
 import { notifyGuardianScam } from "@/lib/guardianAlerts";
+import { useI18n } from "@/lib/i18n";
 
 export const Route = createFileRoute("/check")({
   component: CheckScreen,
@@ -22,6 +23,7 @@ type Result = {
 
 function CheckScreen() {
   const { profile } = useAuth();
+  const { t } = useI18n();
   const navigate = useNavigate();
   const [content, setContent] = useState("");
   const [channel, setChannel] = useState("");
@@ -57,39 +59,39 @@ function CheckScreen() {
     } finally { setBusy(false); }
   };
 
-  const verdict = result && (result.score <= 40 ? { label: "Looks Safe ✅", color: "var(--color-safe)" } :
-    result.score <= 70 ? { label: "Use Caution ⚠️", color: "var(--color-warn)" } :
-    { label: "Likely Scam 🚨", color: "var(--color-danger)" });
+  const verdict = result && (result.score <= 40 ? { label: t("Looks Safe ✅"), color: "var(--color-safe)" } :
+    result.score <= 70 ? { label: t("Use Caution ⚠️"), color: "var(--color-warn)" } :
+    { label: t("Likely Scam 🚨"), color: "var(--color-danger)" });
 
   return (
     <ScreenShell>
       <header className="px-5 py-4" style={{ background: "var(--color-sky)" }}>
-        <h1>Check a Suspicious Message</h1>
-        <p className="mt-1">Paste any suspicious email, text, or describe a phone call. We'll tell you if it's a scam.</p>
+        <h1>{t("Check a Suspicious Message")}</h1>
+        <p className="mt-1">{t("Paste any suspicious email, text, or describe a phone call. We'll tell you if it's a scam.")}</p>
       </header>
 
       <form className="px-5 mt-5 space-y-4" onSubmit={submit}>
         <textarea
           className="input-large"
           rows={8}
-          placeholder="Paste or type the suspicious message here..."
+          placeholder={t("Paste or type the suspicious message here...")}
           value={content}
           onChange={(e) => setContent(e.target.value)}
           style={{ minHeight: 200, resize: "vertical" }}
         />
         <label className="block">
-          <span className="block font-bold mb-2">What type is this?</span>
+          <span className="block font-bold mb-2">{t("What type is this?")}</span>
           <select className="input-large" value={channel} onChange={(e) => { setChannel(e.target.value); setTypeError(false); }}>
-            <option value="">--- Select a type ---</option>
-            <option value="email">Email</option>
-            <option value="sms">Text Message</option>
-            <option value="call">Phone Call</option>
-            <option value="manual">Not Sure</option>
+            <option value="">{t("--- Select a type ---")}</option>
+            <option value="email">{t("Email")}</option>
+            <option value="sms">{t("Text Message")}</option>
+            <option value="call">{t("Phone Call")}</option>
+            <option value="manual">{t("Not Sure")}</option>
           </select>
         </label>
         {typeError && (
           <p className="font-bold text-center" style={{ color: "#F39C12", fontSize: 15 }}>
-            Please select what type of message this is before checking
+            {t("Please select what type of message this is before checking")}
           </p>
         )}
         <button
@@ -97,7 +99,7 @@ function CheckScreen() {
           disabled={busy || !content.trim() || !channel}
           style={channel && content.trim() ? { background: "#DFC18F", color: "#3D2B2B" } : undefined}
         >
-          {busy ? "KinGuard is analyzing this for you…" : "🔍 Check This Now"}
+          {busy ? t("KinGuard is analyzing this for you…") : t("🔍 Check This Now")}
         </button>
         {err && <p className="font-bold" style={{ color: "var(--color-danger)" }}>{err}</p>}
       </form>
@@ -106,10 +108,10 @@ function CheckScreen() {
         <section className="px-5 mt-6 space-y-4">
           {result.ssn_requested && (
             <div className="card-soft" style={{ background: "var(--color-danger)", color: "#fff" }}>
-              <p className="font-extrabold" style={{ fontSize: 20 }}>🚨 SSN ALERT</p>
-              <p className="mt-1">This message is asking for your Social Security Number. Do NOT share it until you use our SSN Shield checker.</p>
+              <p className="font-extrabold" style={{ fontSize: 20 }}>{t("🚨 SSN ALERT")}</p>
+              <p className="mt-1">{t("This message is asking for your Social Security Number. Do NOT share it until you use our SSN Shield checker.")}</p>
               <button className="btn-base btn-rose w-full mt-3" onClick={() => navigate({ to: "/ssn" })}>
-                → Check This in SSN Shield
+                {t("→ Check This in SSN Shield")}
               </button>
             </div>
           )}
@@ -127,7 +129,7 @@ function CheckScreen() {
 
           {result.flags.length > 0 && (
             <div className="card-soft">
-              <p className="font-bold mb-2">Red flags we found:</p>
+              <p className="font-bold mb-2">{t("Red flags we found:")}</p>
               <ul className="space-y-2">
                 {result.flags.map((f, i) => <li key={i}>{f}</li>)}
               </ul>
@@ -135,7 +137,7 @@ function CheckScreen() {
           )}
 
           <div className="card-soft" style={{ background: "var(--color-sky)" }}>
-            <p className="font-bold mb-1">What to do:</p>
+            <p className="font-bold mb-1">{t("What to do:")}</p>
             <p style={{ fontSize: 19 }}>{result.recommendation}</p>
           </div>
 
@@ -147,13 +149,13 @@ function CheckScreen() {
                 score: result.score,
                 channel,
               });
-              toast("✅ Your guardian has been notified");
-            }}>Alert My Guardian</button>
-            <button className="btn-base btn-safe" onClick={() => toast("✅ Marked as safe")}>Mark as Safe</button>
-            <button className="btn-base btn-primary" onClick={() => toast("✅ Sender blocked")}>Block This Sender</button>
+              toast(t("✅ Your guardian has been notified"));
+            }}>{t("Alert My Guardian")}</button>
+            <button className="btn-base btn-safe" onClick={() => toast(t("✅ Marked as safe"))}>{t("Mark as Safe")}</button>
+            <button className="btn-base btn-primary" onClick={() => toast(t("✅ Sender blocked"))}>{t("Block This Sender")}</button>
           </div>
 
-          <Link to="/dashboard" className="btn-base btn-outline w-full">← Back to dashboard</Link>
+          <Link to="/dashboard" className="btn-base btn-outline w-full">{t("← Back to dashboard")}</Link>
         </section>
       )}
     </ScreenShell>

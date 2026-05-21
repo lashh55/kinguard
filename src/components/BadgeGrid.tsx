@@ -1,7 +1,9 @@
 import { useState } from "react";
 import { ALL_BADGES, BadgeDef, ChallengeStats, normalizeStats } from "@/lib/badges";
+import { useI18n } from "@/lib/i18n";
 
 export function BadgeGrid({ stats: raw }: { stats: unknown }) {
+  const { t } = useI18n();
   const stats: ChallengeStats = normalizeStats(raw);
   const [selected, setSelected] = useState<BadgeDef | null>(null);
   const earned = new Set(stats.badges_earned);

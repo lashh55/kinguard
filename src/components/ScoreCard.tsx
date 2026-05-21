@@ -1,7 +1,9 @@
 import { ReactNode } from "react";
 import { ChallengeStats, currentLevelBadge, nextLevelBadge, normalizeStats } from "@/lib/badges";
+import { useI18n } from "@/lib/i18n";
 
 export function ScoreCard({ stats: raw, compact, tree }: { stats: unknown; compact?: boolean; tree?: ReactNode }) {
+  const { t } = useI18n();
   const stats: ChallengeStats = normalizeStats(raw);
   const current = currentLevelBadge(stats.total_correct);
   const next = nextLevelBadge(stats.total_correct);
@@ -31,9 +33,9 @@ export function ScoreCard({ stats: raw, compact, tree }: { stats: unknown; compa
           {current?.icon ?? "🌱"}
         </div>
         <div className="flex-1 min-w-0">
-          <p className="font-bold" style={{ fontSize: 14, color: "var(--color-muted-foreground)" }}>Current badge</p>
+          <p className="font-bold" style={{ fontSize: 14, color: "var(--color-muted-foreground)" }}>{t("Current badge")}</p>
           <p className="font-extrabold" style={{ fontSize: compact ? 18 : 22 }}>
-            {current?.name ?? "Just getting started"}
+            {current?.name ?? t("Just getting started")}
           </p>
         </div>
         {tree && (
@@ -44,12 +46,12 @@ export function ScoreCard({ stats: raw, compact, tree }: { stats: unknown; compa
       </div>
 
       <div className="grid grid-cols-3 gap-2 mt-4 text-center">
-        <Stat label="Correct" value={stats.total_correct} />
-        <Stat label="Streak" value={`${stats.current_streak_weeks} 🔥`} />
-        <Stat label="Accuracy" value={`${accuracy}%`} />
+        <Stat label={t("Correct")} value={stats.total_correct} />
+        <Stat label={t("Streak")} value={`${stats.current_streak_weeks} 🔥`} />
+        <Stat label={t("Accuracy")} value={`${accuracy}%`} />
       </div>
       <div className="text-center mt-2 text-sm" style={{ color: "var(--color-muted-foreground)" }}>
-        Best streak: <span className="font-bold">{stats.best_streak_weeks} weeks</span>
+        {t("Best streak:")} <span className="font-bold">{stats.best_streak_weeks} {t("weeks")}</span>
       </div>
 
       {next && (

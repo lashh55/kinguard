@@ -93,9 +93,10 @@ function LearnScreen() {
 
 function Slides() {
   const [i, setI] = useState(0);
+  const { t } = useI18n();
   return (
     <section className="px-5 mt-2">
-      <h2 className="mb-2">KinGuard Lessons</h2>
+      <h2 className="mb-2">{t("KinGuard Lessons")}</h2>
       <div className="rounded-2xl overflow-hidden" style={{ background: "var(--color-cream)" }}>
         <img
           src={SLIDE_IMAGES[i % SLIDE_IMAGES.length]}
@@ -119,6 +120,7 @@ function Slides() {
 function Cards() {
   const navigate = useNavigate();
   const { profile, refreshProfile } = useAuth();
+  const { t } = useI18n();
   const [opened, setOpened] = useState<Set<string>>(new Set());
 
   const handleOpen = async (id: string) => {
@@ -139,29 +141,29 @@ function Cards() {
 
   return (
     <section className="px-5 mt-6">
-      <h2>Know Your Scams</h2>
-      <p className="mt-1" style={{ color: "var(--color-muted-foreground)" }}>Tap any card to learn more</p>
+      <h2>{t("Know Your Scams")}</h2>
+      <p className="mt-1" style={{ color: "var(--color-muted-foreground)" }}>{t("Tap any card to learn more")}</p>
       <div className="mt-3 space-y-3">
         {SCAM_CARDS.map((c) => (
           <details key={c.id} className="card-soft" style={{ borderTop: `6px solid ${c.accent}` }} onToggle={(e) => { if ((e.target as HTMLDetailsElement).open) handleOpen(c.id); }}>
             <summary className="font-extrabold cursor-pointer" style={{ fontSize: 19 }}>
-              {c.icon} {c.title}
+              {c.icon} {t(c.title)}
             </summary>
             <div className="mt-3 space-y-3">
               <div>
-                <p className="font-bold">What it looks like:</p>
+                <p className="font-bold">{t("What it looks like:")}</p>
                 <p>"{c.look}"</p>
               </div>
               <div>
-                <p className="font-bold">Red flags:</p>
+                <p className="font-bold">{t("Red flags:")}</p>
                 <ul className="list-disc pl-5">{c.flags.map((f) => <li key={f}>{f}</li>)}</ul>
               </div>
               <div>
-                <p className="font-bold">What to do:</p>
+                <p className="font-bold">{t("What to do:")}</p>
                 <p>{c.doIt}</p>
               </div>
               {c.linkSsn && (
-                <button className="btn-base btn-rose w-full" onClick={() => navigate({ to: "/ssn" })}>→ Go to SSN Shield</button>
+                <button className="btn-base btn-rose w-full" onClick={() => navigate({ to: "/ssn" })}>{t("→ Go to SSN Shield")}</button>
               )}
             </div>
           </details>
@@ -172,21 +174,22 @@ function Cards() {
 }
 
 function Videos() {
+  const { t } = useI18n();
   return (
     <section className="px-5 mt-6 mb-4">
-      <h2>Watch & Learn 🎥</h2>
-      <p className="mt-1" style={{ color: "var(--color-muted-foreground)" }}>Real scam situations explained in plain language — coming soon</p>
+      <h2>{t("Watch & Learn 🎥")}</h2>
+      <p className="mt-1" style={{ color: "var(--color-muted-foreground)" }}>{t("Real scam situations explained in plain language — coming soon")}</p>
       <div className="mt-3 grid grid-cols-2 gap-3">
         {VIDEOS.map((v) => (
           <button
             key={v.title}
             className="rounded-2xl overflow-hidden text-left"
             style={{ background: "var(--color-tan)" }}
-            onClick={() => toast("This video is coming soon! Check back for updates.")}
+            onClick={() => toast(t("This video is coming soon! Check back for updates."))}
           >
             <div className="relative flex items-center justify-center" style={{ height: 110 }}>
               <span style={{ fontSize: 40 }}>▶️</span>
-              <span className="absolute top-2 right-2 text-xs font-bold rounded-full px-2 py-1" style={{ background: "var(--color-rose)", color: "#fff" }}>Coming Soon</span>
+              <span className="absolute top-2 right-2 text-xs font-bold rounded-full px-2 py-1" style={{ background: "var(--color-rose)", color: "#fff" }}>{t("Coming Soon")}</span>
             </div>
             <div className="p-3 bg-white">
               <p className="font-bold" style={{ fontSize: 15 }}>{v.title}</p>
@@ -201,6 +204,7 @@ function Videos() {
 
 function Quiz({ onBadges }: { onBadges: (b: ReturnType<typeof applyAnswer>["newBadges"]) => void }) {
   const { profile } = useAuth();
+  const { t } = useI18n();
   const [questions, setQuestions] = useState<Question[]>([]);
   const [idx, setIdx] = useState(0);
   const [picked, setPicked] = useState<string | null>(null);
@@ -225,8 +229,8 @@ function Quiz({ onBadges }: { onBadges: (b: ReturnType<typeof applyAnswer>["newB
   if (questions.length === 0) {
     return (
       <section className="px-5 mt-6">
-        <h2>This Week's Challenge 🧠</h2>
-        <p className="mt-1" style={{ color: "var(--color-muted-foreground)" }}>Loading questions…</p>
+        <h2>{t("This Week's Challenge 🧠")}</h2>
+        <p className="mt-1" style={{ color: "var(--color-muted-foreground)" }}>{t("Loading questions…")}</p>
       </section>
     );
   }
@@ -267,10 +271,10 @@ function Quiz({ onBadges }: { onBadges: (b: ReturnType<typeof applyAnswer>["newB
 
   return (
     <section className="px-5 mt-6">
-      <h2>This Week's Challenge 🧠</h2>
-      <p className="mt-1" style={{ color: "var(--color-muted-foreground)" }}>Test what you know. Questions change every two weeks.</p>
+      <h2>{t("This Week's Challenge 🧠")}</h2>
+      <p className="mt-1" style={{ color: "var(--color-muted-foreground)" }}>{t("Test what you know. Questions change every two weeks.")}</p>
       <div className="card-soft mt-3" style={{ background: "var(--color-cream)" }}>
-        <p className="text-sm font-bold mb-2">Question {idx + 1} of {questions.length}</p>
+        <p className="text-sm font-bold mb-2">{t("Question")} {idx + 1} {t("of")} {questions.length}</p>
         <p className="font-bold" style={{ fontSize: 20 }}>{q.question_text}</p>
         <div className="mt-3 space-y-2">
           {(["a","b","c","d"] as const).map((l) => {
@@ -291,19 +295,19 @@ function Quiz({ onBadges }: { onBadges: (b: ReturnType<typeof applyAnswer>["newB
         {picked && (
           <>
             <p className="mt-3" style={{ fontSize: 17 }}>
-              {picked === q.correct_answer ? "✅ Correct! " : "❌ Not quite. "}
+              {picked === q.correct_answer ? `${t("✅ Correct!")} ` : `${t("❌ Not quite.")} `}
               {q.explanation}
             </p>
             {idx < questions.length - 1 && (
-              <button className="btn-base btn-primary w-full mt-3" onClick={next}>Next Question →</button>
+              <button className="btn-base btn-primary w-full mt-3" onClick={next}>{t("Next Question →")}</button>
             )}
             {idx === questions.length - 1 && (
-              <p className="mt-3 font-bold text-center" style={{ color: "#2ECC71" }}>🎉 You finished this week's challenge!</p>
+              <p className="mt-3 font-bold text-center" style={{ color: "#2ECC71" }}>{t("🎉 You finished this week's challenge!")}</p>
             )}
           </>
         )}
       </div>
-      <Link to="/dashboard" className="btn-base btn-outline w-full mt-3">← Back to dashboard</Link>
+      <Link to="/dashboard" className="btn-base btn-outline w-full mt-3">{t("← Back to dashboard")}</Link>
     </section>
   );
 }
