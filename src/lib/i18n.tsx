@@ -173,6 +173,22 @@ const DICT: Record<string, string> = {
   "Receive your 6-digit IP PIN": "Recibe tu PIN IP de 6 dígitos",
   "Write it down and store it somewhere safe": "Escríbelo y guárdalo en un lugar seguro",
   "Use it on your next tax return": "Úsalo en tu próxima declaración de impuestos",
+  "Employers are legally required to collect your SSN for payroll and taxes. This is normal and safe.\n\n💡 Tip: Always make sure the email asking for your information comes from your official employer email address (example: name@yourcompany.com). If you are unsure, contact your HR department directly by phone before responding.":
+    "Los empleadores están obligados por ley a recopilar tu SSN para la nómina e impuestos. Esto es normal y seguro.\n\n💡 Consejo: Asegúrate siempre de que el correo que pide tu información venga del correo oficial de tu empleador (ejemplo: nombre@tucompañía.com). Si no estás seguro/a, contacta a tu departamento de RRHH directamente por teléfono antes de responder.",
+  "Banks need your SSN to verify your identity. Since you called them, this is safe.":
+    "Los bancos necesitan tu SSN para verificar tu identidad. Como tú los llamaste, esto es seguro.",
+  "Your bank would not call asking for your full SSN out of the blue. Call the number on the back of your card to verify before sharing anything.":
+    "Tu banco no te llamaría de la nada pidiendo tu SSN completo. Llama al número del reverso de tu tarjeta para verificar antes de compartir nada.",
+  "The IRS and Social Security Administration contact you by MAIL first — never by phone or email. If someone called or emailed you claiming to be the IRS, hang up. Call 1-800-829-1040 to verify.":
+    "El IRS y la Administración del Seguro Social te contactan primero por CORREO POSTAL — nunca por teléfono o email. Si alguien llamó o envió correo diciendo ser del IRS, cuelga. Llama al 1-800-829-1040 para verificar.",
+  "Do not enter your SSN on any website until you verify it is legitimate. Look for a padlock icon and .gov or a known company domain only. When in doubt, call the company directly.":
+    "No ingreses tu SSN en ningún sitio web hasta verificar que sea legítimo. Busca un ícono de candado y solo .gov o un dominio conocido. Cuando dudes, llama directamente a la empresa.",
+  "This is one of the most common scam tactics. Hang up immediately. No legitimate organization needs your SSN over an unexpected phone call.":
+    "Esta es una de las tácticas de estafa más comunes. Cuelga de inmediato. Ninguna organización legítima necesita tu SSN en una llamada inesperada.",
+  "Never share your SSN by email or text. Legitimate organizations do not ask for your SSN this way. This is almost certainly a scam.":
+    "Nunca compartas tu SSN por correo o texto. Las organizaciones legítimas no piden tu SSN así. Esto es casi seguro una estafa.",
+  "When in doubt, don't share it. Call your guardian or a trusted family member before doing anything.":
+    "Cuando dudes, no lo compartas. Llama a tu guardián o a un familiar de confianza antes de hacer cualquier cosa.",
 
   // Learn
   "🎓 Learn": "🎓 Aprender",
