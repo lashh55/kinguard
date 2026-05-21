@@ -10,17 +10,31 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as SsnRouteImport } from './routes/ssn'
+import { Route as SitemapDotxmlRouteImport } from './routes/sitemap[.]xml'
+import { Route as ScamsRouteImport } from './routes/scams'
 import { Route as ResetPasswordRouteImport } from './routes/reset-password'
 import { Route as ProfileRouteImport } from './routes/profile'
 import { Route as PrivacyRouteImport } from './routes/privacy'
 import { Route as LearnRouteImport } from './routes/learn'
+import { Route as ForGuardiansRouteImport } from './routes/for-guardians'
 import { Route as DashboardRouteImport } from './routes/dashboard'
 import { Route as CheckRouteImport } from './routes/check'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as ScamsSlugRouteImport } from './routes/scams.$slug'
 
 const SsnRoute = SsnRouteImport.update({
   id: '/ssn',
   path: '/ssn',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const SitemapDotxmlRoute = SitemapDotxmlRouteImport.update({
+  id: '/sitemap.xml',
+  path: '/sitemap.xml',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ScamsRoute = ScamsRouteImport.update({
+  id: '/scams',
+  path: '/scams',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ResetPasswordRoute = ResetPasswordRouteImport.update({
@@ -43,6 +57,11 @@ const LearnRoute = LearnRouteImport.update({
   path: '/learn',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ForGuardiansRoute = ForGuardiansRouteImport.update({
+  id: '/for-guardians',
+  path: '/for-guardians',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const DashboardRoute = DashboardRouteImport.update({
   id: '/dashboard',
   path: '/dashboard',
@@ -58,37 +77,54 @@ const IndexRoute = IndexRouteImport.update({
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ScamsSlugRoute = ScamsSlugRouteImport.update({
+  id: '/$slug',
+  path: '/$slug',
+  getParentRoute: () => ScamsRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/check': typeof CheckRoute
   '/dashboard': typeof DashboardRoute
+  '/for-guardians': typeof ForGuardiansRoute
   '/learn': typeof LearnRoute
   '/privacy': typeof PrivacyRoute
   '/profile': typeof ProfileRoute
   '/reset-password': typeof ResetPasswordRoute
+  '/scams': typeof ScamsRouteWithChildren
+  '/sitemap.xml': typeof SitemapDotxmlRoute
   '/ssn': typeof SsnRoute
+  '/scams/$slug': typeof ScamsSlugRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/check': typeof CheckRoute
   '/dashboard': typeof DashboardRoute
+  '/for-guardians': typeof ForGuardiansRoute
   '/learn': typeof LearnRoute
   '/privacy': typeof PrivacyRoute
   '/profile': typeof ProfileRoute
   '/reset-password': typeof ResetPasswordRoute
+  '/scams': typeof ScamsRouteWithChildren
+  '/sitemap.xml': typeof SitemapDotxmlRoute
   '/ssn': typeof SsnRoute
+  '/scams/$slug': typeof ScamsSlugRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/check': typeof CheckRoute
   '/dashboard': typeof DashboardRoute
+  '/for-guardians': typeof ForGuardiansRoute
   '/learn': typeof LearnRoute
   '/privacy': typeof PrivacyRoute
   '/profile': typeof ProfileRoute
   '/reset-password': typeof ResetPasswordRoute
+  '/scams': typeof ScamsRouteWithChildren
+  '/sitemap.xml': typeof SitemapDotxmlRoute
   '/ssn': typeof SsnRoute
+  '/scams/$slug': typeof ScamsSlugRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -96,41 +132,56 @@ export interface FileRouteTypes {
     | '/'
     | '/check'
     | '/dashboard'
+    | '/for-guardians'
     | '/learn'
     | '/privacy'
     | '/profile'
     | '/reset-password'
+    | '/scams'
+    | '/sitemap.xml'
     | '/ssn'
+    | '/scams/$slug'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
     | '/check'
     | '/dashboard'
+    | '/for-guardians'
     | '/learn'
     | '/privacy'
     | '/profile'
     | '/reset-password'
+    | '/scams'
+    | '/sitemap.xml'
     | '/ssn'
+    | '/scams/$slug'
   id:
     | '__root__'
     | '/'
     | '/check'
     | '/dashboard'
+    | '/for-guardians'
     | '/learn'
     | '/privacy'
     | '/profile'
     | '/reset-password'
+    | '/scams'
+    | '/sitemap.xml'
     | '/ssn'
+    | '/scams/$slug'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   CheckRoute: typeof CheckRoute
   DashboardRoute: typeof DashboardRoute
+  ForGuardiansRoute: typeof ForGuardiansRoute
   LearnRoute: typeof LearnRoute
   PrivacyRoute: typeof PrivacyRoute
   ProfileRoute: typeof ProfileRoute
   ResetPasswordRoute: typeof ResetPasswordRoute
+  ScamsRoute: typeof ScamsRouteWithChildren
+  SitemapDotxmlRoute: typeof SitemapDotxmlRoute
   SsnRoute: typeof SsnRoute
 }
 
@@ -141,6 +192,20 @@ declare module '@tanstack/react-router' {
       path: '/ssn'
       fullPath: '/ssn'
       preLoaderRoute: typeof SsnRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/sitemap.xml': {
+      id: '/sitemap.xml'
+      path: '/sitemap.xml'
+      fullPath: '/sitemap.xml'
+      preLoaderRoute: typeof SitemapDotxmlRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/scams': {
+      id: '/scams'
+      path: '/scams'
+      fullPath: '/scams'
+      preLoaderRoute: typeof ScamsRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/reset-password': {
@@ -171,6 +236,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof LearnRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/for-guardians': {
+      id: '/for-guardians'
+      path: '/for-guardians'
+      fullPath: '/for-guardians'
+      preLoaderRoute: typeof ForGuardiansRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/dashboard': {
       id: '/dashboard'
       path: '/dashboard'
@@ -192,17 +264,37 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/scams/$slug': {
+      id: '/scams/$slug'
+      path: '/$slug'
+      fullPath: '/scams/$slug'
+      preLoaderRoute: typeof ScamsSlugRouteImport
+      parentRoute: typeof ScamsRoute
+    }
   }
 }
+
+interface ScamsRouteChildren {
+  ScamsSlugRoute: typeof ScamsSlugRoute
+}
+
+const ScamsRouteChildren: ScamsRouteChildren = {
+  ScamsSlugRoute: ScamsSlugRoute,
+}
+
+const ScamsRouteWithChildren = ScamsRoute._addFileChildren(ScamsRouteChildren)
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   CheckRoute: CheckRoute,
   DashboardRoute: DashboardRoute,
+  ForGuardiansRoute: ForGuardiansRoute,
   LearnRoute: LearnRoute,
   PrivacyRoute: PrivacyRoute,
   ProfileRoute: ProfileRoute,
   ResetPasswordRoute: ResetPasswordRoute,
+  ScamsRoute: ScamsRouteWithChildren,
+  SitemapDotxmlRoute: SitemapDotxmlRoute,
   SsnRoute: SsnRoute,
 }
 export const routeTree = rootRouteImport
