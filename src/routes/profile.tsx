@@ -60,14 +60,15 @@ function lastActiveLabel(iso: string | null): { text: string; status: "active" |
   return { text: `Last active: ${timeframe(iso)}`, status };
 }
 
-function actionLabel(a: ActivityRow): string {
+function actionLabel(a: ActivityRow, t: (s: string) => string): string {
   const who = a.guardian_first_name;
+  const alertWord = a.alert_scam_type || t("alert");
   switch (a.action_type) {
-    case "app_open": return `${who} opened the app`;
-    case "alert_view": return `${who} viewed your ${a.alert_scam_type || "alert"}`;
-    case "acknowledged": return `${who} acknowledged your ${a.alert_scam_type || "alert"}`;
-    case "called_senior": return `${who} called you about your ${a.alert_scam_type || "alert"}`;
-    case "blocked_sender": return `${who} blocked the sender of your ${a.alert_scam_type || "alert"}`;
+    case "app_open": return `${who} ${t("opened the app")}`;
+    case "alert_view": return `${who} ${t("viewed your")} ${alertWord}`;
+    case "acknowledged": return `${who} ${t("acknowledged your")} ${alertWord}`;
+    case "called_senior": return `${who} ${t("called you about your")} ${alertWord}`;
+    case "blocked_sender": return `${who} ${t("blocked the sender of your")} ${alertWord}`;
   }
 }
 
@@ -114,9 +115,9 @@ function ProfileScreen() {
 
   const removeGuardian = async (linkId: string) => {
     const { error } = await supabase.from("guardian_relationships").delete().eq("id", linkId);
-    if (error) { toast("Could not remove. Try again."); return; }
+    if (error) { toast(t("Could not remove. Try again.")); return; }
     setGuardians((g) => g.filter((r) => r.link_id !== linkId));
-    toast("✅ Guardian removed");
+    toast(t("✅ Guardian removed"));
   };
 
   const deleteAccount = async () => {
@@ -125,10 +126,10 @@ function ProfileScreen() {
       const { error } = await supabase.rpc("delete_my_account");
       if (error) throw error;
       await supabase.auth.signOut();
-      toast("Your account has been deleted.");
+      toast(t("Your account has been deleted."));
       navigate({ to: "/" });
     } catch (e: any) {
-      toast(e?.message || "Could not delete account. Try again.");
+      toast(e?.message || t("Could not delete account. Try again."));
     } finally {
       setDeleting(false);
     }
@@ -144,16 +145,16 @@ function ProfileScreen() {
       </header>
       <section className="px-5 space-y-4">
         <div className="card-soft">
-          <p><span className="font-bold">Name:</span> {profile.full_name}</p>
-          <p className="mt-1"><span className="font-bold">Role:</span> {isSenior ? "Protected Senior" : "Guardian"}</p>
-          {profile.phone_number && <p className="mt-1"><span className="font-bold">Phone:</span> {profile.phone_number}</p>}
+          <p><span className="font-bold">{t("Name:")}</span> {profile.full_name}</p>
+          <p className="mt-1"><span className="font-bold">{t("Role:")}</span> {isSenior ? t("Protected Senior") : t("Guardian")}</p>
+          {profile.phone_number && <p className="mt-1"><span className="font-bold">{t("Phone:")}</span> {profile.phone_number}</p>}
           {isSenior && profile.invite_code && (
             <div className="mt-3">
-              <p className="font-bold mb-1">Your invite code:</p>
+              <p className="font-bold mb-1">{t("Your invite code:")}</p>
               <div className="text-3xl font-extrabold tracking-widest text-center py-3 rounded-xl"
                 style={{ background: "var(--color-sky)" }}>{profile.invite_code}</div>
               <p className="text-sm mt-2" style={{ color: "var(--color-muted-foreground)" }}>
-                Share this with up to 5 family members. Each can link to you with this same code.
+                {t("Share this with up to 5 family members. Each can link to you with this same code.")}
               </p>
             </div>
           )}
@@ -175,50 +176,50 @@ function ProfileScreen() {
             </div>
 
             <div>
-              <h2 className="mb-2">My Badges 🏅</h2>
+              <h2 className="mb-2">{t("My Badges 🏅")}</h2>
               <BadgeGrid stats={profile.challenge_stats} />
             </div>
 
             <div className="card-soft">
               <h2 className="mb-2">
-                My Guardians: {guardians.length}/5
+                {t("My Guardians:")} {guardians.length}/5
                 {guardians.length < 5 && (
                   <span className="text-sm font-normal" style={{ color: "var(--color-muted-foreground)" }}>
-                    {" "}— {5 - guardians.length} slot{5 - guardians.length === 1 ? "" : "s"} available
+                    {" "}— {5 - guardians.length} {5 - guardians.length === 1 ? t("slot available") : t("slots available")}
                   </span>
                 )}
               </h2>
               {guardians.length === 0 ? (
                 <p style={{ color: "var(--color-muted-foreground)" }}>
-                  No one is linked yet. Share your invite code above.
+                  {t("No one is linked yet. Share your invite code above.")}
                 </p>
               ) : (
                 <ul className="space-y-3">
                   {guardians.map((g) => {
                     const active = lastActiveLabel(g.last_alert_view_at);
                     const dot = active.status === "active" ? "🟢" : active.status === "inactive" ? "🟡" : "🔴";
-                    const dotLabel = active.status === "active" ? "Active" : active.status === "inactive" ? "Inactive" : "Never checked";
-                    const phoneFmt = g.phone_last4 ? `•••-•••-${g.phone_last4}` : "Phone not provided";
+                    const dotLabel = active.status === "active" ? t("Active") : active.status === "inactive" ? t("Inactive") : t("Never checked");
+                    const phoneFmt = g.phone_last4 ? `•••-•••-${g.phone_last4}` : t("Phone not provided");
                     return (
                       <li key={g.link_id} className="rounded-xl p-3 border-2" style={{ borderColor: "var(--color-border)" }}>
                         <div className="flex items-start justify-between gap-3">
                           <div className="min-w-0">
                             <p className="font-extrabold" style={{ fontSize: 18 }}>{g.full_name}</p>
                             <p className="text-sm font-bold mt-0.5" style={{ color: "var(--color-rose)" }}>
-                              {g.relationship_label || "Family"}
+                              {g.relationship_label || t("Family")}
                             </p>
                             <p className="text-sm font-mono mt-1">{phoneFmt}</p>
                             <p className="text-sm mt-2" style={{ color: "var(--color-muted-foreground)" }}>
-                              Linked: {formatDate(g.linked_at)}
+                              {t("Linked:")} {formatDate(g.linked_at)}
                             </p>
                             <p className="text-sm" style={{ color: "var(--color-muted-foreground)" }}>
                               {active.text}
                             </p>
                             <p className="text-sm mt-1">
-                              <span className="font-bold">Last viewed your alerts:</span> {timeframe(g.last_alert_view_at)}
+                              <span className="font-bold">{t("Last viewed your alerts:")}</span> {timeframe(g.last_alert_view_at)}
                             </p>
                             <p className="text-sm">
-                              <span className="font-bold">Total alerts reviewed:</span> {g.total_alerts_reviewed ?? 0}
+                              <span className="font-bold">{t("Total alerts reviewed:")}</span> {g.total_alerts_reviewed ?? 0}
                             </p>
                           </div>
                           <span className="text-sm font-bold whitespace-nowrap" title={dotLabel}>
@@ -230,7 +231,7 @@ function ProfileScreen() {
                           style={{ background: "#E74C3C", color: "#fff", minHeight: 44 }}
                           onClick={() => removeGuardian(g.link_id)}
                         >
-                          🗑️ Remove Guardian
+                          {t("🗑️ Remove Guardian")}
                         </button>
                       </li>
                     );
@@ -239,7 +240,7 @@ function ProfileScreen() {
               )}
               {guardians.length >= 5 && (
                 <p className="text-sm mt-3 font-bold" style={{ color: "var(--color-warn)" }}>
-                  You've reached the maximum of 5 guardians. Remove one before adding another.
+                  {t("You've reached the maximum of 5 guardians. Remove one before adding another.")}
                 </p>
               )}
             </div>
