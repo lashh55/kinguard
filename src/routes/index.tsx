@@ -25,7 +25,7 @@ function Onboarding() {
   }, [loading, user, profile, navigate]);
 
   if (loading) {
-    return <div className="min-h-screen flex items-center justify-center">Loading…</div>;
+    return <div className="min-h-screen flex items-center justify-center">{t("Loading…")}</div>;
   }
 
   return (
@@ -68,7 +68,7 @@ function RoleStep({ onPick }: { onPick: (s: Step) => void }) {
         {t("💙 I want to protect someone")}
       </button>
       <p className="text-center italic px-2" style={{ color: "#3D2B2B", fontSize: 16 }}>
-        You will need an invite code from the person you want to protect. Ask them to create their account first — they will receive a code to share with you.
+        {t("You will need an invite code from the person you want to protect. Ask them to create their account first — they will receive a code to share with you.")}
       </p>
       <p className="text-center text-sm mt-2" style={{ color: "var(--color-muted-foreground)" }}>
         {t("Already have an account?")}{" "}
@@ -90,6 +90,7 @@ function FormRow({ label, children, hint }: { label: string; children: React.Rea
 
 function SeniorForm({ onCreated, onBack }: { onCreated: (code: string) => void; onBack: () => void }) {
   const { refreshProfile } = useAuth();
+  const { t } = useI18n();
   const [mode, setMode] = useState<"signup" | "signin">("signup");
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
@@ -104,8 +105,8 @@ function SeniorForm({ onCreated, onBack }: { onCreated: (code: string) => void; 
     e.preventDefault();
     setErr(null); setPhoneErr(null);
     if (mode === "signup") {
-      if (!phone.trim()) { setPhoneErr("Phone number is required"); return; }
-      if (!isValidPhone(phone)) { setPhoneErr("Please enter a valid 10-digit phone number"); return; }
+      if (!phone.trim()) { setPhoneErr(t("Phone number is required")); return; }
+      if (!isValidPhone(phone)) { setPhoneErr(t("Please enter a valid 10-digit phone number")); return; }
     }
     setBusy(true);
     try {
@@ -130,26 +131,26 @@ function SeniorForm({ onCreated, onBack }: { onCreated: (code: string) => void; 
       await refreshProfile();
       onCreated(prof?.invite_code || "—");
     } catch (e: any) {
-      setErr(e?.message || "Something went wrong");
+      setErr(e?.message || t("Something went wrong"));
     } finally { setBusy(false); }
   };
 
   return (
     <form onSubmit={submit} className="card-soft space-y-4">
       <div className="flex gap-2">
-        <button type="button" className={`btn-base flex-1 ${mode==="signup"?"btn-primary":"btn-outline"}`} onClick={() => setMode("signup")}>Create account</button>
-        <button type="button" className={`btn-base flex-1 ${mode==="signin"?"btn-primary":"btn-outline"}`} onClick={() => setMode("signin")}>Sign in</button>
+        <button type="button" className={`btn-base flex-1 ${mode==="signup"?"btn-primary":"btn-outline"}`} onClick={() => setMode("signup")}>{t("Create account")}</button>
+        <button type="button" className={`btn-base flex-1 ${mode==="signin"?"btn-primary":"btn-outline"}`} onClick={() => setMode("signin")}>{t("Sign in")}</button>
       </div>
       {mode === "signup" && (
-        <FormRow label="Full name">
+        <FormRow label={t("Full name")}>
           <input className="input-large" required value={name} onChange={(e) => setName(e.target.value)} />
         </FormRow>
       )}
-      <FormRow label="Email address">
+      <FormRow label={t("Email address")}>
         <input className="input-large" type="email" required value={email} onChange={(e) => setEmail(e.target.value)} />
       </FormRow>
       {mode === "signup" && (
-        <FormRow label="Phone Number — so your guardian can reach you">
+        <FormRow label={t("Phone Number — so your guardian can reach you")}>
           <input
             className="input-large"
             type="tel"
@@ -161,29 +162,30 @@ function SeniorForm({ onCreated, onBack }: { onCreated: (code: string) => void; 
           {phoneErr && <span className="block text-sm font-bold mt-1" style={{ color: "var(--color-danger)" }}>{phoneErr}</span>}
         </FormRow>
       )}
-      <FormRow label="Password">
+      <FormRow label={t("Password")}>
         <input className="input-large" type="password" required minLength={6} value={password} onChange={(e) => setPassword(e.target.value)} />
       </FormRow>
       {mode === "signin" && <ForgotPassword email={email} />}
       {mode === "signup" && (
-        <FormRow label="Text size">
+        <FormRow label={t("Text size")}>
           <div className="flex gap-2">
-            <button type="button" className={`btn-base flex-1 ${font==="large"?"btn-sky":"btn-outline"}`} onClick={() => setFont("large")}>Large</button>
-            <button type="button" className={`btn-base flex-1 ${font==="extra_large"?"btn-sky":"btn-outline"}`} onClick={() => setFont("extra_large")}>Extra Large</button>
+            <button type="button" className={`btn-base flex-1 ${font==="large"?"btn-sky":"btn-outline"}`} onClick={() => setFont("large")}>{t("Large")}</button>
+            <button type="button" className={`btn-base flex-1 ${font==="extra_large"?"btn-sky":"btn-outline"}`} onClick={() => setFont("extra_large")}>{t("Extra Large")}</button>
           </div>
         </FormRow>
       )}
       {err && <p className="text-sm font-bold" style={{ color: "var(--color-danger)" }}>{err}</p>}
       <button className="btn-base btn-primary w-full" disabled={busy}>
-        {busy ? "Please wait…" : mode === "signup" ? "Create My Account" : "Sign In"}
+        {busy ? t("Please wait…") : mode === "signup" ? t("Create My Account") : t("Sign In")}
       </button>
-      <button type="button" className="text-sm underline w-full" onClick={onBack}>← Back</button>
+      <button type="button" className="text-sm underline w-full" onClick={onBack}>{t("← Back")}</button>
     </form>
   );
 }
 
 function GuardianForm({ onLinked, onBack }: { onLinked: () => void; onBack: () => void }) {
   const { refreshProfile } = useAuth();
+  const { t } = useI18n();
   const [mode, setMode] = useState<"signup" | "signin">("signup");
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
@@ -199,8 +201,8 @@ function GuardianForm({ onLinked, onBack }: { onLinked: () => void; onBack: () =
     e.preventDefault();
     setErr(null); setPhoneErr(null);
     if (mode === "signup") {
-      if (!phone.trim()) { setPhoneErr("Phone number is required"); return; }
-      if (!isValidPhone(phone)) { setPhoneErr("Please enter a valid 10-digit phone number"); return; }
+      if (!phone.trim()) { setPhoneErr(t("Phone number is required")); return; }
+      if (!isValidPhone(phone)) { setPhoneErr(t("Please enter a valid 10-digit phone number")); return; }
     }
     setBusy(true);
     try {
@@ -236,19 +238,19 @@ function GuardianForm({ onLinked, onBack }: { onLinked: () => void; onBack: () =
   return (
     <form onSubmit={submit} className="card-soft space-y-4">
       <div className="flex gap-2">
-        <button type="button" className={`btn-base flex-1 ${mode==="signup"?"btn-primary":"btn-outline"}`} onClick={() => setMode("signup")}>Create account</button>
-        <button type="button" className={`btn-base flex-1 ${mode==="signin"?"btn-primary":"btn-outline"}`} onClick={() => setMode("signin")}>Sign in</button>
+        <button type="button" className={`btn-base flex-1 ${mode==="signup"?"btn-primary":"btn-outline"}`} onClick={() => setMode("signup")}>{t("Create account")}</button>
+        <button type="button" className={`btn-base flex-1 ${mode==="signin"?"btn-primary":"btn-outline"}`} onClick={() => setMode("signin")}>{t("Sign in")}</button>
       </div>
       {mode === "signup" && (
-        <FormRow label="Full name">
+        <FormRow label={t("Full name")}>
           <input className="input-large" required value={name} onChange={(e) => setName(e.target.value)} />
         </FormRow>
       )}
-      <FormRow label="Email address">
+      <FormRow label={t("Email address")}>
         <input className="input-large" type="email" required value={email} onChange={(e) => setEmail(e.target.value)} />
       </FormRow>
       {mode === "signup" && (
-        <FormRow label="Phone Number — so we can alert you by call or text">
+        <FormRow label={t("Phone Number — so we can alert you by call or text")}>
           <input
             className="input-large"
             type="tel"
@@ -260,76 +262,79 @@ function GuardianForm({ onLinked, onBack }: { onLinked: () => void; onBack: () =
           {phoneErr && <span className="block text-sm font-bold mt-1" style={{ color: "var(--color-danger)" }}>{phoneErr}</span>}
         </FormRow>
       )}
-      <FormRow label="Password">
+      <FormRow label={t("Password")}>
         <input className="input-large" type="password" required minLength={6} value={password} onChange={(e) => setPassword(e.target.value)} />
       </FormRow>
       {mode === "signin" && <ForgotPassword email={email} />}
-      <FormRow label="Relationship to senior (e.g. Daughter, Son, Friend)">
+      <FormRow label={t("Relationship to senior (e.g. Daughter, Son, Friend)")}>
         <input className="input-large" required value={rel} onChange={(e) => setRel(e.target.value)} />
       </FormRow>
-      <FormRow label="Invite code" hint="Ask the person you want to protect for their invite code. They must create their account first.">
+      <FormRow label={t("Invite code")} hint={t("Ask the person you want to protect for their invite code. They must create their account first.")}>
         <input className="input-large uppercase tracking-widest" required value={code} onChange={(e) => setCode(e.target.value.toUpperCase())} />
       </FormRow>
       {err && <p className="text-sm font-bold" style={{ color: "var(--color-danger)" }}>{err}</p>}
       <button className="btn-base btn-primary w-full" disabled={busy}>
-        {busy ? "Connecting…" : "Connect and Protect"}
+        {busy ? t("Connecting…") : t("Connect and Protect")}
       </button>
-      <button type="button" className="text-sm underline w-full" onClick={onBack}>← Back</button>
+      <button type="button" className="text-sm underline w-full" onClick={onBack}>{t("← Back")}</button>
     </form>
   );
 }
 
 function InviteCodeView({ code, onContinue }: { code: string; onContinue: () => void }) {
+  const { t } = useI18n();
   return (
     <div className="card-soft text-center space-y-4">
-      <h2>You're protected! 🎉</h2>
-      <p>Share this code with your family member so they can protect you:</p>
+      <h2>{t("You're protected! 🎉")}</h2>
+      <p>{t("Share this code with your family member so they can protect you:")}</p>
       <div className="text-5xl font-extrabold tracking-widest py-4 rounded-2xl"
         style={{ background: "var(--color-sky)", color: "var(--color-brown)" }}>
         {code}
       </div>
       <p className="text-sm" style={{ color: "var(--color-muted-foreground)" }}>
-        Multiple family members can use this same code.
+        {t("Multiple family members can use this same code.")}
       </p>
-      <button className="btn-base btn-primary w-full" onClick={onContinue}>Continue to my dashboard</button>
+      <button className="btn-base btn-primary w-full" onClick={onContinue}>{t("Continue to my dashboard")}</button>
     </div>
   );
 }
 
 function LinkedView({ onContinue }: { onContinue: () => void }) {
+  const { t } = useI18n();
   return (
     <div className="card-soft text-center space-y-4">
-      <h2>Connected! 💙</h2>
-      <p>You're now protecting your loved one. You'll see their alerts in your dashboard.</p>
-      <button className="btn-base btn-primary w-full" onClick={onContinue}>Go to dashboard</button>
+      <h2>{t("Connected! 💙")}</h2>
+      <p>{t("You're now protecting your loved one. You'll see their alerts in your dashboard.")}</p>
+      <button className="btn-base btn-primary w-full" onClick={onContinue}>{t("Go to dashboard")}</button>
     </div>
   );
 }
 
 function ForgotPassword({ email }: { email: string }) {
+  const { t } = useI18n();
   const [busy, setBusy] = useState(false);
   const [msg, setMsg] = useState<string | null>(null);
   const [err, setErr] = useState<string | null>(null);
 
   const send = async () => {
     setMsg(null); setErr(null);
-    if (!email.trim()) { setErr("Enter your email above first, then click Forgot password."); return; }
+    if (!email.trim()) { setErr(t("Enter your email above first, then click Forgot password.")); return; }
     setBusy(true);
     try {
       const { error } = await supabase.auth.resetPasswordForEmail(email, {
         redirectTo: `${window.location.origin}/reset-password`,
       });
       if (error) throw error;
-      setMsg("Check your email for a link to reset your password.");
+      setMsg(t("Check your email for a link to reset your password."));
     } catch (e: any) {
-      setErr(e?.message || "Could not send reset email");
+      setErr(e?.message || t("Could not send reset email"));
     } finally { setBusy(false); }
   };
 
   return (
     <div className="text-center">
       <button type="button" className="text-sm underline" onClick={send} disabled={busy}>
-        {busy ? "Sending…" : "Forgot password?"}
+        {busy ? t("Sending…") : t("Forgot password?")}
       </button>
       {msg && <p className="text-sm mt-2" style={{ color: "var(--color-rose)" }}>{msg}</p>}
       {err && <p className="text-sm font-bold mt-2" style={{ color: "var(--color-danger)" }}>{err}</p>}
