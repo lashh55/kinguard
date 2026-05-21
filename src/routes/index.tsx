@@ -5,6 +5,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { PhotoPanel } from "@/components/PhotoPanel";
 import { formatPhone, isValidPhone } from "@/lib/phone";
 import logo from "@/assets/kinguard-logo.png";
+import { useI18n, LanguageToggle } from "@/lib/i18n";
 
 export const Route = createFileRoute("/")({
   component: Onboarding,
@@ -17,6 +18,7 @@ function Onboarding() {
   const navigate = useNavigate();
   const [step, setStep] = useState<Step>("role");
   const [code, setCode] = useState<string | null>(null);
+  const { t } = useI18n();
 
   useEffect(() => {
     if (!loading && user && profile) navigate({ to: "/dashboard" });
@@ -31,11 +33,14 @@ function Onboarding() {
       <PhotoPanel widthPct={35} />
       <div className="sm:w-[65%]">
         <div className="px-5 py-8 max-w-xl mx-auto">
+          <div className="flex justify-end mb-2">
+            <LanguageToggle />
+          </div>
           <div className="flex flex-col items-center text-center">
             <img src={logo} alt="KinGuard logo" className="w-44 h-44 object-contain" />
             <h1 className="mt-2" style={{ color: "var(--color-rose)", fontSize: 38 }}>KinGuard</h1>
             <p className="mt-1" style={{ color: "var(--color-rose)", letterSpacing: "0.08em", textTransform: "uppercase", fontSize: 14, fontWeight: 700 }}>
-              Protecting the people you love
+              {t("Protecting the people you love")}
             </p>
           </div>
 
@@ -53,20 +58,21 @@ function Onboarding() {
 }
 
 function RoleStep({ onPick }: { onPick: (s: Step) => void }) {
+  const { t } = useI18n();
   return (
     <div className="space-y-4">
       <button className="btn-base btn-sky w-full" onClick={() => onPick("senior")}>
-        🛡️ I want to be protected
+        {t("🛡️ I want to be protected")}
       </button>
       <button className="btn-base btn-primary w-full" onClick={() => onPick("guardian")}>
-        💙 I want to protect someone
+        {t("💙 I want to protect someone")}
       </button>
       <p className="text-center italic px-2" style={{ color: "#3D2B2B", fontSize: 16 }}>
         You will need an invite code from the person you want to protect. Ask them to create their account first — they will receive a code to share with you.
       </p>
       <p className="text-center text-sm mt-2" style={{ color: "var(--color-muted-foreground)" }}>
-        Already have an account?{" "}
-        <button className="underline font-bold" onClick={() => onPick("senior")}>Sign in below</button>
+        {t("Already have an account?")}{" "}
+        <button className="underline font-bold" onClick={() => onPick("senior")}>{t("Sign in")}</button>
       </p>
     </div>
   );

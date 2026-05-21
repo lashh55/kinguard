@@ -8,6 +8,7 @@ import { ScoreCard } from "@/components/ScoreCard";
 import { BadgeGrid } from "@/components/BadgeGrid";
 import { normalizeStats } from "@/lib/badges";
 import { LearningTree, LearningTreeWithTooltip } from "@/components/LearningTree";
+import { useI18n, LanguageToggle } from "@/lib/i18n";
 
 export const Route = createFileRoute("/profile")({
   component: ProfileScreen,
@@ -72,6 +73,7 @@ function actionLabel(a: ActivityRow): string {
 
 function ProfileScreen() {
   const { user, profile, loading, signOut, refreshProfile } = useAuth();
+  const { t } = useI18n();
   const navigate = useNavigate();
   const [guardians, setGuardians] = useState<GuardianRow[]>([]);
   const [activity, setActivity] = useState<ActivityRow[]>([]);
@@ -136,7 +138,10 @@ function ProfileScreen() {
 
   return (
     <ScreenShell>
-      <header className="px-5 pt-6 pb-3"><h1>👤 My Profile</h1></header>
+      <header className="px-5 pt-6 pb-3 flex items-center justify-between">
+        <h1>👤 {t("Profile")}</h1>
+        <LanguageToggle />
+      </header>
       <section className="px-5 space-y-4">
         <div className="card-soft">
           <p><span className="font-bold">Name:</span> {profile.full_name}</p>
@@ -157,7 +162,7 @@ function ProfileScreen() {
         {isSenior && (
           <>
             <div>
-              <h2 className="mb-2">Knowledge Tree 🌳</h2>
+              <h2 className="mb-2">{t("Knowledge Tree 🌳")}</h2>
               <ScoreCard
                 stats={profile.challenge_stats}
                 tree={

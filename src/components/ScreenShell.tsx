@@ -2,9 +2,11 @@ import { Link, useRouterState } from "@tanstack/react-router";
 import { ReactNode } from "react";
 import { useAuth } from "@/lib/auth";
 import { PhotoPanel } from "@/components/PhotoPanel";
+import { useI18n } from "@/lib/i18n";
 
 export function ScreenShell({ children, withPhotoPanel = false }: { children: ReactNode; withPhotoPanel?: boolean }) {
   const { profile } = useAuth();
+  const { t } = useI18n();
   const isGuardian = profile?.role === "guardian";
   return (
     <div className="min-h-screen bg-background flex flex-col">
@@ -19,16 +21,16 @@ export function ScreenShell({ children, withPhotoPanel = false }: { children: Re
         <div className="max-w-xl mx-auto flex items-stretch justify-around">
           {isGuardian ? (
             <>
-              <NavItem to="/dashboard" icon="🏠" label="Home" />
-              <NavItem to="/profile" icon="👤" label="Profile" />
+              <NavItem to="/dashboard" icon="🏠" label={t("Home")} />
+              <NavItem to="/profile" icon="👤" label={t("Profile")} />
             </>
           ) : (
             <>
-              <NavItem to="/dashboard" icon="🏠" label="Home" />
-              <NavItem to="/check" icon="🔍" label="Check" />
+              <NavItem to="/dashboard" icon="🏠" label={t("Home")} />
+              <NavItem to="/check" icon="🔍" label={t("Check")} />
               <NavItem to="/ssn" icon="🛡️" label="SSN" />
-              <NavItem to="/learn" icon="🎓" label="Learn" />
-              <NavItem to="/profile" icon="👤" label="Profile" />
+              <NavItem to="/learn" icon="🎓" label={t("Learn")} />
+              <NavItem to="/profile" icon="👤" label={t("Profile")} />
             </>
           )}
         </div>

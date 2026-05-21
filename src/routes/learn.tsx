@@ -8,6 +8,7 @@ import { ScoreCard } from "@/components/ScoreCard";
 import { BadgeCelebration, useBadgeQueue, useNotifyGuardiansOfBadge } from "@/components/BadgeCelebration";
 import { applyAnswer, applyPerfectWeek, normalizeStats } from "@/lib/badges";
 import { LearningTree, LearningTreeWithTooltip } from "@/components/LearningTree";
+import { useI18n } from "@/lib/i18n";
 import slide1 from "@/assets/slide-1.png";
 import slide2 from "@/assets/slide-2.png";
 import slide3 from "@/assets/slide-3.png";
@@ -56,14 +57,15 @@ function LearnScreen() {
   const { profile, refreshProfile } = useAuth();
   const { current, enqueue, dismiss } = useBadgeQueue();
   const notifyGuardians = useNotifyGuardiansOfBadge();
+  const { t } = useI18n();
   return (
     <ScreenShell>
-      <header className="px-5 pt-6 pb-3"><h1>🎓 Learn</h1></header>
+      <header className="px-5 pt-6 pb-3"><h1>🎓 {t("Learn")}</h1></header>
       <Slides />
       <Cards />
       {profile && (
         <section className="px-5 mt-6">
-          <h2 className="mb-2">Knowledge Tree 🌳</h2>
+          <h2 className="mb-2">{t("Knowledge Tree 🌳")}</h2>
           <ScoreCard
             stats={profile.challenge_stats}
             tree={
