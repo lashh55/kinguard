@@ -138,7 +138,10 @@ function ProfileScreen() {
 
   return (
     <ScreenShell>
-      <header className="px-5 pt-6 pb-3"><h1>👤 My Profile</h1></header>
+      <header className="px-5 pt-6 pb-3 flex items-center justify-between">
+        <h1>👤 {t("Profile")}</h1>
+        <LanguageToggle />
+      </header>
       <section className="px-5 space-y-4">
         <div className="card-soft">
           <p><span className="font-bold">Name:</span> {profile.full_name}</p>
