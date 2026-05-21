@@ -92,7 +92,7 @@ function SeniorDashboard() {
     flagged.some((a) => a.scam_score >= 71) ? "danger" :
     flagged.length > 0 ? "warn" : "safe";
 
-  const statusText = status === "safe" ? "You're protected today" : status === "warn" ? `${flagged.length} alert${flagged.length>1?"s":""} flagged` : "Action needed";
+  const statusText = status === "safe" ? t("You're protected today") : status === "warn" ? `${flagged.length} alert${flagged.length>1?"s":""} flagged` : "Action needed";
   const statusColor = status === "safe" ? "var(--color-safe)" : status === "warn" ? "var(--color-warn)" : "var(--color-danger)";
 
   const tip = TIPS[new Date().getDay() % TIPS.length];
