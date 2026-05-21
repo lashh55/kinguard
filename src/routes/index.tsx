@@ -58,20 +58,21 @@ function Onboarding() {
 }
 
 function RoleStep({ onPick }: { onPick: (s: Step) => void }) {
+  const { t } = useI18n();
   return (
     <div className="space-y-4">
       <button className="btn-base btn-sky w-full" onClick={() => onPick("senior")}>
-        🛡️ I want to be protected
+        {t("🛡️ I want to be protected")}
       </button>
       <button className="btn-base btn-primary w-full" onClick={() => onPick("guardian")}>
-        💙 I want to protect someone
+        {t("💙 I want to protect someone")}
       </button>
       <p className="text-center italic px-2" style={{ color: "#3D2B2B", fontSize: 16 }}>
         You will need an invite code from the person you want to protect. Ask them to create their account first — they will receive a code to share with you.
       </p>
       <p className="text-center text-sm mt-2" style={{ color: "var(--color-muted-foreground)" }}>
-        Already have an account?{" "}
-        <button className="underline font-bold" onClick={() => onPick("senior")}>Sign in below</button>
+        {t("Already have an account?")}{" "}
+        <button className="underline font-bold" onClick={() => onPick("senior")}>{t("Sign in")}</button>
       </p>
     </div>
   );
