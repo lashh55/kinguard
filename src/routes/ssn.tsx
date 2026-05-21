@@ -4,6 +4,7 @@ import { ScreenShell } from "@/components/ScreenShell";
 import { useAuth } from "@/lib/auth";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
+import { useI18n } from "@/lib/i18n";
 import { normalizeStats } from "@/lib/badges";
 
 export const Route = createFileRoute("/ssn")({
@@ -64,6 +65,7 @@ const BUREAUS = [
 
 function SsnShield() {
   const { profile, refreshProfile } = useAuth();
+  const { t } = useI18n();
   const [asker, setAsker] = useState<Asker | null>(null);
   const [dir, setDir] = useState<Direction | null>(null);
   const [progress, setProgress] = useState<Record<string, boolean>>({});
@@ -80,7 +82,7 @@ function SsnShield() {
     setProgress(next);
     if (profile?.id) {
       await supabase.from("profiles").update({ ssn_shield_progress: next }).eq("id", profile.id);
-      if (next[key]) toast("✅ Step marked complete");
+      if (next[key]) toast(t("✅ Step marked complete"));
 
       const allDone =
         IRS_STEPS.every((s) => next[s.id]) &&
@@ -90,7 +92,7 @@ function SsnShield() {
         if (!stats.badges_earned.includes("ssn_hero")) {
           const updated = { ...stats, badges_earned: [...stats.badges_earned, "ssn_hero"] };
           await supabase.from("profiles").update({ challenge_stats: updated as any }).eq("id", profile.id);
-          toast("🛡️ You earned the SSN Hero badge!");
+          toast(t("🛡️ You earned the SSN Hero badge!"));
         }
       }
       refreshProfile?.();
@@ -104,26 +106,26 @@ function SsnShield() {
     <ScreenShell>
       <section className="px-5 pt-4">
         <div className="rounded-2xl p-3 text-center" style={{ background: "#E74C3C", color: "#fff", fontSize: 15 }}>
-          🚨 KinGuard will <span className="font-extrabold">NEVER</span> ask for your Social Security Number. We do not collect it, store it, or transmit it — ever. If you see any field asking for your Social Security Number you are NOT on KinGuard. Leave that page immediately and report it to us at <span className="underline">safety@getkinguard.com</span>.
+          {t("ssn_warning")}
         </div>
       </section>
       <header className="px-5 pt-4 pb-3">
-        <h1 style={{ color: "var(--color-rose)" }}>🛡️ SSN Shield</h1>
-        <p className="mt-1">You have the power to protect yourself. We'll show you how.</p>
+        <h1 style={{ color: "var(--color-rose)" }}>{t("🛡️ SSN Shield")}</h1>
+        <p className="mt-1">{t("You have the power to protect yourself. We'll show you how.")}</p>
       </header>
 
       {/* Should I Share */}
       <section className="px-5">
         <div className="card-soft" style={{ borderLeft: "6px solid var(--color-rose)" }}>
-          <h2 style={{ color: "var(--color-rose)" }}>Should I Share My SSN?</h2>
-          <p className="mt-1">Answer two quick questions and we'll tell you if it's safe.</p>
+          <h2 style={{ color: "var(--color-rose)" }}>{t("Should I Share My SSN?")}</h2>
+          <p className="mt-1">{t("Answer two quick questions and we'll tell you if it's safe.")}</p>
 
           {!asker && (
             <div className="mt-4 space-y-2">
-              <p className="font-bold">Who is asking for your SSN?</p>
+              <p className="font-bold">{t("Who is asking for your SSN?")}</p>
               {ASKERS.map((a) => (
                 <button key={a.id} className="btn-base btn-sky w-full justify-start text-left" onClick={() => setAsker(a.id)}>
-                  <span className="mr-2">{a.icon}</span> {a.label}
+                  <span className="mr-2">{a.icon}</span> {t(a.label)}
                 </button>
               ))}
             </div>
@@ -132,12 +134,12 @@ function SsnShield() {
           {asker && asker !== "unsure" && !dir && (
             <div className="mt-4 space-y-2">
               <div className="rounded-2xl px-4 py-3 text-center font-extrabold" style={{ background: "#ACD0DC", fontSize: 17 }}>
-                You selected: {ASKERS.find((a) => a.id === asker)?.label}
+                {t("You selected:")} {t(ASKERS.find((a) => a.id === asker)?.label || "")}
               </div>
-              <p className="font-bold">Did YOU contact them first, or did they contact you?</p>
-              <button className="btn-base btn-sky w-full" onClick={() => setDir("self")}>✅ I contacted them first</button>
-              <button className="btn-base btn-sky w-full" onClick={() => setDir("them")}>⚠️ They contacted me</button>
-              <button className="text-sm underline w-full mt-1" onClick={reset}>← Start over</button>
+              <p className="font-bold">{t("Did YOU contact them first, or did they contact you?")}</p>
+              <button className="btn-base btn-sky w-full" onClick={() => setDir("self")}>{t("✅ I contacted them first")}</button>
+              <button className="btn-base btn-sky w-full" onClick={() => setDir("them")}>{t("⚠️ They contacted me")}</button>
+              <button className="text-sm underline w-full mt-1" onClick={reset}>{t("← Start over")}</button>
             </div>
           )}
 
@@ -145,26 +147,26 @@ function SsnShield() {
             <div className="mt-4 space-y-3">
               {asker && asker !== "unsure" && (
                 <div className="rounded-2xl px-4 py-3 text-center font-extrabold" style={{ background: "#ACD0DC", fontSize: 17 }}>
-                  You selected: {ASKERS.find((a) => a.id === asker)?.label}
+                  {t("You selected:")} {t(ASKERS.find((a) => a.id === asker)?.label || "")}
                 </div>
               )}
               {dir && (
                 <div className="rounded-2xl px-4 py-3 text-center font-extrabold" style={{ background: "#ACD0DC", fontSize: 17 }}>
-                  You selected: {dir === "self" ? "I contacted them first" : "They contacted me"}
+                  {t("You selected:")} {dir === "self" ? t("I contacted them first") : t("They contacted me")}
                 </div>
               )}
               <div className="rounded-2xl p-4 text-white" style={{ background: levelColor(verdict.level) }}>
-                <p className="font-extrabold" style={{ fontSize: 22 }}>{verdict.title}</p>
-                <p className="mt-2" style={{ fontSize: 18, whiteSpace: "pre-line" }}>{verdict.body}</p>
+                <p className="font-extrabold" style={{ fontSize: 22 }}>{t(verdict.title)}</p>
+                <p className="mt-2" style={{ fontSize: 18, whiteSpace: "pre-line" }}>{t(verdict.body)}</p>
               </div>
               {verdict.level === "safe" ? (
-                <button className="btn-base btn-safe w-full" onClick={reset}>I'm Safe, Thanks</button>
+                <button className="btn-base btn-safe w-full" onClick={reset}>{t("I'm Safe, Thanks")}</button>
               ) : (
-                <button className="btn-base btn-rose w-full" onClick={() => toast("✅ Your guardian has been notified")}>
-                  Alert My Guardian
+                <button className="btn-base btn-rose w-full" onClick={() => toast(t("✅ Your guardian has been notified"))}>
+                  {t("Alert My Guardian")}
                 </button>
               )}
-              <button className="btn-base btn-outline w-full" onClick={reset}>Check another</button>
+              <button className="btn-base btn-outline w-full" onClick={reset}>{t("Check another")}</button>
             </div>
           )}
         </div>
@@ -174,16 +176,16 @@ function SsnShield() {
       <section className="px-5 mt-4">
         <div className="card-soft" style={{ borderLeft: "6px solid var(--color-tan)" }}>
           <div className="flex items-start justify-between gap-3">
-            <h2>📌 IRS Identity Protection PIN</h2>
+            <h2>{t("📌 IRS Identity Protection PIN")}</h2>
             <span className="font-bold text-sm whitespace-nowrap" style={{ color: "var(--color-tan)" }}>
               {irsDone}/{IRS_STEPS.length}
             </span>
           </div>
-          <p className="mt-1">A free 6-digit PIN from the IRS that blocks scammers from filing a tax return in your name.</p>
+          <p className="mt-1">{t("A free 6-digit PIN from the IRS that blocks scammers from filing a tax return in your name.")}</p>
 
           <div className="card-soft mt-3" style={{ background: "var(--color-cream)", boxShadow: "none" }}>
-            <p className="font-bold">💡 Why this matters</p>
-            <p className="mt-1">Tax-return identity theft costs seniors billions every year. The IP PIN is the single best protection — and it's free.</p>
+            <p className="font-bold">{t("💡 Why this matters")}</p>
+            <p className="mt-1">{t("Tax-return identity theft costs seniors billions every year. The IP PIN is the single best protection — and it's free.")}</p>
           </div>
 
           {/* Progress bar */}
@@ -219,11 +221,11 @@ function SsnShield() {
                     >
                       {done ? <span key="check" className="inline-block animate-scale-in">✓</span> : i + 1}
                     </span>
-                    <span className="font-bold pt-1" style={{ fontSize: 17, color: done ? "#fff" : undefined }}>{s.label}</span>
+                    <span className="font-bold pt-1" style={{ fontSize: 17, color: done ? "#fff" : undefined }}>{t(s.label)}</span>
                   </button>
                   {s.url && (
                     <a href={s.url} target="_blank" rel="noopener noreferrer" className="btn-base btn-sky w-full mt-2">
-                      → Open IRS.gov/IPPIN
+                      {t("→ Open IRS.gov/IPPIN")}
                     </a>
                   )}
                 </li>
@@ -233,7 +235,7 @@ function SsnShield() {
 
           {irsDone === IRS_STEPS.length && (
             <div className="rounded-2xl p-4 mt-4 text-white font-bold text-center" style={{ background: "#2ECC71", fontSize: 17 }}>
-              🎉 All steps complete! Your IRS PIN is set up. You're protected!
+              {t("🎉 All steps complete! Your IRS PIN is set up. You're protected!")}
             </div>
           )}
         </div>
@@ -243,16 +245,16 @@ function SsnShield() {
       <section className="px-5 mt-4">
         <div className="card-soft" style={{ borderLeft: "6px solid var(--color-sky)" }}>
           <div className="flex items-start justify-between gap-3">
-            <h2>🧊 Freeze Your Credit</h2>
+            <h2>{t("🧊 Freeze Your Credit")}</h2>
             <span className="font-bold text-sm whitespace-nowrap" style={{ color: "var(--color-sky)" }}>
               {freezeDone}/3
             </span>
           </div>
-          <p className="mt-1">A credit freeze stops anyone from opening new accounts in your name. It's free, and you can unfreeze it anytime.</p>
+          <p className="mt-1">{t("A credit freeze stops anyone from opening new accounts in your name. It's free, and you can unfreeze it anytime.")}</p>
 
           <div className="card-soft mt-3" style={{ background: "var(--color-cream)", boxShadow: "none" }}>
-            <p className="font-bold">💡 You must freeze at all 3 bureaus</p>
-            <p className="mt-1">Equifax, Experian, and TransUnion all keep separate files. Freeze each one.</p>
+            <p className="font-bold">{t("💡 You must freeze at all 3 bureaus")}</p>
+            <p className="mt-1">{t("Equifax, Experian, and TransUnion all keep separate files. Freeze each one.")}</p>
           </div>
 
           <div className="mt-4 space-y-3">
@@ -269,19 +271,19 @@ function SsnShield() {
                       <span className="text-2xl">{b.icon}</span>
                       <span className="font-extrabold" style={{ fontSize: 19 }}>{b.name}</span>
                     </div>
-                    {done && <span className="font-bold" style={{ color: "#2ECC71" }}>✓ Done</span>}
+                    {done && <span className="font-bold" style={{ color: "#2ECC71" }}>{t("✓ Done")}</span>}
                   </div>
                   <p className="mt-1 text-sm">📞 {b.phone}</p>
                   <div className="mt-3 grid grid-cols-1 gap-2">
                     <a href={b.url} target="_blank" rel="noopener noreferrer" className="btn-base btn-sky w-full">
-                      → Freeze on {b.name}
+                      {t("→ Freeze on")} {b.name}
                     </a>
                     <button
                       className="btn-base w-full"
                       style={done ? { background: "#2ECC71", color: "#fff" } : undefined}
                       onClick={() => toggle(key)}
                     >
-                      {done ? "✅ Frozen — Done!" : "I froze it ✓"}
+                      {done ? t("✅ Frozen — Done!") : t("I froze it ✓")}
                     </button>
                   </div>
                 </div>
@@ -291,15 +293,15 @@ function SsnShield() {
 
           {freezeDone === 3 && (
             <div className="rounded-2xl p-4 mt-4 text-white" style={{ background: "#2ECC71" }}>
-              <p className="font-extrabold" style={{ fontSize: 20 }}>🛡️ Excellent!</p>
-              <p className="mt-1">All three credit bureaus are frozen. Your credit is now protected even if someone has your Social Security Number.</p>
+              <p className="font-extrabold" style={{ fontSize: 20 }}>{t("🛡️ Excellent!")}</p>
+              <p className="mt-1">{t("All three credit bureaus are frozen. Your credit is now protected even if someone has your Social Security Number.")}</p>
             </div>
           )}
         </div>
       </section>
 
       <p className="text-center text-sm mt-6 mb-2 px-5" style={{ color: "var(--color-muted-foreground)" }}>
-        🔒 KinGuard never requires, stores, or transmits your Social Security Number. We only help you protect it.
+        {t("🔒 KinGuard never requires, stores, or transmits your Social Security Number. We only help you protect it.")}
       </p>
     </ScreenShell>
   );
