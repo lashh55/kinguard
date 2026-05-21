@@ -58,7 +58,7 @@ function Dashboard() {
 
 function SeniorDashboard() {
   const { profile } = useAuth();
-  const { t } = useI18n();
+  const { t, lang } = useI18n();
   const [alerts, setAlerts] = useState<Alert[]>([]);
   const [question, setQuestion] = useState<Question | null>(null);
   const [picked, setPicked] = useState<string | null>(null);
@@ -159,17 +159,17 @@ function SeniorDashboard() {
       </section>
 
       <section className="px-5 mt-5 space-y-3">
-        <Link to="/check" className="btn-base btn-primary w-full">🔍 Check a Suspicious Message</Link>
-        <Link to="/ssn" className="btn-base btn-primary w-full">🛡️ Protect My SSN</Link>
+        <Link to="/check" className="btn-base btn-primary w-full">🔍 {t("Check a Suspicious Message")}</Link>
+        <Link to="/ssn" className="btn-base btn-primary w-full">🛡️ {t("Protect My SSN")}</Link>
         <button className="btn-base btn-danger w-full" onClick={() => notifyGuardianSOS(profile.full_name)}>
-          🆘 I Need Help
+          🆘 {t("I Need Help")}
         </button>
       </section>
 
       {question && (
         <section className="px-5 mt-5">
           <div className="card-soft" style={{ background: "var(--color-cream)" }}>
-            <p className="font-bold mb-1">🧠 This Week's Question</p>
+            <p className="font-bold mb-1">{t("🧠 This Week's Question")}</p>
             <p className="font-bold" style={{ fontSize: 18 }}>{question.question_text}</p>
             <div className="mt-3 space-y-2">
               {(["a","b","c","d"] as const).map((l) => {
@@ -191,18 +191,18 @@ function SeniorDashboard() {
             </div>
             {picked && (
               <p className="mt-3" style={{ fontSize: 16 }}>
-                {picked === question.correct_answer ? "✅ Correct! " : "❌ Not quite. "}
+                {picked === question.correct_answer ? `${t("✅ Correct!")} ` : `${t("❌ Not quite.")} `}
                 {question.explanation}
               </p>
             )}
-            <Link to="/learn" className="btn-base btn-outline w-full mt-3">See All Questions</Link>
+            <Link to="/learn" className="btn-base btn-outline w-full mt-3">{t("See All Questions")}</Link>
           </div>
         </section>
       )}
 
       <section className="px-5 mt-5">
         <div className="card-soft" style={{ background: "var(--color-sky)" }}>
-          <p className="font-bold mb-1">💡 Today's scam tip</p>
+          <p className="font-bold mb-1">{t("💡 Today's scam tip")}</p>
           <p>{tip}</p>
         </div>
       </section>
