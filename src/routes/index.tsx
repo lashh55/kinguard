@@ -5,6 +5,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { PhotoPanel } from "@/components/PhotoPanel";
 import { formatPhone, isValidPhone } from "@/lib/phone";
 import logo from "@/assets/kinguard-logo.png";
+import { useI18n, LanguageToggle } from "@/lib/i18n";
 
 export const Route = createFileRoute("/")({
   component: Onboarding,
