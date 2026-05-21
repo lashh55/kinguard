@@ -7,6 +7,7 @@ import { notifyGuardianSOS } from "@/lib/guardianAlerts";
 import { normalizeStats } from "@/lib/badges";
 import logo from "@/assets/kinguard-logo.png";
 import { LearningTree } from "@/components/LearningTree";
+import { useI18n } from "@/lib/i18n";
 
 export const Route = createFileRoute("/dashboard")({
   component: Dashboard,
