@@ -162,7 +162,7 @@ function ProfileScreen() {
         {isSenior && (
           <>
             <div>
-              <h2 className="mb-2">Knowledge Tree 🌳</h2>
+              <h2 className="mb-2">{t("Knowledge Tree 🌳")}</h2>
               <ScoreCard
                 stats={profile.challenge_stats}
                 tree={
