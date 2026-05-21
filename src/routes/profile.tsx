@@ -73,6 +73,7 @@ function actionLabel(a: ActivityRow): string {
 
 function ProfileScreen() {
   const { user, profile, loading, signOut, refreshProfile } = useAuth();
+  const { t } = useI18n();
   const navigate = useNavigate();
   const [guardians, setGuardians] = useState<GuardianRow[]>([]);
   const [activity, setActivity] = useState<ActivityRow[]>([]);
