@@ -1,4 +1,5 @@
 import { createServerFn } from "@tanstack/react-start";
+import { requireSupabaseAuth } from "@/integrations/supabase/auth-middleware";
 
 type AnalysisResult = {
   score: number;
@@ -13,6 +14,7 @@ const SYSTEM_PROMPT = `You are KinGuard, a warm and trustworthy scam protection 
 { "score": integer 0-100 (scam likelihood), "type": string (scam category, e.g. IRS Impersonation), "flags": array of strings (each red flag in plain language, starting with a warning emoji), "recommendation": string (1-2 sentences, warm and clear, written for a 70-year-old, tell them exactly what to do), "urgency": one of: "low", "medium", "high", "critical", "ssn_requested": boolean (true if the message asks for a Social Security Number) }`;
 
 export const analyzeScam = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
   .inputValidator((d: { content: string; channel: string }) => {
     if (!d?.content || typeof d.content !== "string") throw new Error("content required");
     if (d.content.length > 8000) throw new Error("content too long");
