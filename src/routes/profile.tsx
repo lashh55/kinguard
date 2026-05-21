@@ -265,10 +265,10 @@ function ProfileScreen() {
             })()}
 
             <div className="card-soft">
-              <h2 className="mb-2">Guardian Activity</h2>
+              <h2 className="mb-2">{t("Guardian Activity")}</h2>
               {activity.length === 0 && guardians.every((g) => g.last_alert_view_at) ? (
                 <p style={{ color: "var(--color-muted-foreground)" }}>
-                  No guardian activity yet. When your guardians open the app or view your alerts, you'll see it here.
+                  {t("No guardian activity yet. When your guardians open the app or view your alerts, you'll see it here.")}
                 </p>
               ) : (
                 <ul className="space-y-2">
@@ -276,14 +276,14 @@ function ProfileScreen() {
                     <li key={a.id} className="text-sm flex items-start gap-2">
                       <span style={{ color: "var(--color-muted-foreground)" }}>•</span>
                       <span className="flex-1">
-                        {actionLabel(a)} — <span style={{ color: "var(--color-muted-foreground)" }}>{timeframe(a.created_at)}</span>
+                        {actionLabel(a, t)} — <span style={{ color: "var(--color-muted-foreground)" }}>{timeframe(a.created_at)}</span>
                       </span>
                     </li>
                   ))}
                   {guardians.filter((g) => !g.last_alert_view_at).map((g) => (
                     <li key={g.link_id} className="text-sm flex items-start gap-2">
                       <span>🔴</span>
-                      <span className="flex-1">{g.full_name} has never viewed your alerts</span>
+                      <span className="flex-1">{g.full_name} {t("has never viewed your alerts")}</span>
                     </li>
                   ))}
                 </ul>
@@ -291,19 +291,19 @@ function ProfileScreen() {
             </div>
 
             <div className="card-soft">
-              <p className="font-bold mb-2">Text size</p>
+              <p className="font-bold mb-2">{t("Text size")}</p>
               <div className="flex gap-2">
-                <button className={`btn-base flex-1 ${profile.font_size==="large"?"btn-sky":"btn-outline"}`} onClick={() => setFont("large")}>Large</button>
-                <button className={`btn-base flex-1 ${profile.font_size==="extra_large"?"btn-sky":"btn-outline"}`} onClick={() => setFont("extra_large")}>Extra Large</button>
+                <button className={`btn-base flex-1 ${profile.font_size==="large"?"btn-sky":"btn-outline"}`} onClick={() => setFont("large")}>{t("Large")}</button>
+                <button className={`btn-base flex-1 ${profile.font_size==="extra_large"?"btn-sky":"btn-outline"}`} onClick={() => setFont("extra_large")}>{t("Extra Large")}</button>
               </div>
             </div>
           </>
         )}
 
-        <Link to="/privacy" className="btn-base btn-outline w-full">🔒 Privacy & Safety</Link>
+        <Link to="/privacy" className="btn-base btn-outline w-full">{t("🔒 Privacy & Safety")}</Link>
 
         <button className="btn-base btn-outline w-full" onClick={async () => { await signOut(); navigate({ to: "/" }); }}>
-          Sign Out
+          {t("Sign Out")}
         </button>
 
         {!confirmDelete ? (
@@ -312,12 +312,12 @@ function ProfileScreen() {
             style={{ background: "#E74C3C", color: "#fff" }}
             onClick={() => setConfirmDelete(true)}
           >
-            🗑️ Delete My Account
+            {t("🗑️ Delete My Account")}
           </button>
         ) : (
           <div className="card-soft" style={{ border: "2px solid #E74C3C" }}>
-            <p className="font-extrabold" style={{ fontSize: 19, color: "#E74C3C" }}>Are you sure?</p>
-            <p className="mt-2">This will permanently delete your account and all your data. This cannot be undone.</p>
+            <p className="font-extrabold" style={{ fontSize: 19, color: "#E74C3C" }}>{t("Are you sure?")}</p>
+            <p className="mt-2">{t("This will permanently delete your account and all your data. This cannot be undone.")}</p>
             <div className="grid grid-cols-1 gap-2 mt-4">
               <button
                 className="btn-base w-full"
@@ -325,7 +325,7 @@ function ProfileScreen() {
                 disabled={deleting}
                 onClick={deleteAccount}
               >
-                {deleting ? "Deleting…" : "Yes, Delete My Account"}
+                {deleting ? t("Deleting…") : t("Yes, Delete My Account")}
               </button>
               <button
                 className="btn-base w-full"
@@ -333,7 +333,7 @@ function ProfileScreen() {
                 disabled={deleting}
                 onClick={() => setConfirmDelete(false)}
               >
-                Cancel
+                {t("Cancel")}
               </button>
             </div>
           </div>
