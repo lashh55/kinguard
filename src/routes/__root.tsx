@@ -42,24 +42,26 @@ export const Route = createRootRoute({
   }),
   shellComponent: RootShell,
   component: () => (
-    <AuthProvider>
-      <Outlet />
-      <Toaster
-        position="top-center"
-        duration={3000}
-        toastOptions={{
-          style: {
-            background: "#B27F7C",
-            color: "#fff",
-            border: "none",
-            fontSize: "18px",
-            fontWeight: 700,
-            padding: "16px 20px",
-            borderRadius: "16px",
-          },
-        }}
-      />
-    </AuthProvider>
+    <I18nProvider>
+      <AuthProvider>
+        <Outlet />
+        <Toaster
+          position="top-center"
+          duration={3000}
+          toastOptions={{
+            style: {
+              background: "#B27F7C",
+              color: "#fff",
+              border: "none",
+              fontSize: "18px",
+              fontWeight: 700,
+              padding: "16px 20px",
+              borderRadius: "16px",
+            },
+          }}
+        />
+      </AuthProvider>
+    </I18nProvider>
   ),
   notFoundComponent: NotFoundComponent,
 });
