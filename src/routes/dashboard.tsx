@@ -45,12 +45,13 @@ const TIPS = [
 function Dashboard() {
   const { user, profile, loading } = useAuth();
   const navigate = useNavigate();
+  const { t } = useI18n();
 
   useEffect(() => {
     if (!loading && !user) navigate({ to: "/" });
   }, [loading, user, navigate]);
 
-  if (!profile) return <div className="min-h-screen flex items-center justify-center"><LoadingText /></div>;
+  if (!profile) return <div className="min-h-screen flex items-center justify-center">{t("Loading…")}</div>;
 
   return profile.role === "guardian" ? <GuardianDashboard /> : <SeniorDashboard />;
 }
@@ -92,7 +93,7 @@ function SeniorDashboard() {
     flagged.some((a) => a.scam_score >= 71) ? "danger" :
     flagged.length > 0 ? "warn" : "safe";
 
-  const statusText = status === "safe" ? t("You're protected today") : status === "warn" ? `${flagged.length} alert${flagged.length>1?"s":""} flagged` : "Action needed";
+  const statusText = status === "safe" ? t("You're protected today") : status === "warn" ? `${flagged.length} ${t("flagged")}` : t("Action needed");
   const statusColor = status === "safe" ? "var(--color-safe)" : status === "warn" ? "var(--color-warn)" : "var(--color-danger)";
 
   const tip = TIPS[new Date().getDay() % TIPS.length];
@@ -128,8 +129,8 @@ function SeniorDashboard() {
       <section className="px-5 mt-4">
         <div className="card-soft text-center" style={{ background: "var(--color-cream)" }}>
           {streak > 0
-            ? <p className="font-bold" style={{ fontSize: 18 }}>🔥 {streak}-week streak! Keep it up!</p>
-            : <p className="font-bold" style={{ fontSize: 18 }}>Start a new streak this week! You've got this 💪</p>}
+            ? <p className="font-bold" style={{ fontSize: 18 }}>🔥 {streak}{lang === "es" ? "-semanas de racha! ¡Sigue así!" : "-week streak! Keep it up!"}</p>
+            : <p className="font-bold" style={{ fontSize: 18 }}>{t("Start a new streak this week! You've got this 💪")}</p>}
         </div>
       </section>
 
