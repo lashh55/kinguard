@@ -134,21 +134,21 @@ function SeniorDashboard() {
       </section>
 
       <section className="px-5 mt-4 grid grid-cols-3 gap-2">
-        <Stat icon="🔒" label="Blocked" value={blocked} />
-        <Stat icon="📧" label="Checked" value={checked} />
+        <Stat icon="🔒" label={t("Blocked")} value={blocked} />
+        <Stat icon="📧" label={t("Checked")} value={checked} />
         <Link to="/learn" className="card-soft text-center block" style={{ padding: 12, textDecoration: "none", color: "inherit" }}>
           <div style={{ height: 60 }}>
             <LearningTree stats={stats} size={60} />
           </div>
-          <div className="text-xs mt-1" style={{ color: "var(--color-muted-foreground)" }}>Knowledge Tree</div>
+          <div className="text-xs mt-1" style={{ color: "var(--color-muted-foreground)" }}>{t("Knowledge Tree")}</div>
         </Link>
       </section>
 
       <section className="px-5 mt-5">
-        <h2 className="mb-2">Recent alerts</h2>
+        <h2 className="mb-2">{t("Recent alerts")}</h2>
         {alerts.length === 0 ? (
           <div className="card-soft text-center font-bold" style={{ color: "#2ECC71" }}>
-            ✅ No alerts yet. You're all clear!
+            {t("✅ No alerts yet. You're all clear!")}
           </div>
         ) : (
           <ul className="space-y-2">
