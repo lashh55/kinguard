@@ -50,7 +50,7 @@ function Dashboard() {
     if (!loading && !user) navigate({ to: "/" });
   }, [loading, user, navigate]);
 
-  if (!profile) return <div className="min-h-screen flex items-center justify-center">Loading…</div>;
+  if (!profile) return <div className="min-h-screen flex items-center justify-center"><LoadingText /></div>;
 
   return profile.role === "guardian" ? <GuardianDashboard /> : <SeniorDashboard />;
 }
