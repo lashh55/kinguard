@@ -18,6 +18,7 @@ function Onboarding() {
   const navigate = useNavigate();
   const [step, setStep] = useState<Step>("role");
   const [code, setCode] = useState<string | null>(null);
+  const { t } = useI18n();
 
   useEffect(() => {
     if (!loading && user && profile) navigate({ to: "/dashboard" });
@@ -32,11 +33,14 @@ function Onboarding() {
       <PhotoPanel widthPct={35} />
       <div className="sm:w-[65%]">
         <div className="px-5 py-8 max-w-xl mx-auto">
+          <div className="flex justify-end mb-2">
+            <LanguageToggle />
+          </div>
           <div className="flex flex-col items-center text-center">
             <img src={logo} alt="KinGuard logo" className="w-44 h-44 object-contain" />
             <h1 className="mt-2" style={{ color: "var(--color-rose)", fontSize: 38 }}>KinGuard</h1>
             <p className="mt-1" style={{ color: "var(--color-rose)", letterSpacing: "0.08em", textTransform: "uppercase", fontSize: 14, fontWeight: 700 }}>
-              Protecting the people you love
+              {t("Protecting the people you love")}
             </p>
           </div>
 
