@@ -114,6 +114,7 @@ export function useBadgeQueue() {
   const [queue, setQueue] = useState<BadgeDef[]>([]);
   const enqueue = (badges: BadgeDef[]) => {
     if (!badges.length) return;
+    badges.forEach((b) => track("badge_earned", { badge_id: b.id, badge_name: b.name }));
     setQueue((q) => [...q, ...badges]);
   };
   const current = queue[0] ?? null;
