@@ -47,7 +47,13 @@ export const Route = createRootRoute({
     ],
   }),
   shellComponent: RootShell,
-  component: () => (
+  component: RootComponent,
+  notFoundComponent: NotFoundComponent,
+});
+
+function RootComponent() {
+  useEffect(() => { initAnalytics(); }, []);
+  return (
     <I18nProvider>
       <AuthProvider>
         <Outlet />
@@ -68,9 +74,8 @@ export const Route = createRootRoute({
         />
       </AuthProvider>
     </I18nProvider>
-  ),
-  notFoundComponent: NotFoundComponent,
-});
+  );
+}
 
 function RootShell({ children }: { children: React.ReactNode }) {
   return (
