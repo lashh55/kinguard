@@ -6,6 +6,8 @@ import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 import { useI18n } from "@/lib/i18n";
 import { normalizeStats } from "@/lib/badges";
+import { SsnDisclaimer } from "@/components/SsnDisclaimer";
+import { track } from "@/lib/analytics";
 
 export const Route = createFileRoute("/ssn")({
   component: SsnShield,
