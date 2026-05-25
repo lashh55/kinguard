@@ -168,7 +168,7 @@ function SeniorDashboard() {
       <section className="px-5 mt-5 space-y-3">
         <Link to="/check" className="btn-base btn-primary w-full">🔍 {t("Check a Suspicious Message")}</Link>
         <Link to="/ssn" className="btn-base btn-primary w-full">🛡️ {t("Protect My SSN")}</Link>
-        <button className="btn-base btn-danger w-full" onClick={() => notifyGuardianSOS(profile.full_name)}>
+        <button className="btn-base btn-danger w-full" onClick={() => { track("help_requested"); notifyGuardianSOS(profile.full_name); }}>
           🆘 {t("I Need Help")}
         </button>
       </section>
