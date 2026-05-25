@@ -134,6 +134,7 @@ function Cards() {
       if (!stats.badges_earned.includes("scholar")) {
         const updated = { ...stats, badges_earned: [...stats.badges_earned, "scholar"] };
         await supabase.from("profiles").update({ challenge_stats: updated as any }).eq("id", profile.id);
+        track("badge_earned", { badge_id: "scholar", badge_name: "Scholar" });
         toast("📚 You earned the Scholar badge!");
         refreshProfile();
       }
