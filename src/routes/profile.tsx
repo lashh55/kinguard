@@ -100,6 +100,7 @@ function ProfileScreen() {
         if (!stats.badges_earned.includes("team_player")) {
           const updated = { ...stats, badges_earned: [...stats.badges_earned, "team_player"] };
           await supabase.from("profiles").update({ challenge_stats: updated as any }).eq("id", profile.id);
+          track("badge_earned", { badge_id: "team_player", badge_name: "Team Player" });
           toast("👨‍👩‍👧 You earned the Team Player badge!");
           refreshProfile();
         }
