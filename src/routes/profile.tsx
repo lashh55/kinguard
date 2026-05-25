@@ -9,6 +9,7 @@ import { BadgeGrid } from "@/components/BadgeGrid";
 import { normalizeStats } from "@/lib/badges";
 import { LearningTree, LearningTreeWithTooltip } from "@/components/LearningTree";
 import { useI18n, LanguageToggle } from "@/lib/i18n";
+import { track } from "@/lib/analytics";
 
 export const Route = createFileRoute("/profile")({
   component: ProfileScreen,
