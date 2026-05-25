@@ -119,7 +119,10 @@ function SeniorDashboard() {
 
   return (
     <ScreenShell withPhotoPanel>
-      <header className="px-5 pt-6 pb-4">
+      <section className="px-5 pt-4">
+        <SsnDisclaimer />
+      </section>
+      <header className="px-5 pt-4 pb-4">
         <h1>Hello, {profile.full_name.split(" ")[0]} 👋</h1>
       </header>
 
