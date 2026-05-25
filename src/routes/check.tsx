@@ -42,6 +42,7 @@ function CheckScreen() {
     try {
       const r = await analyzeScam({ data: { content, channel } });
       setResult(r);
+      track("suspicious_message_checked", { channel, score: r.score, scam_type: r.type, ssn_requested: r.ssn_requested });
       if (profile) {
         await supabase.from("scam_alerts").insert({
           senior_id: profile.id,
