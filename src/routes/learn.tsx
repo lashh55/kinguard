@@ -242,6 +242,7 @@ function Quiz({ onBadges }: { onBadges: (b: ReturnType<typeof applyAnswer>["newB
     setPicked(l);
     const wasCorrect = l === q.correct_answer;
     if (wasCorrect) setCorrectCount((c) => c + 1);
+    track("quiz_answered", { question_id: q.id, was_correct: wasCorrect, source: "learn" });
     await supabase.from("quiz_attempts").insert({
       user_id: profile.id,
       question_id: q.id,
