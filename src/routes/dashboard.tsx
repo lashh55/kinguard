@@ -108,10 +108,12 @@ function SeniorDashboard() {
   const choose = async (letter: "a"|"b"|"c"|"d") => {
     if (!question || picked) return;
     setPicked(letter);
+    const wasCorrect = letter === question.correct_answer;
+    track("quiz_answered", { question_id: question.id, was_correct: wasCorrect, source: "dashboard" });
     await supabase.from("quiz_attempts").insert({
       user_id: profile.id,
       question_id: question.id,
-      was_correct: letter === question.correct_answer,
+      was_correct: wasCorrect,
     });
   };
 
