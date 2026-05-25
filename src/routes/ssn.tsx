@@ -124,7 +124,7 @@ function SsnShield() {
             <div className="mt-4 space-y-2">
               <p className="font-bold">{t("Who is asking for your SSN?")}</p>
               {ASKERS.map((a) => (
-                <button key={a.id} className="btn-base btn-sky w-full justify-start text-left" onClick={() => setAsker(a.id)}>
+                <button key={a.id} className="btn-base btn-sky w-full justify-start text-left" onClick={() => { track("ssn_check_started", { asker: a.id }); setAsker(a.id); }}>
                   <span className="mr-2">{a.icon}</span> {t(a.label)}
                 </button>
               ))}
