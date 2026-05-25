@@ -7,6 +7,7 @@ import { ScreenShell, scoreColor } from "@/components/ScreenShell";
 import { analyzeScam } from "@/server/scam.functions";
 import { notifyGuardianScam } from "@/lib/guardianAlerts";
 import { useI18n } from "@/lib/i18n";
+import { track } from "@/lib/analytics";
 
 export const Route = createFileRoute("/check")({
   component: CheckScreen,
@@ -41,6 +42,7 @@ function CheckScreen() {
     try {
       const r = await analyzeScam({ data: { content, channel } });
       setResult(r);
+      track("suspicious_message_checked", { channel, score: r.score, scam_type: r.type, ssn_requested: r.ssn_requested });
       if (profile) {
         await supabase.from("scam_alerts").insert({
           senior_id: profile.id,

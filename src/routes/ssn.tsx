@@ -6,6 +6,8 @@ import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 import { useI18n } from "@/lib/i18n";
 import { normalizeStats } from "@/lib/badges";
+import { SsnDisclaimer } from "@/components/SsnDisclaimer";
+import { track } from "@/lib/analytics";
 
 export const Route = createFileRoute("/ssn")({
   component: SsnShield,
@@ -92,6 +94,7 @@ function SsnShield() {
         if (!stats.badges_earned.includes("ssn_hero")) {
           const updated = { ...stats, badges_earned: [...stats.badges_earned, "ssn_hero"] };
           await supabase.from("profiles").update({ challenge_stats: updated as any }).eq("id", profile.id);
+          track("badge_earned", { badge_id: "ssn_hero", badge_name: "SSN Hero" });
           toast(t("🛡️ You earned the SSN Hero badge!"));
         }
       }
@@ -105,9 +108,7 @@ function SsnShield() {
   return (
     <ScreenShell>
       <section className="px-5 pt-4">
-        <div className="rounded-2xl p-3 text-center" style={{ background: "#E74C3C", color: "#fff", fontSize: 15 }}>
-          {t("ssn_warning")}
-        </div>
+        <SsnDisclaimer />
       </section>
       <header className="px-5 pt-4 pb-3">
         <h1 style={{ color: "var(--color-rose)" }}>{t("🛡️ SSN Shield")}</h1>
@@ -124,7 +125,7 @@ function SsnShield() {
             <div className="mt-4 space-y-2">
               <p className="font-bold">{t("Who is asking for your SSN?")}</p>
               {ASKERS.map((a) => (
-                <button key={a.id} className="btn-base btn-sky w-full justify-start text-left" onClick={() => setAsker(a.id)}>
+                <button key={a.id} className="btn-base btn-sky w-full justify-start text-left" onClick={() => { track("ssn_check_started", { asker: a.id }); setAsker(a.id); }}>
                   <span className="mr-2">{a.icon}</span> {t(a.label)}
                 </button>
               ))}

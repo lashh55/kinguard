@@ -1,6 +1,7 @@
 import { useMemo, useState } from "react";
 import { BadgeDef } from "@/lib/badges";
 import { toast } from "sonner";
+import { track } from "@/lib/analytics";
 
 const CONFETTI_COLORS = ["#ACD0DC", "#F6EFC1", "#DFC18F", "#B27F7C", "#2ECC71", "#F39C12"];
 
@@ -113,6 +114,7 @@ export function useBadgeQueue() {
   const [queue, setQueue] = useState<BadgeDef[]>([]);
   const enqueue = (badges: BadgeDef[]) => {
     if (!badges.length) return;
+    badges.forEach((b) => track("badge_earned", { badge_id: b.id, badge_name: b.name }));
     setQueue((q) => [...q, ...badges]);
   };
   const current = queue[0] ?? null;

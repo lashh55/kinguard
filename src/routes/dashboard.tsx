@@ -8,6 +8,8 @@ import { normalizeStats } from "@/lib/badges";
 import logo from "@/assets/kinguard-logo.png";
 import { LearningTree } from "@/components/LearningTree";
 import { useI18n } from "@/lib/i18n";
+import { SsnDisclaimer } from "@/components/SsnDisclaimer";
+import { track } from "@/lib/analytics";
 
 export const Route = createFileRoute("/dashboard")({
   component: Dashboard,
@@ -106,16 +108,21 @@ function SeniorDashboard() {
   const choose = async (letter: "a"|"b"|"c"|"d") => {
     if (!question || picked) return;
     setPicked(letter);
+    const wasCorrect = letter === question.correct_answer;
+    track("quiz_answered", { question_id: question.id, was_correct: wasCorrect, source: "dashboard" });
     await supabase.from("quiz_attempts").insert({
       user_id: profile.id,
       question_id: question.id,
-      was_correct: letter === question.correct_answer,
+      was_correct: wasCorrect,
     });
   };
 
   return (
     <ScreenShell withPhotoPanel>
-      <header className="px-5 pt-6 pb-4">
+      <section className="px-5 pt-4">
+        <SsnDisclaimer />
+      </section>
+      <header className="px-5 pt-4 pb-4">
         <h1>Hello, {profile.full_name.split(" ")[0]} 👋</h1>
       </header>
 
@@ -161,7 +168,7 @@ function SeniorDashboard() {
       <section className="px-5 mt-5 space-y-3">
         <Link to="/check" className="btn-base btn-primary w-full">🔍 {t("Check a Suspicious Message")}</Link>
         <Link to="/ssn" className="btn-base btn-primary w-full">🛡️ {t("Protect My SSN")}</Link>
-        <button className="btn-base btn-danger w-full" onClick={() => notifyGuardianSOS(profile.full_name)}>
+        <button className="btn-base btn-danger w-full" onClick={() => { track("help_requested"); notifyGuardianSOS(profile.full_name); }}>
           🆘 {t("I Need Help")}
         </button>
       </section>

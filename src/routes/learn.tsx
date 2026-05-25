@@ -9,6 +9,7 @@ import { BadgeCelebration, useBadgeQueue, useNotifyGuardiansOfBadge } from "@/co
 import { applyAnswer, applyPerfectWeek, normalizeStats } from "@/lib/badges";
 import { LearningTree, LearningTreeWithTooltip } from "@/components/LearningTree";
 import { useI18n } from "@/lib/i18n";
+import { track } from "@/lib/analytics";
 import slide1 from "@/assets/slide-1.png";
 import slide2 from "@/assets/slide-2.png";
 import slide3 from "@/assets/slide-3.png";
@@ -133,6 +134,7 @@ function Cards() {
       if (!stats.badges_earned.includes("scholar")) {
         const updated = { ...stats, badges_earned: [...stats.badges_earned, "scholar"] };
         await supabase.from("profiles").update({ challenge_stats: updated as any }).eq("id", profile.id);
+        track("badge_earned", { badge_id: "scholar", badge_name: "Scholar" });
         toast("📚 You earned the Scholar badge!");
         refreshProfile();
       }
@@ -241,6 +243,7 @@ function Quiz({ onBadges }: { onBadges: (b: ReturnType<typeof applyAnswer>["newB
     setPicked(l);
     const wasCorrect = l === q.correct_answer;
     if (wasCorrect) setCorrectCount((c) => c + 1);
+    track("quiz_answered", { question_id: q.id, was_correct: wasCorrect, source: "learn" });
     await supabase.from("quiz_attempts").insert({
       user_id: profile.id,
       question_id: q.id,

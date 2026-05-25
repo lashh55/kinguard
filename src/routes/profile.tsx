@@ -9,6 +9,7 @@ import { BadgeGrid } from "@/components/BadgeGrid";
 import { normalizeStats } from "@/lib/badges";
 import { LearningTree, LearningTreeWithTooltip } from "@/components/LearningTree";
 import { useI18n, LanguageToggle } from "@/lib/i18n";
+import { track } from "@/lib/analytics";
 
 export const Route = createFileRoute("/profile")({
   component: ProfileScreen,
@@ -99,6 +100,7 @@ function ProfileScreen() {
         if (!stats.badges_earned.includes("team_player")) {
           const updated = { ...stats, badges_earned: [...stats.badges_earned, "team_player"] };
           await supabase.from("profiles").update({ challenge_stats: updated as any }).eq("id", profile.id);
+          track("badge_earned", { badge_id: "team_player", badge_name: "Team Player" });
           toast("👨‍👩‍👧 You earned the Team Player badge!");
           refreshProfile();
         }
@@ -147,7 +149,6 @@ function ProfileScreen() {
         <div className="card-soft">
           <p><span className="font-bold">{t("Name:")}</span> {profile.full_name}</p>
           <p className="mt-1"><span className="font-bold">{t("Role:")}</span> {isSenior ? t("Protected Senior") : t("Guardian")}</p>
-          {profile.phone_number && <p className="mt-1"><span className="font-bold">{t("Phone:")}</span> {profile.phone_number}</p>}
           {isSenior && profile.invite_code && (
             <div className="mt-3">
               <p className="font-bold mb-1">{t("Your invite code:")}</p>
@@ -199,7 +200,6 @@ function ProfileScreen() {
                     const active = lastActiveLabel(g.last_alert_view_at);
                     const dot = active.status === "active" ? "🟢" : active.status === "inactive" ? "🟡" : "🔴";
                     const dotLabel = active.status === "active" ? t("Active") : active.status === "inactive" ? t("Inactive") : t("Never checked");
-                    const phoneFmt = g.phone_last4 ? `•••-•••-${g.phone_last4}` : t("Phone not provided");
                     return (
                       <li key={g.link_id} className="rounded-xl p-3 border-2" style={{ borderColor: "var(--color-border)" }}>
                         <div className="flex items-start justify-between gap-3">
@@ -208,7 +208,6 @@ function ProfileScreen() {
                             <p className="text-sm font-bold mt-0.5" style={{ color: "var(--color-rose)" }}>
                               {g.relationship_label || t("Family")}
                             </p>
-                            <p className="text-sm font-mono mt-1">{phoneFmt}</p>
                             <p className="text-sm mt-2" style={{ color: "var(--color-muted-foreground)" }}>
                               {t("Linked:")} {formatDate(g.linked_at)}
                             </p>

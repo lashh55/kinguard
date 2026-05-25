@@ -6,7 +6,6 @@ export type Profile = {
   id: string;
   full_name: string;
   role: "senior" | "guardian";
-  phone_number: string | null;
   font_size: "large" | "extra_large";
   invite_code: string | null;
   quiz_progress: Record<string, unknown>;

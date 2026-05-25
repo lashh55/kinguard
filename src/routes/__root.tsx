@@ -1,8 +1,10 @@
 import { Outlet, Link, createRootRoute, HeadContent, Scripts } from "@tanstack/react-router";
+import { useEffect } from "react";
 import appCss from "../styles.css?url";
 import { AuthProvider } from "@/lib/auth";
 import { I18nProvider } from "@/lib/i18n";
 import { Toaster } from "@/components/ui/sonner";
+import { initAnalytics } from "@/lib/analytics";
 
 function NotFoundComponent() {
   return (
@@ -45,7 +47,13 @@ export const Route = createRootRoute({
     ],
   }),
   shellComponent: RootShell,
-  component: () => (
+  component: RootComponent,
+  notFoundComponent: NotFoundComponent,
+});
+
+function RootComponent() {
+  useEffect(() => { initAnalytics(); }, []);
+  return (
     <I18nProvider>
       <AuthProvider>
         <Outlet />
@@ -66,9 +74,8 @@ export const Route = createRootRoute({
         />
       </AuthProvider>
     </I18nProvider>
-  ),
-  notFoundComponent: NotFoundComponent,
-});
+  );
+}
 
 function RootShell({ children }: { children: React.ReactNode }) {
   return (

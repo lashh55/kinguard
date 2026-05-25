@@ -97,7 +97,6 @@ export type Database = {
           full_name: string
           id: string
           invite_code: string | null
-          phone_number: string | null
           quiz_progress: Json
           role: string
           ssn_shield_progress: Json
@@ -109,7 +108,6 @@ export type Database = {
           full_name: string
           id: string
           invite_code?: string | null
-          phone_number?: string | null
           quiz_progress?: Json
           role: string
           ssn_shield_progress?: Json
@@ -121,7 +119,6 @@ export type Database = {
           full_name?: string
           id?: string
           invite_code?: string | null
-          phone_number?: string | null
           quiz_progress?: Json
           role?: string
           ssn_shield_progress?: Json
