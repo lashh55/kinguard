@@ -107,9 +107,7 @@ function SsnShield() {
   return (
     <ScreenShell>
       <section className="px-5 pt-4">
-        <div className="rounded-2xl p-3 text-center" style={{ background: "#E74C3C", color: "#fff", fontSize: 15 }}>
-          {t("ssn_warning")}
-        </div>
+        <SsnDisclaimer />
       </section>
       <header className="px-5 pt-4 pb-3">
         <h1 style={{ color: "var(--color-rose)" }}>{t("🛡️ SSN Shield")}</h1>
