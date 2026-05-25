@@ -95,19 +95,13 @@ function SeniorForm({ onCreated, onBack }: { onCreated: (code: string) => void; 
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [phone, setPhone] = useState("");
-  const [phoneErr, setPhoneErr] = useState<string | null>(null);
   const [font, setFont] = useState<"large" | "extra_large">("large");
   const [busy, setBusy] = useState(false);
   const [err, setErr] = useState<string | null>(null);
 
   const submit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setErr(null); setPhoneErr(null);
-    if (mode === "signup") {
-      if (!phone.trim()) { setPhoneErr(t("Phone number is required")); return; }
-      if (!isValidPhone(phone)) { setPhoneErr(t("Please enter a valid 10-digit phone number")); return; }
-    }
+    setErr(null);
     setBusy(true);
     try {
       if (mode === "signin") {
@@ -124,11 +118,12 @@ function SeniorForm({ onCreated, onBack }: { onCreated: (code: string) => void; 
       const uid = data.user?.id;
       if (!uid) throw new Error("Account created — please check your email to confirm, then sign in.");
       const { error: pErr } = await supabase.from("profiles").insert({
-        id: uid, full_name: name, role: "senior", phone_number: phone, font_size: font,
+        id: uid, full_name: name, role: "senior", font_size: font,
       });
       if (pErr) throw pErr;
       const { data: prof } = await supabase.from("profiles").select("invite_code").eq("id", uid).maybeSingle();
       await refreshProfile();
+      track("senior_signup", { invite_code_issued: !!prof?.invite_code });
       onCreated(prof?.invite_code || "—");
     } catch (e: any) {
       setErr(e?.message || t("Something went wrong"));
@@ -149,19 +144,6 @@ function SeniorForm({ onCreated, onBack }: { onCreated: (code: string) => void; 
       <FormRow label={t("Email address")}>
         <input className="input-large" type="email" required value={email} onChange={(e) => setEmail(e.target.value)} />
       </FormRow>
-      {mode === "signup" && (
-        <FormRow label={t("Phone Number — so your guardian can reach you")}>
-          <input
-            className="input-large"
-            type="tel"
-            placeholder="(555) 555-5555"
-            required
-            value={phone}
-            onChange={(e) => { setPhone(formatPhone(e.target.value)); setPhoneErr(null); }}
-          />
-          {phoneErr && <span className="block text-sm font-bold mt-1" style={{ color: "var(--color-danger)" }}>{phoneErr}</span>}
-        </FormRow>
-      )}
       <FormRow label={t("Password")}>
         <input className="input-large" type="password" required minLength={6} value={password} onChange={(e) => setPassword(e.target.value)} />
       </FormRow>
