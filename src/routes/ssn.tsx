@@ -94,6 +94,7 @@ function SsnShield() {
         if (!stats.badges_earned.includes("ssn_hero")) {
           const updated = { ...stats, badges_earned: [...stats.badges_earned, "ssn_hero"] };
           await supabase.from("profiles").update({ challenge_stats: updated as any }).eq("id", profile.id);
+          track("badge_earned", { badge_id: "ssn_hero", badge_name: "SSN Hero" });
           toast(t("🛡️ You earned the SSN Hero badge!"));
         }
       }
