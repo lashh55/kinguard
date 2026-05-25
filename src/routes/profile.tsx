@@ -198,7 +198,6 @@ function ProfileScreen() {
                     const active = lastActiveLabel(g.last_alert_view_at);
                     const dot = active.status === "active" ? "🟢" : active.status === "inactive" ? "🟡" : "🔴";
                     const dotLabel = active.status === "active" ? t("Active") : active.status === "inactive" ? t("Inactive") : t("Never checked");
-                    const phoneFmt = g.phone_last4 ? `•••-•••-${g.phone_last4}` : t("Phone not provided");
                     return (
                       <li key={g.link_id} className="rounded-xl p-3 border-2" style={{ borderColor: "var(--color-border)" }}>
                         <div className="flex items-start justify-between gap-3">
@@ -207,7 +206,6 @@ function ProfileScreen() {
                             <p className="text-sm font-bold mt-0.5" style={{ color: "var(--color-rose)" }}>
                               {g.relationship_label || t("Family")}
                             </p>
-                            <p className="text-sm font-mono mt-1">{phoneFmt}</p>
                             <p className="text-sm mt-2" style={{ color: "var(--color-muted-foreground)" }}>
                               {t("Linked:")} {formatDate(g.linked_at)}
                             </p>
