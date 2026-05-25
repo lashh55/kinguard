@@ -147,7 +147,6 @@ function ProfileScreen() {
         <div className="card-soft">
           <p><span className="font-bold">{t("Name:")}</span> {profile.full_name}</p>
           <p className="mt-1"><span className="font-bold">{t("Role:")}</span> {isSenior ? t("Protected Senior") : t("Guardian")}</p>
-          {profile.phone_number && <p className="mt-1"><span className="font-bold">{t("Phone:")}</span> {profile.phone_number}</p>}
           {isSenior && profile.invite_code && (
             <div className="mt-3">
               <p className="font-bold mb-1">{t("Your invite code:")}</p>
