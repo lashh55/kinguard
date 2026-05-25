@@ -7,6 +7,7 @@ import { ScreenShell, scoreColor } from "@/components/ScreenShell";
 import { analyzeScam } from "@/server/scam.functions";
 import { notifyGuardianScam } from "@/lib/guardianAlerts";
 import { useI18n } from "@/lib/i18n";
+import { track } from "@/lib/analytics";
 
 export const Route = createFileRoute("/check")({
   component: CheckScreen,
