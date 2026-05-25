@@ -1,6 +1,7 @@
 import { useMemo, useState } from "react";
 import { BadgeDef } from "@/lib/badges";
 import { toast } from "sonner";
+import { track } from "@/lib/analytics";
 
 const CONFETTI_COLORS = ["#ACD0DC", "#F6EFC1", "#DFC18F", "#B27F7C", "#2ECC71", "#F39C12"];
 
