@@ -8,6 +8,8 @@ import { normalizeStats } from "@/lib/badges";
 import logo from "@/assets/kinguard-logo.png";
 import { LearningTree } from "@/components/LearningTree";
 import { useI18n } from "@/lib/i18n";
+import { SsnDisclaimer } from "@/components/SsnDisclaimer";
+import { track } from "@/lib/analytics";
 
 export const Route = createFileRoute("/dashboard")({
   component: Dashboard,
