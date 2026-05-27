@@ -275,7 +275,7 @@ function GuardianForm({ onLinked, onBack }: { onLinked: () => void; onBack: () =
         <input className="input-large" required value={rel} onChange={(e) => setRel(e.target.value)} />
       </FormRow>
       <FormRow label={t("Invite code")} hint={t("Ask the person you want to protect for their invite code. They must create their account first.")}>
-        <input className="input-large uppercase tracking-widest" required value={code} onChange={(e) => setCode(e.target.value.toUpperCase())} />
+        <input className="invite-code input-large uppercase tracking-widest" required value={code} onChange={(e) => setCode(e.target.value.toUpperCase())} />
       </FormRow>
       {err && <p className="text-sm font-bold" style={{ color: "var(--color-danger)" }}>{err}</p>}
       <button className="btn-base btn-primary w-full" disabled={busy}>
