@@ -31,7 +31,7 @@ function ResetPassword() {
   const submit = async (e: React.FormEvent) => {
     e.preventDefault();
     setErr(null);
-    if (password.length < 6) { setErr("Password must be at least 6 characters"); return; }
+    if (password.length < 10) { setErr("Password must be at least 10 characters"); return; }
     if (password !== confirm) { setErr("Passwords do not match"); return; }
     setBusy(true);
     try {
