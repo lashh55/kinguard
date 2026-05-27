@@ -6,6 +6,10 @@ import { PhotoPanel } from "@/components/PhotoPanel";
 import logo from "@/assets/kinguard-logo.png";
 import { useI18n, LanguageToggle } from "@/lib/i18n";
 import { track } from "@/lib/analytics";
+import { PasswordInput } from "@/components/PasswordInput";
+import { PasswordStrengthMeter } from "@/components/PasswordStrengthMeter";
+import { generatePassphrase } from "@/lib/passphrase";
+import { useState as useState2 } from "react";
 
 export const Route = createFileRoute("/")({
   component: Onboarding,
