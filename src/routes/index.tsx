@@ -292,7 +292,7 @@ function InviteCodeView({ code, onContinue }: { code: string; onContinue: () => 
     <div className="card-soft text-center space-y-4">
       <h2>{t("You're protected! 🎉")}</h2>
       <p>{t("Share this code with your family member so they can protect you:")}</p>
-      <div className="text-5xl font-extrabold tracking-widest py-4 rounded-2xl"
+      <div className="invite-code text-5xl font-extrabold tracking-widest py-4 rounded-2xl"
         style={{ background: "var(--color-sky)", color: "var(--color-brown)" }}>
         {code}
       </div>
