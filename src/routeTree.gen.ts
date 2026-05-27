@@ -19,8 +19,15 @@ import { Route as LearnRouteImport } from './routes/learn'
 import { Route as ForGuardiansRouteImport } from './routes/for-guardians'
 import { Route as DashboardRouteImport } from './routes/dashboard'
 import { Route as CheckRouteImport } from './routes/check'
+import { Route as AdminRouteImport } from './routes/_admin'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as ScamsSlugRouteImport } from './routes/scams.$slug'
+import { Route as AdminAdminIndexRouteImport } from './routes/_admin/admin.index'
+import { Route as AdminAdminSosRouteImport } from './routes/_admin/admin.sos'
+import { Route as AdminAdminSeniorsRouteImport } from './routes/_admin/admin.seniors'
+import { Route as AdminAdminMessagesRouteImport } from './routes/_admin/admin.messages'
+import { Route as AdminAdminGuardiansRouteImport } from './routes/_admin/admin.guardians'
+import { Route as AdminAdminAuditRouteImport } from './routes/_admin/admin.audit'
 
 const SsnRoute = SsnRouteImport.update({
   id: '/ssn',
@@ -72,6 +79,10 @@ const CheckRoute = CheckRouteImport.update({
   path: '/check',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AdminRoute = AdminRouteImport.update({
+  id: '/_admin',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
@@ -81,6 +92,36 @@ const ScamsSlugRoute = ScamsSlugRouteImport.update({
   id: '/$slug',
   path: '/$slug',
   getParentRoute: () => ScamsRoute,
+} as any)
+const AdminAdminIndexRoute = AdminAdminIndexRouteImport.update({
+  id: '/admin/',
+  path: '/admin/',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminAdminSosRoute = AdminAdminSosRouteImport.update({
+  id: '/admin/sos',
+  path: '/admin/sos',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminAdminSeniorsRoute = AdminAdminSeniorsRouteImport.update({
+  id: '/admin/seniors',
+  path: '/admin/seniors',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminAdminMessagesRoute = AdminAdminMessagesRouteImport.update({
+  id: '/admin/messages',
+  path: '/admin/messages',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminAdminGuardiansRoute = AdminAdminGuardiansRouteImport.update({
+  id: '/admin/guardians',
+  path: '/admin/guardians',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminAdminAuditRoute = AdminAdminAuditRouteImport.update({
+  id: '/admin/audit',
+  path: '/admin/audit',
+  getParentRoute: () => AdminRoute,
 } as any)
 
 export interface FileRoutesByFullPath {
@@ -96,6 +137,12 @@ export interface FileRoutesByFullPath {
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/ssn': typeof SsnRoute
   '/scams/$slug': typeof ScamsSlugRoute
+  '/admin/audit': typeof AdminAdminAuditRoute
+  '/admin/guardians': typeof AdminAdminGuardiansRoute
+  '/admin/messages': typeof AdminAdminMessagesRoute
+  '/admin/seniors': typeof AdminAdminSeniorsRoute
+  '/admin/sos': typeof AdminAdminSosRoute
+  '/admin/': typeof AdminAdminIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -110,10 +157,17 @@ export interface FileRoutesByTo {
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/ssn': typeof SsnRoute
   '/scams/$slug': typeof ScamsSlugRoute
+  '/admin/audit': typeof AdminAdminAuditRoute
+  '/admin/guardians': typeof AdminAdminGuardiansRoute
+  '/admin/messages': typeof AdminAdminMessagesRoute
+  '/admin/seniors': typeof AdminAdminSeniorsRoute
+  '/admin/sos': typeof AdminAdminSosRoute
+  '/admin': typeof AdminAdminIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/_admin': typeof AdminRouteWithChildren
   '/check': typeof CheckRoute
   '/dashboard': typeof DashboardRoute
   '/for-guardians': typeof ForGuardiansRoute
@@ -125,6 +179,12 @@ export interface FileRoutesById {
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/ssn': typeof SsnRoute
   '/scams/$slug': typeof ScamsSlugRoute
+  '/_admin/admin/audit': typeof AdminAdminAuditRoute
+  '/_admin/admin/guardians': typeof AdminAdminGuardiansRoute
+  '/_admin/admin/messages': typeof AdminAdminMessagesRoute
+  '/_admin/admin/seniors': typeof AdminAdminSeniorsRoute
+  '/_admin/admin/sos': typeof AdminAdminSosRoute
+  '/_admin/admin/': typeof AdminAdminIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -141,6 +201,12 @@ export interface FileRouteTypes {
     | '/sitemap.xml'
     | '/ssn'
     | '/scams/$slug'
+    | '/admin/audit'
+    | '/admin/guardians'
+    | '/admin/messages'
+    | '/admin/seniors'
+    | '/admin/sos'
+    | '/admin/'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -155,9 +221,16 @@ export interface FileRouteTypes {
     | '/sitemap.xml'
     | '/ssn'
     | '/scams/$slug'
+    | '/admin/audit'
+    | '/admin/guardians'
+    | '/admin/messages'
+    | '/admin/seniors'
+    | '/admin/sos'
+    | '/admin'
   id:
     | '__root__'
     | '/'
+    | '/_admin'
     | '/check'
     | '/dashboard'
     | '/for-guardians'
@@ -169,10 +242,17 @@ export interface FileRouteTypes {
     | '/sitemap.xml'
     | '/ssn'
     | '/scams/$slug'
+    | '/_admin/admin/audit'
+    | '/_admin/admin/guardians'
+    | '/_admin/admin/messages'
+    | '/_admin/admin/seniors'
+    | '/_admin/admin/sos'
+    | '/_admin/admin/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  AdminRoute: typeof AdminRouteWithChildren
   CheckRoute: typeof CheckRoute
   DashboardRoute: typeof DashboardRoute
   ForGuardiansRoute: typeof ForGuardiansRoute
@@ -257,6 +337,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof CheckRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/_admin': {
+      id: '/_admin'
+      path: ''
+      fullPath: '/'
+      preLoaderRoute: typeof AdminRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/': {
       id: '/'
       path: '/'
@@ -271,8 +358,70 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ScamsSlugRouteImport
       parentRoute: typeof ScamsRoute
     }
+    '/_admin/admin/': {
+      id: '/_admin/admin/'
+      path: '/admin'
+      fullPath: '/admin/'
+      preLoaderRoute: typeof AdminAdminIndexRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/_admin/admin/sos': {
+      id: '/_admin/admin/sos'
+      path: '/admin/sos'
+      fullPath: '/admin/sos'
+      preLoaderRoute: typeof AdminAdminSosRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/_admin/admin/seniors': {
+      id: '/_admin/admin/seniors'
+      path: '/admin/seniors'
+      fullPath: '/admin/seniors'
+      preLoaderRoute: typeof AdminAdminSeniorsRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/_admin/admin/messages': {
+      id: '/_admin/admin/messages'
+      path: '/admin/messages'
+      fullPath: '/admin/messages'
+      preLoaderRoute: typeof AdminAdminMessagesRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/_admin/admin/guardians': {
+      id: '/_admin/admin/guardians'
+      path: '/admin/guardians'
+      fullPath: '/admin/guardians'
+      preLoaderRoute: typeof AdminAdminGuardiansRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/_admin/admin/audit': {
+      id: '/_admin/admin/audit'
+      path: '/admin/audit'
+      fullPath: '/admin/audit'
+      preLoaderRoute: typeof AdminAdminAuditRouteImport
+      parentRoute: typeof AdminRoute
+    }
   }
 }
+
+interface AdminRouteChildren {
+  AdminAdminAuditRoute: typeof AdminAdminAuditRoute
+  AdminAdminGuardiansRoute: typeof AdminAdminGuardiansRoute
+  AdminAdminMessagesRoute: typeof AdminAdminMessagesRoute
+  AdminAdminSeniorsRoute: typeof AdminAdminSeniorsRoute
+  AdminAdminSosRoute: typeof AdminAdminSosRoute
+  AdminAdminIndexRoute: typeof AdminAdminIndexRoute
+}
+
+const AdminRouteChildren: AdminRouteChildren = {
+  AdminAdminAuditRoute: AdminAdminAuditRoute,
+  AdminAdminGuardiansRoute: AdminAdminGuardiansRoute,
+  AdminAdminMessagesRoute: AdminAdminMessagesRoute,
+  AdminAdminSeniorsRoute: AdminAdminSeniorsRoute,
+  AdminAdminSosRoute: AdminAdminSosRoute,
+  AdminAdminIndexRoute: AdminAdminIndexRoute,
+}
+
+const AdminRouteWithChildren = AdminRoute._addFileChildren(AdminRouteChildren)
 
 interface ScamsRouteChildren {
   ScamsSlugRoute: typeof ScamsSlugRoute
@@ -286,6 +435,7 @@ const ScamsRouteWithChildren = ScamsRoute._addFileChildren(ScamsRouteChildren)
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  AdminRoute: AdminRouteWithChildren,
   CheckRoute: CheckRoute,
   DashboardRoute: DashboardRoute,
   ForGuardiansRoute: ForGuardiansRoute,
@@ -300,13 +450,3 @@ const rootRouteChildren: RootRouteChildren = {
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
-
-import type { getRouter } from './router.tsx'
-import type { startInstance } from './start.ts'
-declare module '@tanstack/react-start' {
-  interface Register {
-    ssr: true
-    router: Awaited<ReturnType<typeof getRouter>>
-    config: Awaited<ReturnType<typeof startInstance.getOptions>>
-  }
-}

@@ -14,6 +14,45 @@ export type Database = {
   }
   public: {
     Tables: {
+      admin_audit_log: {
+        Row: {
+          action: string
+          admin_email: string
+          created_at: string
+          id: string
+          path: string | null
+        }
+        Insert: {
+          action: string
+          admin_email: string
+          created_at?: string
+          id?: string
+          path?: string | null
+        }
+        Update: {
+          action?: string
+          admin_email?: string
+          created_at?: string
+          id?: string
+          path?: string | null
+        }
+        Relationships: []
+      }
+      admin_users: {
+        Row: {
+          created_at: string
+          email: string
+        }
+        Insert: {
+          created_at?: string
+          email: string
+        }
+        Update: {
+          created_at?: string
+          email?: string
+        }
+        Relationships: []
+      }
       guardian_activity: {
         Row: {
           action_type: string
@@ -258,11 +297,83 @@ export type Database = {
           },
         ]
       }
+      sos_events: {
+        Row: {
+          created_at: string
+          id: string
+          senior_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          senior_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          senior_id?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
     }
     Functions: {
+      admin_get_stats: { Args: never; Returns: Json }
+      admin_list_audit: {
+        Args: never
+        Returns: {
+          action: string
+          admin_email: string
+          created_at: string
+          id: string
+          path: string
+        }[]
+      }
+      admin_list_guardians: {
+        Args: never
+        Returns: {
+          created_at: string
+          full_name: string
+          id: string
+          linked_seniors: number
+        }[]
+      }
+      admin_list_messages: {
+        Args: never
+        Returns: {
+          channel: string
+          content_preview: string
+          created_at: string
+          id: string
+          scam_score: number
+          scam_type: string
+          senior_id: string
+          senior_name: string
+          status: string
+        }[]
+      }
+      admin_list_seniors: {
+        Args: never
+        Returns: {
+          created_at: string
+          full_name: string
+          guardian_count: number
+          id: string
+          invite_code: string
+        }[]
+      }
+      admin_list_sos: {
+        Args: never
+        Returns: {
+          created_at: string
+          id: string
+          senior_id: string
+          senior_name: string
+        }[]
+      }
+      admin_log_view: { Args: { _path: string }; Returns: undefined }
       delete_my_account: { Args: never; Returns: undefined }
       gen_invite_code: { Args: never; Returns: string }
       get_guardian_activity_feed: {
@@ -297,6 +408,7 @@ export type Database = {
           total_alerts_reviewed: number
         }[]
       }
+      is_admin: { Args: never; Returns: boolean }
       is_guardian_of: { Args: { _senior: string }; Returns: boolean }
       link_guardian_by_code: {
         Args: { _code: string; _label: string }
