@@ -24,6 +24,7 @@ import { Route as IndexRouteImport } from './routes/index'
 import { Route as ScamsSlugRouteImport } from './routes/scams.$slug'
 import { Route as AdminAdminIndexRouteImport } from './routes/_admin/admin.index'
 import { Route as AdminAdminSeniorsRouteImport } from './routes/_admin/admin.seniors'
+import { Route as AdminAdminGuardiansRouteImport } from './routes/_admin/admin.guardians'
 
 const SsnRoute = SsnRouteImport.update({
   id: '/ssn',
@@ -99,6 +100,11 @@ const AdminAdminSeniorsRoute = AdminAdminSeniorsRouteImport.update({
   path: '/admin/seniors',
   getParentRoute: () => AdminRoute,
 } as any)
+const AdminAdminGuardiansRoute = AdminAdminGuardiansRouteImport.update({
+  id: '/admin/guardians',
+  path: '/admin/guardians',
+  getParentRoute: () => AdminRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -113,6 +119,7 @@ export interface FileRoutesByFullPath {
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/ssn': typeof SsnRoute
   '/scams/$slug': typeof ScamsSlugRoute
+  '/admin/guardians': typeof AdminAdminGuardiansRoute
   '/admin/seniors': typeof AdminAdminSeniorsRoute
   '/admin/': typeof AdminAdminIndexRoute
 }
@@ -129,6 +136,7 @@ export interface FileRoutesByTo {
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/ssn': typeof SsnRoute
   '/scams/$slug': typeof ScamsSlugRoute
+  '/admin/guardians': typeof AdminAdminGuardiansRoute
   '/admin/seniors': typeof AdminAdminSeniorsRoute
   '/admin': typeof AdminAdminIndexRoute
 }
@@ -147,6 +155,7 @@ export interface FileRoutesById {
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/ssn': typeof SsnRoute
   '/scams/$slug': typeof ScamsSlugRoute
+  '/_admin/admin/guardians': typeof AdminAdminGuardiansRoute
   '/_admin/admin/seniors': typeof AdminAdminSeniorsRoute
   '/_admin/admin/': typeof AdminAdminIndexRoute
 }
@@ -165,6 +174,7 @@ export interface FileRouteTypes {
     | '/sitemap.xml'
     | '/ssn'
     | '/scams/$slug'
+    | '/admin/guardians'
     | '/admin/seniors'
     | '/admin/'
   fileRoutesByTo: FileRoutesByTo
@@ -181,6 +191,7 @@ export interface FileRouteTypes {
     | '/sitemap.xml'
     | '/ssn'
     | '/scams/$slug'
+    | '/admin/guardians'
     | '/admin/seniors'
     | '/admin'
   id:
@@ -198,6 +209,7 @@ export interface FileRouteTypes {
     | '/sitemap.xml'
     | '/ssn'
     | '/scams/$slug'
+    | '/_admin/admin/guardians'
     | '/_admin/admin/seniors'
     | '/_admin/admin/'
   fileRoutesById: FileRoutesById
@@ -324,15 +336,24 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminAdminSeniorsRouteImport
       parentRoute: typeof AdminRoute
     }
+    '/_admin/admin/guardians': {
+      id: '/_admin/admin/guardians'
+      path: '/admin/guardians'
+      fullPath: '/admin/guardians'
+      preLoaderRoute: typeof AdminAdminGuardiansRouteImport
+      parentRoute: typeof AdminRoute
+    }
   }
 }
 
 interface AdminRouteChildren {
+  AdminAdminGuardiansRoute: typeof AdminAdminGuardiansRoute
   AdminAdminSeniorsRoute: typeof AdminAdminSeniorsRoute
   AdminAdminIndexRoute: typeof AdminAdminIndexRoute
 }
 
 const AdminRouteChildren: AdminRouteChildren = {
+  AdminAdminGuardiansRoute: AdminAdminGuardiansRoute,
   AdminAdminSeniorsRoute: AdminAdminSeniorsRoute,
   AdminAdminIndexRoute: AdminAdminIndexRoute,
 }
