@@ -20,7 +20,6 @@ type GuardianRow = {
   guardian_id: string;
   full_name: string;
   relationship_label: string | null;
-  phone_last4: string | null;
   linked_at: string;
   last_alert_view_at: string | null;
   total_alerts_reviewed: number;
