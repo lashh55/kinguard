@@ -268,7 +268,7 @@ function GuardianForm({ onLinked, onBack }: { onLinked: () => void; onBack: () =
         <input className="input-large" type="email" required value={email} onChange={(e) => setEmail(e.target.value)} />
       </FormRow>
       <FormRow label={t("Password")}>
-        <input className="input-large" type="password" required minLength={6} value={password} onChange={(e) => setPassword(e.target.value)} />
+        <PasswordInput required minLength={mode === "signup" ? 10 : undefined} value={password} onChange={(e) => setPassword(e.target.value)} />
       </FormRow>
       {mode === "signin" && <ForgotPassword email={email} />}
       <FormRow label={t("Relationship to senior (e.g. Daughter, Son, Friend)")}>
