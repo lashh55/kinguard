@@ -161,7 +161,31 @@ function SeniorForm({ onCreated, onBack }: { onCreated: (code: string) => void; 
         <input className="input-large" type="email" required value={email} onChange={(e) => setEmail(e.target.value)} />
       </FormRow>
       <FormRow label={t("Password")}>
-        <input className="input-large" type="password" required minLength={6} value={password} onChange={(e) => setPassword(e.target.value)} />
+        <PasswordInput
+          required
+          minLength={mode === "signup" ? 10 : undefined}
+          value={password}
+          forceVisible={mode === "signup" && generated}
+          onChange={(e) => { setPassword(e.target.value); setGenerated(false); setCopied(false); }}
+        />
+        {mode === "signup" && <PasswordStrengthMeter value={password} />}
+        {mode === "signup" && (
+          <div className="mt-2 flex flex-wrap gap-2 items-center">
+            <button type="button" className="text-sm underline font-semibold" onClick={handleGenerate}>
+              {t("Generate a strong password for me")}
+            </button>
+            {generated && password && (
+              <button type="button" className="text-sm underline" onClick={handleCopy}>
+                {copied ? t("Copied!") : t("Copy")}
+              </button>
+            )}
+          </div>
+        )}
+        {mode === "signup" && generated && (
+          <p className="text-sm font-bold mt-2" style={{ color: "var(--color-danger)" }}>
+            {t("Write this down somewhere safe before continuing.")}
+          </p>
+        )}
       </FormRow>
       {mode === "signin" && <ForgotPassword email={email} />}
       {mode === "signup" && (
