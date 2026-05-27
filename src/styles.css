@@ -145,3 +145,10 @@
   .badge-score-warn   { background: var(--color-warn);  color: #fff; }
   .badge-score-danger { background: var(--color-danger); color: #fff; }
 }
+
+@layer utilities {
+  .invite-code {
+    font-variant-numeric: slashed-zero;
+    font-feature-settings: "zero";
+  }
+}

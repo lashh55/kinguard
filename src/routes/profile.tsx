@@ -151,7 +151,7 @@ function ProfileScreen() {
           {isSenior && profile.invite_code && (
             <div className="mt-3">
               <p className="font-bold mb-1">{t("Your invite code:")}</p>
-              <div className="text-3xl font-extrabold tracking-widest text-center py-3 rounded-xl"
+              <div className="invite-code text-3xl font-extrabold tracking-widest text-center py-3 rounded-xl"
                 style={{ background: "var(--color-sky)" }}>{profile.invite_code}</div>
               <p className="text-sm mt-2" style={{ color: "var(--color-muted-foreground)" }}>
                 {t("Share this with up to 5 family members. Each can link to you with this same code.")}

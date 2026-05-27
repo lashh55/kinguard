@@ -6,6 +6,9 @@ import { PhotoPanel } from "@/components/PhotoPanel";
 import logo from "@/assets/kinguard-logo.png";
 import { useI18n, LanguageToggle } from "@/lib/i18n";
 import { track } from "@/lib/analytics";
+import { PasswordInput } from "@/components/PasswordInput";
+import { PasswordStrengthMeter } from "@/components/PasswordStrengthMeter";
+import { generatePassphrase } from "@/lib/passphrase";
 
 export const Route = createFileRoute("/")({
   component: Onboarding,
@@ -95,9 +98,22 @@ function SeniorForm({ onCreated, onBack }: { onCreated: (code: string) => void; 
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [generated, setGenerated] = useState(false);
+  const [copied, setCopied] = useState(false);
   const [font, setFont] = useState<"large" | "extra_large">("large");
   const [busy, setBusy] = useState(false);
   const [err, setErr] = useState<string | null>(null);
+
+  const handleGenerate = async () => {
+    const pw = generatePassphrase();
+    setPassword(pw);
+    setGenerated(true);
+    setCopied(false);
+    try { await navigator.clipboard.writeText(pw); setCopied(true); } catch { /* user can copy manually */ }
+  };
+  const handleCopy = async () => {
+    try { await navigator.clipboard.writeText(password); setCopied(true); } catch { /* noop */ }
+  };
 
   const submit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -145,7 +161,31 @@ function SeniorForm({ onCreated, onBack }: { onCreated: (code: string) => void; 
         <input className="input-large" type="email" required value={email} onChange={(e) => setEmail(e.target.value)} />
       </FormRow>
       <FormRow label={t("Password")}>
-        <input className="input-large" type="password" required minLength={6} value={password} onChange={(e) => setPassword(e.target.value)} />
+        <PasswordInput
+          required
+          minLength={mode === "signup" ? 10 : undefined}
+          value={password}
+          forceVisible={mode === "signup" && generated}
+          onChange={(e) => { setPassword(e.target.value); setGenerated(false); setCopied(false); }}
+        />
+        {mode === "signup" && <PasswordStrengthMeter value={password} />}
+        {mode === "signup" && (
+          <div className="mt-2 flex flex-wrap gap-2 items-center">
+            <button type="button" className="text-sm underline font-semibold" onClick={handleGenerate}>
+              {t("Generate a strong password for me")}
+            </button>
+            {generated && password && (
+              <button type="button" className="text-sm underline" onClick={handleCopy}>
+                {copied ? t("Copied!") : t("Copy")}
+              </button>
+            )}
+          </div>
+        )}
+        {mode === "signup" && generated && (
+          <p className="text-sm font-bold mt-2" style={{ color: "var(--color-danger)" }}>
+            {t("Write this down somewhere safe before continuing.")}
+          </p>
+        )}
       </FormRow>
       {mode === "signin" && <ForgotPassword email={email} />}
       {mode === "signup" && (
@@ -228,14 +268,14 @@ function GuardianForm({ onLinked, onBack }: { onLinked: () => void; onBack: () =
         <input className="input-large" type="email" required value={email} onChange={(e) => setEmail(e.target.value)} />
       </FormRow>
       <FormRow label={t("Password")}>
-        <input className="input-large" type="password" required minLength={6} value={password} onChange={(e) => setPassword(e.target.value)} />
+        <PasswordInput required minLength={mode === "signup" ? 10 : undefined} value={password} onChange={(e) => setPassword(e.target.value)} />
       </FormRow>
       {mode === "signin" && <ForgotPassword email={email} />}
       <FormRow label={t("Relationship to senior (e.g. Daughter, Son, Friend)")}>
         <input className="input-large" required value={rel} onChange={(e) => setRel(e.target.value)} />
       </FormRow>
       <FormRow label={t("Invite code")} hint={t("Ask the person you want to protect for their invite code. They must create their account first.")}>
-        <input className="input-large uppercase tracking-widest" required value={code} onChange={(e) => setCode(e.target.value.toUpperCase())} />
+        <input className="invite-code input-large uppercase tracking-widest" required value={code} onChange={(e) => setCode(e.target.value.toUpperCase())} />
       </FormRow>
       {err && <p className="text-sm font-bold" style={{ color: "var(--color-danger)" }}>{err}</p>}
       <button className="btn-base btn-primary w-full" disabled={busy}>
@@ -252,7 +292,7 @@ function InviteCodeView({ code, onContinue }: { code: string; onContinue: () => 
     <div className="card-soft text-center space-y-4">
       <h2>{t("You're protected! 🎉")}</h2>
       <p>{t("Share this code with your family member so they can protect you:")}</p>
-      <div className="text-5xl font-extrabold tracking-widest py-4 rounded-2xl"
+      <div className="invite-code text-5xl font-extrabold tracking-widest py-4 rounded-2xl"
         style={{ background: "var(--color-sky)", color: "var(--color-brown)" }}>
         {code}
       </div>

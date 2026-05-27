@@ -1,6 +1,7 @@
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
+import { PasswordInput } from "@/components/PasswordInput";
 import logo from "@/assets/kinguard-logo.png";
 
 export const Route = createFileRoute("/reset-password")({
@@ -30,7 +31,7 @@ function ResetPassword() {
   const submit = async (e: React.FormEvent) => {
     e.preventDefault();
     setErr(null);
-    if (password.length < 6) { setErr("Password must be at least 6 characters"); return; }
+    if (password.length < 10) { setErr("Password must be at least 10 characters"); return; }
     if (password !== confirm) { setErr("Passwords do not match"); return; }
     setBusy(true);
     try {
@@ -64,11 +65,11 @@ function ResetPassword() {
           <form onSubmit={submit} className="card-soft space-y-4">
             <label className="block">
               <span className="block font-bold mb-2">New password</span>
-              <input className="input-large" type="password" required minLength={6} value={password} onChange={(e) => setPassword(e.target.value)} />
+              <PasswordInput required minLength={10} value={password} onChange={(e) => setPassword(e.target.value)} />
             </label>
             <label className="block">
               <span className="block font-bold mb-2">Confirm new password</span>
-              <input className="input-large" type="password" required minLength={6} value={confirm} onChange={(e) => setConfirm(e.target.value)} />
+              <PasswordInput required minLength={10} value={confirm} onChange={(e) => setConfirm(e.target.value)} />
             </label>
             {err && <p className="text-sm font-bold" style={{ color: "var(--color-danger)" }}>{err}</p>}
             <button className="btn-base btn-primary w-full" disabled={busy}>
