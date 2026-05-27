@@ -24,6 +24,7 @@ import { Route as IndexRouteImport } from './routes/index'
 import { Route as ScamsSlugRouteImport } from './routes/scams.$slug'
 import { Route as AdminAdminIndexRouteImport } from './routes/_admin/admin.index'
 import { Route as AdminAdminSeniorsRouteImport } from './routes/_admin/admin.seniors'
+import { Route as AdminAdminMessagesRouteImport } from './routes/_admin/admin.messages'
 import { Route as AdminAdminGuardiansRouteImport } from './routes/_admin/admin.guardians'
 
 const SsnRoute = SsnRouteImport.update({
@@ -100,6 +101,11 @@ const AdminAdminSeniorsRoute = AdminAdminSeniorsRouteImport.update({
   path: '/admin/seniors',
   getParentRoute: () => AdminRoute,
 } as any)
+const AdminAdminMessagesRoute = AdminAdminMessagesRouteImport.update({
+  id: '/admin/messages',
+  path: '/admin/messages',
+  getParentRoute: () => AdminRoute,
+} as any)
 const AdminAdminGuardiansRoute = AdminAdminGuardiansRouteImport.update({
   id: '/admin/guardians',
   path: '/admin/guardians',
@@ -120,6 +126,7 @@ export interface FileRoutesByFullPath {
   '/ssn': typeof SsnRoute
   '/scams/$slug': typeof ScamsSlugRoute
   '/admin/guardians': typeof AdminAdminGuardiansRoute
+  '/admin/messages': typeof AdminAdminMessagesRoute
   '/admin/seniors': typeof AdminAdminSeniorsRoute
   '/admin/': typeof AdminAdminIndexRoute
 }
@@ -137,6 +144,7 @@ export interface FileRoutesByTo {
   '/ssn': typeof SsnRoute
   '/scams/$slug': typeof ScamsSlugRoute
   '/admin/guardians': typeof AdminAdminGuardiansRoute
+  '/admin/messages': typeof AdminAdminMessagesRoute
   '/admin/seniors': typeof AdminAdminSeniorsRoute
   '/admin': typeof AdminAdminIndexRoute
 }
@@ -156,6 +164,7 @@ export interface FileRoutesById {
   '/ssn': typeof SsnRoute
   '/scams/$slug': typeof ScamsSlugRoute
   '/_admin/admin/guardians': typeof AdminAdminGuardiansRoute
+  '/_admin/admin/messages': typeof AdminAdminMessagesRoute
   '/_admin/admin/seniors': typeof AdminAdminSeniorsRoute
   '/_admin/admin/': typeof AdminAdminIndexRoute
 }
@@ -175,6 +184,7 @@ export interface FileRouteTypes {
     | '/ssn'
     | '/scams/$slug'
     | '/admin/guardians'
+    | '/admin/messages'
     | '/admin/seniors'
     | '/admin/'
   fileRoutesByTo: FileRoutesByTo
@@ -192,6 +202,7 @@ export interface FileRouteTypes {
     | '/ssn'
     | '/scams/$slug'
     | '/admin/guardians'
+    | '/admin/messages'
     | '/admin/seniors'
     | '/admin'
   id:
@@ -210,6 +221,7 @@ export interface FileRouteTypes {
     | '/ssn'
     | '/scams/$slug'
     | '/_admin/admin/guardians'
+    | '/_admin/admin/messages'
     | '/_admin/admin/seniors'
     | '/_admin/admin/'
   fileRoutesById: FileRoutesById
@@ -336,6 +348,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminAdminSeniorsRouteImport
       parentRoute: typeof AdminRoute
     }
+    '/_admin/admin/messages': {
+      id: '/_admin/admin/messages'
+      path: '/admin/messages'
+      fullPath: '/admin/messages'
+      preLoaderRoute: typeof AdminAdminMessagesRouteImport
+      parentRoute: typeof AdminRoute
+    }
     '/_admin/admin/guardians': {
       id: '/_admin/admin/guardians'
       path: '/admin/guardians'
@@ -348,12 +367,14 @@ declare module '@tanstack/react-router' {
 
 interface AdminRouteChildren {
   AdminAdminGuardiansRoute: typeof AdminAdminGuardiansRoute
+  AdminAdminMessagesRoute: typeof AdminAdminMessagesRoute
   AdminAdminSeniorsRoute: typeof AdminAdminSeniorsRoute
   AdminAdminIndexRoute: typeof AdminAdminIndexRoute
 }
 
 const AdminRouteChildren: AdminRouteChildren = {
   AdminAdminGuardiansRoute: AdminAdminGuardiansRoute,
+  AdminAdminMessagesRoute: AdminAdminMessagesRoute,
   AdminAdminSeniorsRoute: AdminAdminSeniorsRoute,
   AdminAdminIndexRoute: AdminAdminIndexRoute,
 }
