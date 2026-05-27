@@ -65,11 +65,11 @@ function ResetPassword() {
           <form onSubmit={submit} className="card-soft space-y-4">
             <label className="block">
               <span className="block font-bold mb-2">New password</span>
-              <input className="input-large" type="password" required minLength={6} value={password} onChange={(e) => setPassword(e.target.value)} />
+              <PasswordInput required minLength={10} value={password} onChange={(e) => setPassword(e.target.value)} />
             </label>
             <label className="block">
               <span className="block font-bold mb-2">Confirm new password</span>
-              <input className="input-large" type="password" required minLength={6} value={confirm} onChange={(e) => setConfirm(e.target.value)} />
+              <PasswordInput required minLength={10} value={confirm} onChange={(e) => setConfirm(e.target.value)} />
             </label>
             {err && <p className="text-sm font-bold" style={{ color: "var(--color-danger)" }}>{err}</p>}
             <button className="btn-base btn-primary w-full" disabled={busy}>
