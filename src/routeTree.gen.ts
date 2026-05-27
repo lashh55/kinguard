@@ -23,6 +23,7 @@ import { Route as AdminRouteImport } from './routes/_admin'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as ScamsSlugRouteImport } from './routes/scams.$slug'
 import { Route as AdminAdminIndexRouteImport } from './routes/_admin/admin.index'
+import { Route as AdminAdminSosRouteImport } from './routes/_admin/admin.sos'
 import { Route as AdminAdminSeniorsRouteImport } from './routes/_admin/admin.seniors'
 import { Route as AdminAdminMessagesRouteImport } from './routes/_admin/admin.messages'
 import { Route as AdminAdminGuardiansRouteImport } from './routes/_admin/admin.guardians'
@@ -96,6 +97,11 @@ const AdminAdminIndexRoute = AdminAdminIndexRouteImport.update({
   path: '/admin/',
   getParentRoute: () => AdminRoute,
 } as any)
+const AdminAdminSosRoute = AdminAdminSosRouteImport.update({
+  id: '/admin/sos',
+  path: '/admin/sos',
+  getParentRoute: () => AdminRoute,
+} as any)
 const AdminAdminSeniorsRoute = AdminAdminSeniorsRouteImport.update({
   id: '/admin/seniors',
   path: '/admin/seniors',
@@ -128,6 +134,7 @@ export interface FileRoutesByFullPath {
   '/admin/guardians': typeof AdminAdminGuardiansRoute
   '/admin/messages': typeof AdminAdminMessagesRoute
   '/admin/seniors': typeof AdminAdminSeniorsRoute
+  '/admin/sos': typeof AdminAdminSosRoute
   '/admin/': typeof AdminAdminIndexRoute
 }
 export interface FileRoutesByTo {
@@ -146,6 +153,7 @@ export interface FileRoutesByTo {
   '/admin/guardians': typeof AdminAdminGuardiansRoute
   '/admin/messages': typeof AdminAdminMessagesRoute
   '/admin/seniors': typeof AdminAdminSeniorsRoute
+  '/admin/sos': typeof AdminAdminSosRoute
   '/admin': typeof AdminAdminIndexRoute
 }
 export interface FileRoutesById {
@@ -166,6 +174,7 @@ export interface FileRoutesById {
   '/_admin/admin/guardians': typeof AdminAdminGuardiansRoute
   '/_admin/admin/messages': typeof AdminAdminMessagesRoute
   '/_admin/admin/seniors': typeof AdminAdminSeniorsRoute
+  '/_admin/admin/sos': typeof AdminAdminSosRoute
   '/_admin/admin/': typeof AdminAdminIndexRoute
 }
 export interface FileRouteTypes {
@@ -186,6 +195,7 @@ export interface FileRouteTypes {
     | '/admin/guardians'
     | '/admin/messages'
     | '/admin/seniors'
+    | '/admin/sos'
     | '/admin/'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -204,6 +214,7 @@ export interface FileRouteTypes {
     | '/admin/guardians'
     | '/admin/messages'
     | '/admin/seniors'
+    | '/admin/sos'
     | '/admin'
   id:
     | '__root__'
@@ -223,6 +234,7 @@ export interface FileRouteTypes {
     | '/_admin/admin/guardians'
     | '/_admin/admin/messages'
     | '/_admin/admin/seniors'
+    | '/_admin/admin/sos'
     | '/_admin/admin/'
   fileRoutesById: FileRoutesById
 }
@@ -341,6 +353,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminAdminIndexRouteImport
       parentRoute: typeof AdminRoute
     }
+    '/_admin/admin/sos': {
+      id: '/_admin/admin/sos'
+      path: '/admin/sos'
+      fullPath: '/admin/sos'
+      preLoaderRoute: typeof AdminAdminSosRouteImport
+      parentRoute: typeof AdminRoute
+    }
     '/_admin/admin/seniors': {
       id: '/_admin/admin/seniors'
       path: '/admin/seniors'
@@ -369,6 +388,7 @@ interface AdminRouteChildren {
   AdminAdminGuardiansRoute: typeof AdminAdminGuardiansRoute
   AdminAdminMessagesRoute: typeof AdminAdminMessagesRoute
   AdminAdminSeniorsRoute: typeof AdminAdminSeniorsRoute
+  AdminAdminSosRoute: typeof AdminAdminSosRoute
   AdminAdminIndexRoute: typeof AdminAdminIndexRoute
 }
 
@@ -376,6 +396,7 @@ const AdminRouteChildren: AdminRouteChildren = {
   AdminAdminGuardiansRoute: AdminAdminGuardiansRoute,
   AdminAdminMessagesRoute: AdminAdminMessagesRoute,
   AdminAdminSeniorsRoute: AdminAdminSeniorsRoute,
+  AdminAdminSosRoute: AdminAdminSosRoute,
   AdminAdminIndexRoute: AdminAdminIndexRoute,
 }
 
