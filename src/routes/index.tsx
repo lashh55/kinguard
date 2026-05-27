@@ -98,9 +98,22 @@ function SeniorForm({ onCreated, onBack }: { onCreated: (code: string) => void; 
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [generated, setGenerated] = useState(false);
+  const [copied, setCopied] = useState(false);
   const [font, setFont] = useState<"large" | "extra_large">("large");
   const [busy, setBusy] = useState(false);
   const [err, setErr] = useState<string | null>(null);
+
+  const handleGenerate = async () => {
+    const pw = generatePassphrase();
+    setPassword(pw);
+    setGenerated(true);
+    setCopied(false);
+    try { await navigator.clipboard.writeText(pw); setCopied(true); } catch { /* user can copy manually */ }
+  };
+  const handleCopy = async () => {
+    try { await navigator.clipboard.writeText(password); setCopied(true); } catch { /* noop */ }
+  };
 
   const submit = async (e: React.FormEvent) => {
     e.preventDefault();
