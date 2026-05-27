@@ -183,7 +183,6 @@ function GuardianForm({ onLinked, onBack }: { onLinked: () => void; onBack: () =
     setBusy(true);
     try {
       let uid: string | undefined;
-      let didSignUp = false;
       if (mode === "signin") {
         const { data, error } = await supabase.auth.signInWithPassword({ email, password });
         if (error) throw error;
@@ -201,13 +200,12 @@ function GuardianForm({ onLinked, onBack }: { onLinked: () => void; onBack: () =
           id: uid, full_name: name, role: "guardian",
         });
         if (pErr) throw pErr;
-        didSignUp = true;
+        track("guardian_signup");
       }
       if (!uid) throw new Error("Sign in failed");
       const { error: linkErr } = await supabase.rpc("link_guardian_by_code", { _code: code, _label: rel });
       if (linkErr) throw linkErr;
       await refreshProfile();
-      if (didSignUp) track("guardian_signup");
       track("guardian_linked");
       onLinked();
     } catch (e: any) {
