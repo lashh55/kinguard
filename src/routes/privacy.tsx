@@ -33,7 +33,6 @@ function PrivacyPage() {
             <ul className="list-disc pl-5 space-y-1">
               <li>Full name</li>
               <li>Email address</li>
-              <li>Phone number</li>
               <li>Encrypted password</li>
               <li>Role (Senior or Guardian)</li>
               <li>Messages submitted for scam analysis</li>
@@ -54,6 +53,7 @@ function PrivacyPage() {
               <li>Home address</li>
               <li>Government ID numbers</li>
               <li>Location or GPS data</li>
+              <li>Phone numbers</li>
               <li>Contacts or call history</li>
               <li>Financial account information</li>
             </ul>
@@ -105,7 +105,7 @@ function PrivacyPage() {
       <Section title="Your Rights" bg="#F6EFC1">
         <ul className="list-disc pl-5 space-y-1">
           <li>Access your data anytime</li>
-          <li>Correct name, phone, email in settings</li>
+          <li>Correct name and email in settings</li>
           <li>Delete your account from your Profile screen</li>
           <li>Remove any guardian anytime</li>
           <li>Opt out of non-essential communications</li>
