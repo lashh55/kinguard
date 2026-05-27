@@ -293,7 +293,6 @@ export type Database = {
           last_alert_view_at: string
           link_id: string
           linked_at: string
-          phone_last4: string
           relationship_label: string
           total_alerts_reviewed: number
         }[]
