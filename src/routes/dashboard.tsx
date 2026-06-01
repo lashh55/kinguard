@@ -64,6 +64,7 @@ function SeniorDashboard() {
   const [alerts, setAlerts] = useState<Alert[]>([]);
   const [question, setQuestion] = useState<Question | null>(null);
   const [picked, setPicked] = useState<string | null>(null);
+  const [guardianCount, setGuardianCount] = useState<number>(0);
 
   useEffect(() => {
     if (!profile) return;
