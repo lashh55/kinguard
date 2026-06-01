@@ -10,6 +10,7 @@ import { LearningTree } from "@/components/LearningTree";
 import { useI18n } from "@/lib/i18n";
 import { SsnDisclaimer } from "@/components/SsnDisclaimer";
 import { track } from "@/lib/analytics";
+import { toast } from "sonner";
 
 export const Route = createFileRoute("/dashboard")({
   component: Dashboard,
