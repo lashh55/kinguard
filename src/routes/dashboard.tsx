@@ -87,6 +87,10 @@ function SeniorDashboard() {
         .limit(1);
       if (data?.[0]) setQuestion(data[0] as Question);
     })();
+    (async () => {
+      const { data } = await supabase.rpc("get_my_guardians");
+      setGuardianCount((data ?? []).length);
+    })();
   }, [profile]);
 
   if (!profile) return null;
