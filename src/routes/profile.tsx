@@ -79,6 +79,7 @@ function ProfileScreen() {
   const [guardians, setGuardians] = useState<GuardianRow[]>([]);
   const [activity, setActivity] = useState<ActivityRow[]>([]);
   const [confirmDelete, setConfirmDelete] = useState(false);
+  const [deleteText, setDeleteText] = useState("");
   const [deleting, setDeleting] = useState(false);
 
   useEffect(() => { if (!loading && !user) navigate({ to: "/" }); }, [loading, user, navigate]);
