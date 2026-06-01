@@ -285,12 +285,14 @@ function GuardianForm({ onLinked, onBack }: { onLinked: () => void; onBack: () =
     } finally { setBusy(false); }
   };
 
+  const isSignIn = mode === "signin";
+  const isInvalidCreds = !!err && /invalid login credentials|invalid email or password/i.test(err);
+
   return (
     <form onSubmit={submit} className="card-soft space-y-4">
-      <div className="flex gap-2">
-        <button type="button" className={`btn-base flex-1 ${mode==="signup"?"btn-primary":"btn-outline"}`} onClick={() => setMode("signup")}>{t("Create account")}</button>
-        <button type="button" className={`btn-base flex-1 ${mode==="signin"?"btn-primary":"btn-outline"}`} onClick={() => setMode("signin")}>{t("Sign in")}</button>
-      </div>
+      <h2 className="text-center" style={{ color: "var(--color-rose)" }}>
+        {isSignIn ? t("Sign In") : t("Create account")}
+      </h2>
       {mode === "signup" && (
         <FormRow label={t("Full name")}>
           <input className="input-large" required value={name} onChange={(e) => setName(e.target.value)} />
@@ -309,10 +311,40 @@ function GuardianForm({ onLinked, onBack }: { onLinked: () => void; onBack: () =
       <FormRow label={t("Invite code")} hint={t("Ask the person you want to protect for their invite code. They must create their account first.")}>
         <input className="invite-code input-large uppercase tracking-widest" required value={code} onChange={(e) => setCode(e.target.value.toUpperCase())} />
       </FormRow>
-      {err && <p className="text-sm font-bold" style={{ color: "var(--color-danger)" }}>{err}</p>}
+      {err && (
+        <div className="text-sm font-bold" style={{ color: "var(--color-danger)" }}>
+          {isSignIn && isInvalidCreds ? (
+            <p>
+              {t("We couldn't find an account with that email and password.")}{" "}
+              <button type="button" className="underline" onClick={() => { setErr(null); setMode("signup"); }}>
+                {t("Create one")}
+              </button>
+            </p>
+          ) : (
+            <p>{err}</p>
+          )}
+        </div>
+      )}
       <button className="btn-base btn-primary w-full" disabled={busy}>
         {busy ? t("Connecting…") : t("Connect and Protect")}
       </button>
+      <p className="text-center text-sm" style={{ color: "var(--color-muted-foreground)" }}>
+        {isSignIn ? (
+          <>
+            {t("New here?")}{" "}
+            <button type="button" className="underline font-bold" onClick={() => { setErr(null); setMode("signup"); }}>
+              {t("Create an account")}
+            </button>
+          </>
+        ) : (
+          <>
+            {t("Already have an account?")}{" "}
+            <button type="button" className="underline font-bold" onClick={() => { setErr(null); setMode("signin"); }}>
+              {t("Sign in")}
+            </button>
+          </>
+        )}
+      </p>
       <button type="button" className="text-sm underline w-full" onClick={onBack}>{t("← Back")}</button>
     </form>
   );
