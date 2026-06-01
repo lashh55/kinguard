@@ -174,12 +174,21 @@ function SeniorDashboard() {
         <Link to="/check" className="btn-base btn-primary w-full">🔍 {t("Check a Suspicious Message")}</Link>
         <Link to="/ssn" className="btn-base btn-primary w-full">🛡️ {t("Protect My SSN")}</Link>
         <button className="btn-base btn-danger w-full" onClick={() => {
+          if (guardianCount === 0) {
+            toast(t("Please add a guardian before using SOS Alert."));
+            return;
+          }
           track("help_requested");
           notifyGuardianSOS(profile.full_name);
           supabase.from("sos_events").insert({ senior_id: user!.id }).then(() => {});
         }}>
           🆘 {t("I Need Help")}
         </button>
+        {guardianCount === 0 && (
+          <p className="text-sm text-center" style={{ color: "var(--color-muted-foreground)" }}>
+            {t("Add a guardian in your profile to enable SOS Alert.")}
+          </p>
+        )}
       </section>
 
       {question && (
