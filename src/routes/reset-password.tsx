@@ -2,6 +2,8 @@ import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { PasswordInput } from "@/components/PasswordInput";
+import { PasswordStrengthMeter } from "@/components/PasswordStrengthMeter";
+import { generatePassphrase } from "@/lib/passphrase";
 import logo from "@/assets/kinguard-logo.png";
 
 export const Route = createFileRoute("/reset-password")({
@@ -13,12 +15,13 @@ function ResetPassword() {
   const [ready, setReady] = useState(false);
   const [password, setPassword] = useState("");
   const [confirm, setConfirm] = useState("");
+  const [generated, setGenerated] = useState(false);
+  const [copied, setCopied] = useState(false);
   const [busy, setBusy] = useState(false);
   const [err, setErr] = useState<string | null>(null);
   const [done, setDone] = useState(false);
 
   useEffect(() => {
-    // Supabase parses the recovery hash on load; wait for the PASSWORD_RECOVERY event or existing session.
     const { data: sub } = supabase.auth.onAuthStateChange((event) => {
       if (event === "PASSWORD_RECOVERY" || event === "SIGNED_IN") setReady(true);
     });
@@ -27,6 +30,18 @@ function ResetPassword() {
     });
     return () => sub.subscription.unsubscribe();
   }, []);
+
+  const handleGenerate = async () => {
+    const pw = generatePassphrase();
+    setPassword(pw);
+    setConfirm(pw);
+    setGenerated(true);
+    setCopied(false);
+    try { await navigator.clipboard.writeText(pw); setCopied(true); } catch { /* user can copy manually */ }
+  };
+  const handleCopy = async () => {
+    try { await navigator.clipboard.writeText(password); setCopied(true); } catch { /* noop */ }
+  };
 
   const submit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -65,7 +80,29 @@ function ResetPassword() {
           <form onSubmit={submit} className="card-soft space-y-4">
             <label className="block">
               <span className="block font-bold mb-2">New password</span>
-              <PasswordInput required minLength={10} value={password} onChange={(e) => setPassword(e.target.value)} />
+              <PasswordInput
+                required
+                minLength={10}
+                value={password}
+                forceVisible={generated}
+                onChange={(e) => { setPassword(e.target.value); setGenerated(false); setCopied(false); }}
+              />
+              <PasswordStrengthMeter value={password} />
+              <div className="mt-2 flex flex-wrap gap-2 items-center">
+                <button type="button" className="text-sm underline font-semibold" onClick={handleGenerate}>
+                  Generate a strong password for me
+                </button>
+                {generated && password && (
+                  <button type="button" className="text-sm underline" onClick={handleCopy}>
+                    {copied ? "Copied!" : "Copy"}
+                  </button>
+                )}
+              </div>
+              {generated && (
+                <p className="text-sm font-bold mt-2" style={{ color: "var(--color-danger)" }}>
+                  Write this down somewhere safe before continuing.
+                </p>
+              )}
             </label>
             <label className="block">
               <span className="block font-bold mb-2">Confirm new password</span>

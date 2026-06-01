@@ -10,6 +10,7 @@ import { LearningTree } from "@/components/LearningTree";
 import { useI18n } from "@/lib/i18n";
 import { SsnDisclaimer } from "@/components/SsnDisclaimer";
 import { track } from "@/lib/analytics";
+import { toast } from "sonner";
 
 export const Route = createFileRoute("/dashboard")({
   component: Dashboard,
@@ -64,6 +65,7 @@ function SeniorDashboard() {
   const [alerts, setAlerts] = useState<Alert[]>([]);
   const [question, setQuestion] = useState<Question | null>(null);
   const [picked, setPicked] = useState<string | null>(null);
+  const [guardianCount, setGuardianCount] = useState<number>(0);
 
   useEffect(() => {
     if (!profile) return;
@@ -85,6 +87,10 @@ function SeniorDashboard() {
         .eq("rotation_group", group)
         .limit(1);
       if (data?.[0]) setQuestion(data[0] as Question);
+    })();
+    (async () => {
+      const { data } = await supabase.rpc("get_my_guardians");
+      setGuardianCount((data ?? []).length);
     })();
   }, [profile]);
 
@@ -169,12 +175,21 @@ function SeniorDashboard() {
         <Link to="/check" className="btn-base btn-primary w-full">🔍 {t("Check a Suspicious Message")}</Link>
         <Link to="/ssn" className="btn-base btn-primary w-full">🛡️ {t("Protect My SSN")}</Link>
         <button className="btn-base btn-danger w-full" onClick={() => {
+          if (guardianCount === 0) {
+            toast(t("Please add a guardian before using SOS Alert."));
+            return;
+          }
           track("help_requested");
           notifyGuardianSOS(profile.full_name);
           supabase.from("sos_events").insert({ senior_id: user!.id }).then(() => {});
         }}>
           🆘 {t("I Need Help")}
         </button>
+        {guardianCount === 0 && (
+          <p className="text-sm text-center" style={{ color: "var(--color-muted-foreground)" }}>
+            {t("Add a guardian in your profile to enable SOS Alert.")}
+          </p>
+        )}
       </section>
 
       {question && (
