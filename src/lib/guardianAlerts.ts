@@ -29,6 +29,6 @@ export function notifyGuardianSOS(seniorName: string) {
   const msg =
     `🆘 SOS Alert\n` +
     `${seniorName} has pressed the emergency help button and needs assistance.\n` +
-    `Tap to call them immediately.`;
+    `Reach out to them right away.`;
   toast(msg, { duration: 5000, style: { whiteSpace: "pre-line" } });
 }
