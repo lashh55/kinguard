@@ -305,35 +305,70 @@ function ProfileScreen() {
           {t("Sign Out")}
         </button>
 
-        {!confirmDelete ? (
+        <div className="card-soft" style={{ border: "3px solid #E74C3C", background: "color-mix(in oklab, #E74C3C 6%, #fff)" }}>
+          <p className="font-extrabold uppercase tracking-wider mb-2" style={{ color: "#a02c20", fontSize: 14 }}>
+            ⚠️ {t("Danger Zone")}
+          </p>
+          <p className="text-sm mb-3" style={{ color: "var(--color-muted-foreground)" }}>
+            {t("Permanently delete your account and all your data. This cannot be undone.")}
+          </p>
           <button
             className="btn-base w-full"
             style={{ background: "#E74C3C", color: "#fff" }}
-            onClick={() => setConfirmDelete(true)}
+            onClick={() => { setConfirmDelete(true); setDeleteText(""); }}
           >
             {t("🗑️ Delete My Account")}
           </button>
-        ) : (
-          <div className="card-soft" style={{ border: "2px solid #E74C3C" }}>
-            <p className="font-extrabold" style={{ fontSize: 19, color: "#E74C3C" }}>{t("Are you sure?")}</p>
-            <p className="mt-2">{t("This will permanently delete your account and all your data. This cannot be undone.")}</p>
-            <div className="grid grid-cols-1 gap-2 mt-4">
-              <button
-                className="btn-base w-full"
-                style={{ background: "#E74C3C", color: "#fff" }}
-                disabled={deleting}
-                onClick={deleteAccount}
-              >
-                {deleting ? t("Deleting…") : t("Yes, Delete My Account")}
-              </button>
-              <button
-                className="btn-base w-full"
-                style={{ background: "#9b9b9b", color: "#fff" }}
-                disabled={deleting}
-                onClick={() => setConfirmDelete(false)}
-              >
-                {t("Cancel")}
-              </button>
+        </div>
+
+        {confirmDelete && (
+          <div
+            role="dialog"
+            aria-modal="true"
+            className="fixed inset-0 z-50 flex items-center justify-center p-4"
+            style={{ background: "rgba(0,0,0,0.5)" }}
+            onClick={() => !deleting && setConfirmDelete(false)}
+          >
+            <div
+              className="card-soft w-full max-w-md"
+              style={{ border: "3px solid #E74C3C" }}
+              onClick={(e) => e.stopPropagation()}
+            >
+              <p className="font-extrabold" style={{ fontSize: 20, color: "#E74C3C" }}>
+                {t("Are you absolutely sure?")}
+              </p>
+              <p className="mt-2">
+                {t("This will permanently delete your account and all your data. This cannot be undone.")}
+              </p>
+              <p className="mt-4 font-bold">
+                {t("To confirm, type")} <span style={{ fontFamily: "monospace", fontSize: 20 }}>DELETE</span> {t("below:")}
+              </p>
+              <input
+                className="input-large mt-2 text-center"
+                style={{ fontSize: 24, letterSpacing: "0.15em", fontWeight: 800 }}
+                value={deleteText}
+                onChange={(e) => setDeleteText(e.target.value)}
+                placeholder="DELETE"
+                autoFocus
+              />
+              <div className="grid grid-cols-1 gap-2 mt-4">
+                <button
+                  className="btn-base w-full"
+                  style={{ background: "#E74C3C", color: "#fff", opacity: deleteText === "DELETE" ? 1 : 0.5 }}
+                  disabled={deleting || deleteText !== "DELETE"}
+                  onClick={deleteAccount}
+                >
+                  {deleting ? t("Deleting…") : t("Yes, Delete My Account")}
+                </button>
+                <button
+                  className="btn-base w-full"
+                  style={{ background: "#9b9b9b", color: "#fff" }}
+                  disabled={deleting}
+                  onClick={() => { setConfirmDelete(false); setDeleteText(""); }}
+                >
+                  {t("Cancel")}
+                </button>
+              </div>
             </div>
           </div>
         )}
