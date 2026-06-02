@@ -47,6 +47,9 @@ function ForGuardians() {
         <Feature emoji="🔔" title="You get alerts">Real-time notifications whenever they check a suspicious message.</Feature>
       </div>
 
+      <ScamVignette />
+
+
       <section className="mt-12">
         <h2>What guardians actually see</h2>
         <ul className="mt-3 space-y-2 list-disc pl-6">
