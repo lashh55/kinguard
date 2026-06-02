@@ -183,8 +183,8 @@ const DICT: Record<string, string> = {
     "Esta es una de las tácticas de estafa más comunes. Cuelga de inmediato. Ninguna organización legítima necesita tu SSN en una llamada inesperada.",
   "Never share your SSN by email or text. Legitimate organizations do not ask for your SSN this way. This is almost certainly a scam.":
     "Nunca compartas tu SSN por correo o texto. Las organizaciones legítimas no piden tu SSN así. Esto es casi seguro una estafa.",
-  "When in doubt, don't share it. Call your guardian or a trusted family member before doing anything.":
-    "Cuando dudes, no lo compartas. Llama a tu guardián o a un familiar de confianza antes de hacer cualquier cosa.",
+  "When in doubt, don't share it. Alert your guardian through KinGuard or contact a trusted family member before doing anything.":
+    "Cuando dudes, no lo compartas. Alerta a tu guardián a través de KinGuard o contacta a un familiar de confianza antes de hacer cualquier cosa.",
 
   // Learn
   "🎓 Learn": "🎓 Aprender",
