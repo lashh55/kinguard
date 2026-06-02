@@ -219,14 +219,27 @@ function SeniorDashboard() {
       </section>
 
       <section className="px-5 mt-5">
-        <h2 className="mb-2">{t("Recent alerts")}</h2>
+        <div className="flex items-center justify-between mb-2">
+          <h2>📬 {t("Scam Alerts Inbox")}</h2>
+          {alerts.length > 0 && (
+            <button
+              onClick={() => setInboxOpen((v) => !v)}
+              className="text-sm font-bold underline"
+              style={{ color: "var(--color-rose)" }}
+            >
+              {inboxOpen ? t("Hide") : `${t("Show all")} (${alerts.length})`}
+            </button>
+          )}
+        </div>
         {alerts.length === 0 ? (
           <div className="card-soft text-center font-bold" style={{ color: "#2ECC71" }}>
             {t("✅ No alerts yet. You're all clear!")}
           </div>
         ) : (
           <ul className="space-y-2">
-            {alerts.map((a) => <AlertCard key={a.id} a={a} />)}
+            {(inboxOpen ? alerts : alerts.slice(0, 3)).map((a) => (
+              <AlertCard key={a.id} a={a} unread={new Date(a.created_at).getTime() > lastSeen} />
+            ))}
           </ul>
         )}
       </section>
