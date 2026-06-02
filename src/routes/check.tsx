@@ -27,17 +27,17 @@ function CheckScreen() {
   const { t } = useI18n();
   const navigate = useNavigate();
   const [content, setContent] = useState("");
-  const [channel, setChannel] = useState("");
   const [busy, setBusy] = useState(false);
   const [result, setResult] = useState<Result | null>(null);
   const [err, setErr] = useState<string | null>(null);
-  const [typeError, setTypeError] = useState(false);
+  const [copied, setCopied] = useState(false);
+
+  const FORWARD_EMAIL = "check@getkinguard.com";
+  const channel = "manual";
 
   const submit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!channel) { setTypeError(true); return; }
     if (!content.trim()) return;
-    setTypeError(false);
     setBusy(true); setErr(null); setResult(null);
     try {
       const r = await analyzeScam({ data: { content, channel } });
@@ -61,6 +61,17 @@ function CheckScreen() {
     } finally { setBusy(false); }
   };
 
+  const copyEmail = async () => {
+    try {
+      await navigator.clipboard.writeText(FORWARD_EMAIL);
+      setCopied(true);
+      toast(t("✅ Email address copied"));
+      setTimeout(() => setCopied(false), 2500);
+    } catch {
+      toast(t("Could not copy. Please type the address manually."));
+    }
+  };
+
   const verdict = result && (result.score <= 40 ? { label: t("Looks Safe ✅"), color: "var(--color-safe)" } :
     result.score <= 70 ? { label: t("Use Caution ⚠️"), color: "var(--color-warn)" } :
     { label: t("Likely Scam 🚨"), color: "var(--color-danger)" });
@@ -69,10 +80,45 @@ function CheckScreen() {
     <ScreenShell>
       <header className="px-5 py-4" style={{ background: "var(--color-sky)" }}>
         <h1>{t("Check a Suspicious Message")}</h1>
-        <p className="mt-1">{t("Paste any suspicious email, text, or describe a phone call. We'll tell you if it's a scam.")}</p>
+        <p className="mt-1">{t("Forward a suspicious email to us, or paste a text message or describe a phone call below. KinGuard will tell you if it's a scam.")}</p>
       </header>
 
-      <form className="px-5 mt-5 space-y-4" onSubmit={submit}>
+      <section className="px-5 mt-5">
+        <div className="card-soft" style={{ background: "var(--color-sky)" }}>
+          <p className="font-extrabold" style={{ fontSize: 20 }}>{t("📧 Got a suspicious email?")}</p>
+          <p className="mt-2" style={{ fontSize: 18 }}>
+            {t("Just forward it to the address below. No copying or pasting needed. KinGuard will check it and alert you and your guardians right away.")}
+          </p>
+          <div
+            className="mt-3 rounded-xl px-4 py-3 font-extrabold text-center break-all"
+            style={{ background: "#fff", color: "#3D2B2B", fontSize: 22, border: "2px dashed #3D2B2B" }}
+          >
+            {FORWARD_EMAIL}
+          </div>
+          <button
+            type="button"
+            onClick={copyEmail}
+            className="btn-base w-full mt-3 font-extrabold"
+            style={{ background: "#DFC18F", color: "#3D2B2B" }}
+          >
+            {copied ? t("✅ Copied!") : t("📋 Copy email address")}
+          </button>
+          <p className="mt-3" style={{ fontSize: 16 }}>
+            {t("Open the suspicious email in your inbox, tap Forward, and send it to this address. That's all you need to do.")}
+          </p>
+        </div>
+      </section>
+
+      <div className="px-5 mt-6 flex items-center gap-3" aria-hidden="true">
+        <div style={{ flex: 1, height: 1, background: "#3D2B2B33" }} />
+        <span className="font-bold" style={{ fontSize: 16 }}>{t("OR PASTE BELOW")}</span>
+        <div style={{ flex: 1, height: 1, background: "#3D2B2B33" }} />
+      </div>
+
+      <form className="px-5 mt-4 space-y-4" onSubmit={submit}>
+        <p className="font-bold" style={{ fontSize: 18 }}>
+          {t("For text messages, phone calls, or someone at your door — paste or type what they said here:")}
+        </p>
         <textarea
           className="input-large"
           rows={8}
@@ -81,30 +127,44 @@ function CheckScreen() {
           onChange={(e) => setContent(e.target.value)}
           style={{ minHeight: 200, resize: "vertical" }}
         />
-        <label className="block">
-          <span className="block font-bold mb-2">{t("What type is this?")}</span>
-          <select className="input-large" value={channel} onChange={(e) => { setChannel(e.target.value); setTypeError(false); }}>
-            <option value="">{t("--- Select a type ---")}</option>
-            <option value="email">{t("Email")}</option>
-            <option value="sms">{t("Text Message")}</option>
-            <option value="call">{t("Phone Call")}</option>
-            <option value="manual">{t("Not Sure")}</option>
-          </select>
-        </label>
-        {typeError && (
-          <p className="font-bold text-center" style={{ color: "#F39C12", fontSize: 15 }}>
-            {t("Please select what type of message this is before checking")}
-          </p>
-        )}
         <button
           className="btn-base w-full font-extrabold"
-          disabled={busy || !content.trim() || !channel}
-          style={channel && content.trim() ? { background: "#DFC18F", color: "#3D2B2B" } : undefined}
+          disabled={busy || !content.trim()}
+          style={content.trim() ? { background: "#DFC18F", color: "#3D2B2B" } : undefined}
         >
           {busy ? t("KinGuard is analyzing this for you…") : t("🔍 Check This Now")}
         </button>
         {err && <p className="font-bold" style={{ color: "var(--color-danger)" }}>{err}</p>}
       </form>
+
+      <section className="px-5 mt-6">
+        <details className="card-soft" style={{ background: "#FFF8EC" }}>
+          <summary className="font-extrabold cursor-pointer" style={{ fontSize: 20 }}>
+            {t("How do I copy and paste?")}
+          </summary>
+          <div className="mt-4 space-y-4" style={{ fontSize: 18 }}>
+            <div>
+              <p className="font-extrabold mb-1">{t("📱 On a phone or tablet")}</p>
+              <ol className="list-decimal pl-6 space-y-1">
+                <li>{t("Press and hold your finger on the message until words become highlighted.")}</li>
+                <li>{t("Drag the little blue dots to cover all the text you want.")}</li>
+                <li>{t("Tap \"Copy\" in the small menu that appears.")}</li>
+                <li>{t("Come back to this page, press and hold inside the box above, then tap \"Paste\".")}</li>
+              </ol>
+            </div>
+            <div>
+              <p className="font-extrabold mb-1">{t("💻 On a computer")}</p>
+              <ol className="list-decimal pl-6 space-y-1">
+                <li>{t("Click at the start of the message, hold the mouse button, and drag to the end to highlight it.")}</li>
+                <li>{t("Press the Ctrl key and the C key at the same time (on a Mac, use Command + C).")}</li>
+                <li>{t("Click inside the box above on this page.")}</li>
+                <li>{t("Press Ctrl + V (on a Mac, Command + V) to paste it in.")}</li>
+              </ol>
+            </div>
+          </div>
+        </details>
+      </section>
+
 
       {result && verdict && (
         <section className="px-5 mt-6 space-y-4">
