@@ -527,12 +527,23 @@ function Stat({ icon, label, value }: { icon: string; label: string; value: Reac
   );
 }
 
-function AlertCard({ a }: { a: Alert }) {
+function AlertCard({ a, unread }: { a: Alert; unread?: boolean }) {
   return (
-    <li className="card-soft flex items-start gap-3">
+    <li
+      className="card-soft flex items-start gap-3"
+      style={unread ? { border: "3px solid var(--color-danger)", background: "#FFF5F3" } : undefined}
+    >
       <div style={{ fontSize: 28 }}>{channelIcon(a.channel)}</div>
       <div className="flex-1 min-w-0">
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-2 flex-wrap">
+          {unread && (
+            <span
+              className="px-2 py-0.5 rounded-full text-xs font-extrabold"
+              style={{ background: "var(--color-danger)", color: "#fff" }}
+            >
+              NEW
+            </span>
+          )}
           <span className="font-bold truncate">{a.scam_type || "Suspicious message"}</span>
           <ScoreBadge score={a.scam_score} />
         </div>
