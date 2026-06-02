@@ -341,6 +341,37 @@ function GuardianDashboard() {
     })();
   }, [profile]);
 
+  // Realtime: fan-out alerts from any linked senior (forwarded emails included)
+  useEffect(() => {
+    if (!profile) return;
+    const linkedIds = Object.keys(seniorMap);
+    if (linkedIds.length === 0) return;
+    const channel = supabase
+      .channel(`scam_alerts_guardian_${profile.id}`)
+      .on(
+        "postgres_changes",
+        { event: "INSERT", schema: "public", table: "scam_alerts" },
+        (payload) => {
+          const a = payload.new as Alert;
+          if (!linkedIds.includes(a.senior_id)) return;
+          setRecentAlerts((prev) => [a, ...prev].slice(0, 10));
+          setSeniors((prev) => prev.map((s) =>
+            s.id === a.senior_id
+              ? { ...s, alertCount: s.alertCount + (a.status === "flagged" ? 1 : 0), lastAlert: a }
+              : s,
+          ));
+          notifyGuardianScam({
+            seniorName: seniorMap[a.senior_id] || "Your loved one",
+            scamType: a.scam_type || "Suspicious message",
+            score: a.scam_score,
+            channel: a.channel,
+          });
+        },
+      )
+      .subscribe();
+    return () => { supabase.removeChannel(channel); };
+  }, [profile, seniorMap]);
+
   if (!profile) return null;
 
   return (
