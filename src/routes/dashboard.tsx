@@ -66,6 +66,16 @@ function SeniorDashboard() {
   const [question, setQuestion] = useState<Question | null>(null);
   const [picked, setPicked] = useState<string | null>(null);
   const [guardianCount, setGuardianCount] = useState<number>(0);
+  const [lastSeen, setLastSeen] = useState<number>(0);
+  const [inboxOpen, setInboxOpen] = useState(false);
+
+  const seenKey = profile ? `kg_alerts_seen_${profile.id}` : "";
+
+  useEffect(() => {
+    if (!seenKey) return;
+    const v = Number(localStorage.getItem(seenKey) || 0);
+    setLastSeen(v);
+  }, [seenKey]);
 
   useEffect(() => {
     if (!profile) return;
@@ -75,7 +85,7 @@ function SeniorDashboard() {
         .select("id,channel,scam_type,scam_score,content_preview,status,created_at,senior_id")
         .eq("senior_id", profile.id)
         .order("created_at", { ascending: false })
-        .limit(3);
+        .limit(100);
       setAlerts((data as Alert[]) ?? []);
     })();
     (async () => {
@@ -104,10 +114,10 @@ function SeniorDashboard() {
         { event: "INSERT", schema: "public", table: "scam_alerts", filter: `senior_id=eq.${profile.id}` },
         (payload) => {
           const a = payload.new as Alert;
-          setAlerts((prev) => [a, ...prev].slice(0, 3));
+          setAlerts((prev) => [a, ...prev].slice(0, 100));
           const verdict = a.scam_score >= 71 ? t("🚨 Likely scam") : a.scam_score <= 40 ? t("✅ Looks safe") : t("⚠️ Use caution");
           if (a.channel === "email_forward" || a.channel === "ssn_request") {
-            toast(`📧 ${t("KinGuard analyzed your forwarded email")} — ${verdict} (${a.scam_score}/100)`, { duration: 6000 });
+            toast(`📧 ${t("KinGuard analyzed your forwarded email")} — ${verdict} (${a.scam_score}/100)`, { duration: 8000 });
           }
         },
       )
@@ -116,6 +126,16 @@ function SeniorDashboard() {
   }, [profile, t]);
 
   if (!profile) return null;
+
+  const unreadAlerts = alerts.filter((a) => new Date(a.created_at).getTime() > lastSeen);
+  const unreadCount = unreadAlerts.length;
+
+  const markAllSeenAndOpen = () => {
+    const now = Date.now();
+    localStorage.setItem(seenKey, String(now));
+    setLastSeen(now);
+    setInboxOpen(true);
+  };
 
   const flagged = alerts.filter((a) => a.status === "flagged");
   const status: "safe" | "warn" | "danger" =
