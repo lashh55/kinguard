@@ -20,6 +20,7 @@ function Onboarding() {
   const { user, profile, loading, refreshProfile } = useAuth();
   const navigate = useNavigate();
   const [step, setStep] = useState<Step>("role");
+  const [seniorMode, setSeniorMode] = useState<"signup" | "signin">("signup");
   const [code, setCode] = useState<string | null>(null);
   const { t } = useI18n();
 
