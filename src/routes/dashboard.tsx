@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import { useAuth } from "@/lib/auth";
 import { supabase } from "@/integrations/supabase/client";
 import { ScreenShell, ScoreBadge } from "@/components/ScreenShell";
-import { notifyGuardianSOS } from "@/lib/guardianAlerts";
+import { notifyGuardianSOS, notifyGuardianScam } from "@/lib/guardianAlerts";
 import { normalizeStats } from "@/lib/badges";
 import logo from "@/assets/kinguard-logo.png";
 import { LearningTree } from "@/components/LearningTree";
@@ -93,6 +93,27 @@ function SeniorDashboard() {
       setGuardianCount((data ?? []).length);
     })();
   }, [profile]);
+
+  // Realtime: surface new alerts (e.g. from forwarded emails) instantly
+  useEffect(() => {
+    if (!profile) return;
+    const channel = supabase
+      .channel(`scam_alerts_senior_${profile.id}`)
+      .on(
+        "postgres_changes",
+        { event: "INSERT", schema: "public", table: "scam_alerts", filter: `senior_id=eq.${profile.id}` },
+        (payload) => {
+          const a = payload.new as Alert;
+          setAlerts((prev) => [a, ...prev].slice(0, 3));
+          const verdict = a.scam_score >= 71 ? t("🚨 Likely scam") : a.scam_score <= 40 ? t("✅ Looks safe") : t("⚠️ Use caution");
+          if (a.channel === "email_forward" || a.channel === "ssn_request") {
+            toast(`📧 ${t("KinGuard analyzed your forwarded email")} — ${verdict} (${a.scam_score}/100)`, { duration: 6000 });
+          }
+        },
+      )
+      .subscribe();
+    return () => { supabase.removeChannel(channel); };
+  }, [profile, t]);
 
   if (!profile) return null;
 
@@ -320,6 +341,37 @@ function GuardianDashboard() {
     })();
   }, [profile]);
 
+  // Realtime: fan-out alerts from any linked senior (forwarded emails included)
+  useEffect(() => {
+    if (!profile) return;
+    const linkedIds = Object.keys(seniorMap);
+    if (linkedIds.length === 0) return;
+    const channel = supabase
+      .channel(`scam_alerts_guardian_${profile.id}`)
+      .on(
+        "postgres_changes",
+        { event: "INSERT", schema: "public", table: "scam_alerts" },
+        (payload) => {
+          const a = payload.new as Alert;
+          if (!linkedIds.includes(a.senior_id)) return;
+          setRecentAlerts((prev) => [a, ...prev].slice(0, 10));
+          setSeniors((prev) => prev.map((s) =>
+            s.id === a.senior_id
+              ? { ...s, alertCount: s.alertCount + (a.status === "flagged" ? 1 : 0), lastAlert: a }
+              : s,
+          ));
+          notifyGuardianScam({
+            seniorName: seniorMap[a.senior_id] || "Your loved one",
+            scamType: a.scam_type || "Suspicious message",
+            score: a.scam_score,
+            channel: a.channel,
+          });
+        },
+      )
+      .subscribe();
+    return () => { supabase.removeChannel(channel); };
+  }, [profile, seniorMap]);
+
   if (!profile) return null;
 
   return (
@@ -410,7 +462,7 @@ function MiniStat({ label, value }: { label: string; value: React.ReactNode }) {
 }
 
 function channelIcon(channel: string) {
-  return channel === "ssn_request" ? "🛡️" : channel === "email" ? "📧" : channel === "sms" ? "📱" : channel === "call" ? "📞" : "🔍";
+  return channel === "ssn_request" ? "🛡️" : (channel === "email" || channel === "email_forward") ? "📧" : channel === "sms" ? "📱" : channel === "call" ? "📞" : "🔍";
 }
 
 function Stat({ icon, label, value }: { icon: string; label: string; value: React.ReactNode }) {

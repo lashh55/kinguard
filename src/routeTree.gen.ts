@@ -23,6 +23,7 @@ import { Route as AdminRouteImport } from './routes/_admin'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as ScamsSlugRouteImport } from './routes/scams.$slug'
 import { Route as AdminAdminIndexRouteImport } from './routes/_admin/admin.index'
+import { Route as ApiPublicInboundEmailRouteImport } from './routes/api/public/inbound-email'
 import { Route as AdminAdminSosRouteImport } from './routes/_admin/admin.sos'
 import { Route as AdminAdminSeniorsRouteImport } from './routes/_admin/admin.seniors'
 import { Route as AdminAdminMessagesRouteImport } from './routes/_admin/admin.messages'
@@ -98,6 +99,11 @@ const AdminAdminIndexRoute = AdminAdminIndexRouteImport.update({
   path: '/admin/',
   getParentRoute: () => AdminRoute,
 } as any)
+const ApiPublicInboundEmailRoute = ApiPublicInboundEmailRouteImport.update({
+  id: '/api/public/inbound-email',
+  path: '/api/public/inbound-email',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const AdminAdminSosRoute = AdminAdminSosRouteImport.update({
   id: '/admin/sos',
   path: '/admin/sos',
@@ -142,6 +148,7 @@ export interface FileRoutesByFullPath {
   '/admin/messages': typeof AdminAdminMessagesRoute
   '/admin/seniors': typeof AdminAdminSeniorsRoute
   '/admin/sos': typeof AdminAdminSosRoute
+  '/api/public/inbound-email': typeof ApiPublicInboundEmailRoute
   '/admin/': typeof AdminAdminIndexRoute
 }
 export interface FileRoutesByTo {
@@ -162,6 +169,7 @@ export interface FileRoutesByTo {
   '/admin/messages': typeof AdminAdminMessagesRoute
   '/admin/seniors': typeof AdminAdminSeniorsRoute
   '/admin/sos': typeof AdminAdminSosRoute
+  '/api/public/inbound-email': typeof ApiPublicInboundEmailRoute
   '/admin': typeof AdminAdminIndexRoute
 }
 export interface FileRoutesById {
@@ -184,6 +192,7 @@ export interface FileRoutesById {
   '/_admin/admin/messages': typeof AdminAdminMessagesRoute
   '/_admin/admin/seniors': typeof AdminAdminSeniorsRoute
   '/_admin/admin/sos': typeof AdminAdminSosRoute
+  '/api/public/inbound-email': typeof ApiPublicInboundEmailRoute
   '/_admin/admin/': typeof AdminAdminIndexRoute
 }
 export interface FileRouteTypes {
@@ -206,6 +215,7 @@ export interface FileRouteTypes {
     | '/admin/messages'
     | '/admin/seniors'
     | '/admin/sos'
+    | '/api/public/inbound-email'
     | '/admin/'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -226,6 +236,7 @@ export interface FileRouteTypes {
     | '/admin/messages'
     | '/admin/seniors'
     | '/admin/sos'
+    | '/api/public/inbound-email'
     | '/admin'
   id:
     | '__root__'
@@ -247,6 +258,7 @@ export interface FileRouteTypes {
     | '/_admin/admin/messages'
     | '/_admin/admin/seniors'
     | '/_admin/admin/sos'
+    | '/api/public/inbound-email'
     | '/_admin/admin/'
   fileRoutesById: FileRoutesById
 }
@@ -263,6 +275,7 @@ export interface RootRouteChildren {
   ScamsRoute: typeof ScamsRouteWithChildren
   SitemapDotxmlRoute: typeof SitemapDotxmlRoute
   SsnRoute: typeof SsnRoute
+  ApiPublicInboundEmailRoute: typeof ApiPublicInboundEmailRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -365,6 +378,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminAdminIndexRouteImport
       parentRoute: typeof AdminRoute
     }
+    '/api/public/inbound-email': {
+      id: '/api/public/inbound-email'
+      path: '/api/public/inbound-email'
+      fullPath: '/api/public/inbound-email'
+      preLoaderRoute: typeof ApiPublicInboundEmailRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/_admin/admin/sos': {
       id: '/_admin/admin/sos'
       path: '/admin/sos'
@@ -446,6 +466,7 @@ const rootRouteChildren: RootRouteChildren = {
   ScamsRoute: ScamsRouteWithChildren,
   SitemapDotxmlRoute: SitemapDotxmlRoute,
   SsnRoute: SsnRoute,
+  ApiPublicInboundEmailRoute: ApiPublicInboundEmailRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
