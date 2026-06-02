@@ -1,5 +1,7 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { MarketingShell } from "@/components/MarketingShell";
+import { ScamVignette } from "@/components/ScamVignette";
+
 
 export const Route = createFileRoute("/for-guardians")({
   component: ForGuardians,
@@ -44,6 +46,9 @@ function ForGuardians() {
         <Feature emoji="💙" title="You connect">Enter the invite code, name your relationship, and you're linked.</Feature>
         <Feature emoji="🔔" title="You get alerts">Real-time notifications whenever they check a suspicious message.</Feature>
       </div>
+
+      <ScamVignette />
+
 
       <section className="mt-12">
         <h2>What guardians actually see</h2>

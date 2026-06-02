@@ -34,9 +34,15 @@ export function AdminShell({ title, children }: { title: string; children: React
               );
             })}
           </nav>
-          <div className="flex gap-2">
+          <div className="flex gap-3 items-center">
             <Link to="/dashboard" className="text-sm underline">← Back to KinGuard</Link>
-            <button onClick={() => signOut()} className="text-sm underline">Sign out</button>
+            <button
+              onClick={() => signOut()}
+              className="btn-base"
+              style={{ background: "var(--color-rose)", color: "#fff", minHeight: 44, padding: "8px 18px", fontSize: 16, fontWeight: 800 }}
+            >
+              Sign Out
+            </button>
           </div>
         </div>
       </header>
