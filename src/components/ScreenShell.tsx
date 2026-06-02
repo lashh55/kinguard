@@ -1,17 +1,36 @@
-import { Link, useRouterState } from "@tanstack/react-router";
+import { Link, useRouterState, useNavigate } from "@tanstack/react-router";
 import { ReactNode } from "react";
 import { useAuth } from "@/lib/auth";
 import { PhotoPanel } from "@/components/PhotoPanel";
 import { useI18n } from "@/lib/i18n";
 
 export function ScreenShell({ children, withPhotoPanel = false }: { children: ReactNode; withPhotoPanel?: boolean }) {
-  const { profile } = useAuth();
+  const { profile, user, signOut } = useAuth();
   const { t } = useI18n();
+  const navigate = useNavigate();
   const isGuardian = profile?.role === "guardian";
+  const handleSignOut = async () => { await signOut(); navigate({ to: "/" }); };
   return (
     <div className="min-h-screen bg-background flex flex-col">
       {withPhotoPanel && <PhotoPanel widthPct={35} />}
       <div className={`flex-1 ${withPhotoPanel ? "sm:w-[65%]" : "w-full"}`}>
+        {user && (
+          <div
+            className="sticky top-0 z-20 border-b"
+            style={{ background: "var(--color-cream)", borderColor: "color-mix(in oklab, var(--color-brown) 12%, transparent)" }}
+          >
+            <div className="max-w-xl mx-auto flex items-center justify-end px-4 py-2">
+              <button
+                onClick={handleSignOut}
+                aria-label={t("Sign Out")}
+                className="btn-base"
+                style={{ background: "var(--color-rose)", color: "#fff", minHeight: 44, padding: "8px 18px", fontSize: 16, fontWeight: 800 }}
+              >
+                {t("Sign Out")}
+              </button>
+            </div>
+          </div>
+        )}
         <main className="pb-28 max-w-xl w-full mx-auto">{children}</main>
       </div>
       <nav
