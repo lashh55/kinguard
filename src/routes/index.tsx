@@ -20,6 +20,7 @@ function Onboarding() {
   const { user, profile, loading, refreshProfile } = useAuth();
   const navigate = useNavigate();
   const [step, setStep] = useState<Step>("role");
+  const [seniorMode, setSeniorMode] = useState<"signup" | "signin">("signup");
   const [code, setCode] = useState<string | null>(null);
   const { t } = useI18n();
 
@@ -48,8 +49,8 @@ function Onboarding() {
           </div>
 
           <div className="mt-8">
-            {step === "role" && <RoleStep onPick={setStep} />}
-            {step === "senior" && <SeniorForm onCreated={(c) => { setCode(c); setStep("invite"); }} onBack={() => setStep("role")} />}
+            {step === "role" && <RoleStep onPick={setStep} onSignIn={() => { setSeniorMode("signin"); setStep("senior"); }} onSignUp={() => { setSeniorMode("signup"); setStep("senior"); }} />}
+            {step === "senior" && <SeniorForm initialMode={seniorMode} onCreated={(c) => { setCode(c); setStep("invite"); }} onBack={() => setStep("role")} />}
             {step === "guardian" && <GuardianForm onLinked={() => setStep("linked")} onBack={() => setStep("role")} />}
             {step === "invite" && <InviteCodeView code={code!} onContinue={() => navigate({ to: "/dashboard" })} />}
             {step === "linked" && <LinkedView onContinue={() => navigate({ to: "/dashboard" })} />}
@@ -60,11 +61,11 @@ function Onboarding() {
   );
 }
 
-function RoleStep({ onPick }: { onPick: (s: Step) => void }) {
+function RoleStep({ onPick, onSignIn, onSignUp }: { onPick: (s: Step) => void; onSignIn: () => void; onSignUp: () => void }) {
   const { t } = useI18n();
   return (
     <div className="space-y-4">
-      <button className="btn-base btn-sky w-full" onClick={() => onPick("senior")}>
+      <button className="btn-base btn-sky w-full" onClick={onSignUp}>
         {t("🛡️ I want to be protected")}
       </button>
       <button className="btn-base btn-primary w-full" onClick={() => onPick("guardian")}>
@@ -75,7 +76,7 @@ function RoleStep({ onPick }: { onPick: (s: Step) => void }) {
       </p>
       <p className="text-center text-sm mt-2" style={{ color: "var(--color-muted-foreground)" }}>
         {t("Already have an account?")}{" "}
-        <button className="underline font-bold" onClick={() => onPick("senior")}>{t("Sign in")}</button>
+        <button className="underline font-bold" onClick={onSignIn}>{t("Sign in")}</button>
       </p>
     </div>
   );
@@ -91,10 +92,10 @@ function FormRow({ label, children, hint }: { label: string; children: React.Rea
   );
 }
 
-function SeniorForm({ onCreated, onBack }: { onCreated: (code: string) => void; onBack: () => void }) {
+function SeniorForm({ onCreated, onBack, initialMode = "signup" }: { onCreated: (code: string) => void; onBack: () => void; initialMode?: "signup" | "signin" }) {
   const { refreshProfile } = useAuth();
   const { t } = useI18n();
-  const [mode, setMode] = useState<"signup" | "signin">("signup");
+  const [mode, setMode] = useState<"signup" | "signin">(initialMode);
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
