@@ -32,7 +32,7 @@ function CheckScreen() {
   const [err, setErr] = useState<string | null>(null);
   const [copied, setCopied] = useState(false);
 
-  const FORWARD_EMAIL = "check@getkinguard.com";
+  const FORWARD_EMAIL = "check@check.getkinguard.com";
   const channel = "manual";
 
   const submit = async (e: React.FormEvent) => {
