@@ -92,10 +92,10 @@ function FormRow({ label, children, hint }: { label: string; children: React.Rea
   );
 }
 
-function SeniorForm({ onCreated, onBack }: { onCreated: (code: string) => void; onBack: () => void }) {
+function SeniorForm({ onCreated, onBack, initialMode = "signup" }: { onCreated: (code: string) => void; onBack: () => void; initialMode?: "signup" | "signin" }) {
   const { refreshProfile } = useAuth();
   const { t } = useI18n();
-  const [mode, setMode] = useState<"signup" | "signin">("signup");
+  const [mode, setMode] = useState<"signup" | "signin">(initialMode);
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
