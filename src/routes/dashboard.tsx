@@ -462,7 +462,7 @@ function MiniStat({ label, value }: { label: string; value: React.ReactNode }) {
 }
 
 function channelIcon(channel: string) {
-  return channel === "ssn_request" ? "🛡️" : channel === "email" ? "📧" : channel === "sms" ? "📱" : channel === "call" ? "📞" : "🔍";
+  return channel === "ssn_request" ? "🛡️" : (channel === "email" || channel === "email_forward") ? "📧" : channel === "sms" ? "📱" : channel === "call" ? "📞" : "🔍";
 }
 
 function Stat({ icon, label, value }: { icon: string; label: string; value: React.ReactNode }) {
