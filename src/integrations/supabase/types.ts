@@ -128,6 +128,45 @@ export type Database = {
           },
         ]
       }
+      inbound_email_logs: {
+        Row: {
+          body_preview: string | null
+          created_at: string
+          id: string
+          matched_senior_id: string | null
+          message: string | null
+          raw_fields: Json | null
+          sender_email: string | null
+          status: string
+          subject: string | null
+          to_address: string | null
+        }
+        Insert: {
+          body_preview?: string | null
+          created_at?: string
+          id?: string
+          matched_senior_id?: string | null
+          message?: string | null
+          raw_fields?: Json | null
+          sender_email?: string | null
+          status: string
+          subject?: string | null
+          to_address?: string | null
+        }
+        Update: {
+          body_preview?: string | null
+          created_at?: string
+          id?: string
+          matched_senior_id?: string | null
+          message?: string | null
+          raw_fields?: Json | null
+          sender_email?: string | null
+          status?: string
+          subject?: string | null
+          to_address?: string | null
+        }
+        Relationships: []
+      }
       profiles: {
         Row: {
           challenge_stats: Json
