@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import { useAuth } from "@/lib/auth";
 import { supabase } from "@/integrations/supabase/client";
 import { ScreenShell, ScoreBadge } from "@/components/ScreenShell";
-import { notifyGuardianSOS } from "@/lib/guardianAlerts";
+import { notifyGuardianSOS, notifyGuardianScam } from "@/lib/guardianAlerts";
 import { normalizeStats } from "@/lib/badges";
 import logo from "@/assets/kinguard-logo.png";
 import { LearningTree } from "@/components/LearningTree";
