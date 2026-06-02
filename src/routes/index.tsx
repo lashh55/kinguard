@@ -61,11 +61,11 @@ function Onboarding() {
   );
 }
 
-function RoleStep({ onPick }: { onPick: (s: Step) => void }) {
+function RoleStep({ onPick, onSignIn, onSignUp }: { onPick: (s: Step) => void; onSignIn: () => void; onSignUp: () => void }) {
   const { t } = useI18n();
   return (
     <div className="space-y-4">
-      <button className="btn-base btn-sky w-full" onClick={() => onPick("senior")}>
+      <button className="btn-base btn-sky w-full" onClick={onSignUp}>
         {t("🛡️ I want to be protected")}
       </button>
       <button className="btn-base btn-primary w-full" onClick={() => onPick("guardian")}>
@@ -76,7 +76,7 @@ function RoleStep({ onPick }: { onPick: (s: Step) => void }) {
       </p>
       <p className="text-center text-sm mt-2" style={{ color: "var(--color-muted-foreground)" }}>
         {t("Already have an account?")}{" "}
-        <button className="underline font-bold" onClick={() => onPick("senior")}>{t("Sign in")}</button>
+        <button className="underline font-bold" onClick={onSignIn}>{t("Sign in")}</button>
       </p>
     </div>
   );
