@@ -66,6 +66,16 @@ function SeniorDashboard() {
   const [question, setQuestion] = useState<Question | null>(null);
   const [picked, setPicked] = useState<string | null>(null);
   const [guardianCount, setGuardianCount] = useState<number>(0);
+  const [lastSeen, setLastSeen] = useState<number>(0);
+  const [inboxOpen, setInboxOpen] = useState(false);
+
+  const seenKey = profile ? `kg_alerts_seen_${profile.id}` : "";
+
+  useEffect(() => {
+    if (!seenKey) return;
+    const v = Number(localStorage.getItem(seenKey) || 0);
+    setLastSeen(v);
+  }, [seenKey]);
 
   useEffect(() => {
     if (!profile) return;
@@ -75,7 +85,7 @@ function SeniorDashboard() {
         .select("id,channel,scam_type,scam_score,content_preview,status,created_at,senior_id")
         .eq("senior_id", profile.id)
         .order("created_at", { ascending: false })
-        .limit(3);
+        .limit(100);
       setAlerts((data as Alert[]) ?? []);
     })();
     (async () => {
@@ -104,10 +114,10 @@ function SeniorDashboard() {
         { event: "INSERT", schema: "public", table: "scam_alerts", filter: `senior_id=eq.${profile.id}` },
         (payload) => {
           const a = payload.new as Alert;
-          setAlerts((prev) => [a, ...prev].slice(0, 3));
+          setAlerts((prev) => [a, ...prev].slice(0, 100));
           const verdict = a.scam_score >= 71 ? t("🚨 Likely scam") : a.scam_score <= 40 ? t("✅ Looks safe") : t("⚠️ Use caution");
           if (a.channel === "email_forward" || a.channel === "ssn_request") {
-            toast(`📧 ${t("KinGuard analyzed your forwarded email")} — ${verdict} (${a.scam_score}/100)`, { duration: 6000 });
+            toast(`📧 ${t("KinGuard analyzed your forwarded email")} — ${verdict} (${a.scam_score}/100)`, { duration: 8000 });
           }
         },
       )
@@ -116,6 +126,16 @@ function SeniorDashboard() {
   }, [profile, t]);
 
   if (!profile) return null;
+
+  const unreadAlerts = alerts.filter((a) => new Date(a.created_at).getTime() > lastSeen);
+  const unreadCount = unreadAlerts.length;
+
+  const markAllSeenAndOpen = () => {
+    const now = Date.now();
+    localStorage.setItem(seenKey, String(now));
+    setLastSeen(now);
+    setInboxOpen(true);
+  };
 
   const flagged = alerts.filter((a) => a.status === "flagged");
   const status: "safe" | "warn" | "danger" =
@@ -153,6 +173,25 @@ function SeniorDashboard() {
         <h1>Hello, {profile.full_name.split(" ")[0]} 👋</h1>
       </header>
 
+      {unreadCount > 0 && (
+        <section className="px-5 mb-3">
+          <button
+            onClick={markAllSeenAndOpen}
+            className="w-full card-soft flex items-center gap-3 text-left animate-pulse"
+            style={{ background: "var(--color-danger)", color: "#fff", border: "3px solid #fff", boxShadow: "0 4px 14px rgba(231,76,60,0.35)" }}
+          >
+            <div style={{ fontSize: 32 }}>🔔</div>
+            <div className="flex-1">
+              <p className="font-extrabold" style={{ fontSize: 20 }}>
+                {unreadCount} {unreadCount === 1 ? t("new scam alert") : t("new scam alerts")}
+              </p>
+              <p style={{ fontSize: 15, opacity: 0.95 }}>{t("Tap to review your results")}</p>
+            </div>
+            <div className="font-extrabold" style={{ fontSize: 22 }}>›</div>
+          </button>
+        </section>
+      )}
+
       <section className="px-5">
         <div className="card-soft text-center" style={{ background: "#fff" }}>
           <img src={logo} alt="KinGuard" style={{ width: 120, height: "auto" }} className="mx-auto" />
@@ -180,14 +219,27 @@ function SeniorDashboard() {
       </section>
 
       <section className="px-5 mt-5">
-        <h2 className="mb-2">{t("Recent alerts")}</h2>
+        <div className="flex items-center justify-between mb-2">
+          <h2>📬 {t("Scam Alerts Inbox")}</h2>
+          {alerts.length > 0 && (
+            <button
+              onClick={() => setInboxOpen((v) => !v)}
+              className="text-sm font-bold underline"
+              style={{ color: "var(--color-rose)" }}
+            >
+              {inboxOpen ? t("Hide") : `${t("Show all")} (${alerts.length})`}
+            </button>
+          )}
+        </div>
         {alerts.length === 0 ? (
           <div className="card-soft text-center font-bold" style={{ color: "#2ECC71" }}>
             {t("✅ No alerts yet. You're all clear!")}
           </div>
         ) : (
           <ul className="space-y-2">
-            {alerts.map((a) => <AlertCard key={a.id} a={a} />)}
+            {(inboxOpen ? alerts : alerts.slice(0, 3)).map((a) => (
+              <AlertCard key={a.id} a={a} unread={new Date(a.created_at).getTime() > lastSeen} />
+            ))}
           </ul>
         )}
       </section>
@@ -475,12 +527,23 @@ function Stat({ icon, label, value }: { icon: string; label: string; value: Reac
   );
 }
 
-function AlertCard({ a }: { a: Alert }) {
+function AlertCard({ a, unread }: { a: Alert; unread?: boolean }) {
   return (
-    <li className="card-soft flex items-start gap-3">
+    <li
+      className="card-soft flex items-start gap-3"
+      style={unread ? { border: "3px solid var(--color-danger)", background: "#FFF5F3" } : undefined}
+    >
       <div style={{ fontSize: 28 }}>{channelIcon(a.channel)}</div>
       <div className="flex-1 min-w-0">
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-2 flex-wrap">
+          {unread && (
+            <span
+              className="px-2 py-0.5 rounded-full text-xs font-extrabold"
+              style={{ background: "var(--color-danger)", color: "#fff" }}
+            >
+              NEW
+            </span>
+          )}
           <span className="font-bold truncate">{a.scam_type || "Suspicious message"}</span>
           <ScoreBadge score={a.scam_score} />
         </div>
