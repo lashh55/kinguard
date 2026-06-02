@@ -44,6 +44,7 @@ const DICT: Record<string, string> = {
   "You're now protecting your loved one. You'll see their alerts in your dashboard.": "Ahora estás protegiendo a tu ser querido. Verás sus alertas en tu panel.",
   "Go to dashboard": "Ir al panel",
   "Loading…": "Cargando…",
+  "Setting up your KinGuard protection... just a moment!": "Configurando tu protección de KinGuard... ¡un momento!",
 
   // Navigation
   "Home": "Inicio",
