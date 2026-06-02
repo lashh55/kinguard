@@ -94,6 +94,27 @@ function SeniorDashboard() {
     })();
   }, [profile]);
 
+  // Realtime: surface new alerts (e.g. from forwarded emails) instantly
+  useEffect(() => {
+    if (!profile) return;
+    const channel = supabase
+      .channel(`scam_alerts_senior_${profile.id}`)
+      .on(
+        "postgres_changes",
+        { event: "INSERT", schema: "public", table: "scam_alerts", filter: `senior_id=eq.${profile.id}` },
+        (payload) => {
+          const a = payload.new as Alert;
+          setAlerts((prev) => [a, ...prev].slice(0, 3));
+          const verdict = a.scam_score >= 71 ? t("🚨 Likely scam") : a.scam_score <= 40 ? t("✅ Looks safe") : t("⚠️ Use caution");
+          if (a.channel === "email_forward" || a.channel === "ssn_request") {
+            toast(`📧 ${t("KinGuard analyzed your forwarded email")} — ${verdict} (${a.scam_score}/100)`, { duration: 6000 });
+          }
+        },
+      )
+      .subscribe();
+    return () => { supabase.removeChannel(channel); };
+  }, [profile, t]);
+
   if (!profile) return null;
 
   const flagged = alerts.filter((a) => a.status === "flagged");
