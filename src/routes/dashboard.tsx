@@ -173,6 +173,25 @@ function SeniorDashboard() {
         <h1>Hello, {profile.full_name.split(" ")[0]} 👋</h1>
       </header>
 
+      {unreadCount > 0 && (
+        <section className="px-5 mb-3">
+          <button
+            onClick={markAllSeenAndOpen}
+            className="w-full card-soft flex items-center gap-3 text-left animate-pulse"
+            style={{ background: "var(--color-danger)", color: "#fff", border: "3px solid #fff", boxShadow: "0 4px 14px rgba(231,76,60,0.35)" }}
+          >
+            <div style={{ fontSize: 32 }}>🔔</div>
+            <div className="flex-1">
+              <p className="font-extrabold" style={{ fontSize: 20 }}>
+                {unreadCount} {unreadCount === 1 ? t("new scam alert") : t("new scam alerts")}
+              </p>
+              <p style={{ fontSize: 15, opacity: 0.95 }}>{t("Tap to review your results")}</p>
+            </div>
+            <div className="font-extrabold" style={{ fontSize: 22 }}>›</div>
+          </button>
+        </section>
+      )}
+
       <section className="px-5">
         <div className="card-soft text-center" style={{ background: "#fff" }}>
           <img src={logo} alt="KinGuard" style={{ width: 120, height: "auto" }} className="mx-auto" />
