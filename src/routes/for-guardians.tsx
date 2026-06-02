@@ -1,5 +1,7 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { MarketingShell } from "@/components/MarketingShell";
+import { ScamVignette } from "@/components/ScamVignette";
+
 
 export const Route = createFileRoute("/for-guardians")({
   component: ForGuardians,
