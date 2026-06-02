@@ -43,7 +43,7 @@ function decide(a: Asker, d: Direction): Verdict {
     return { level: "danger", title: "🚨 DANGER", body: "This is one of the most common scam tactics. Hang up immediately. No legitimate organization needs your SSN over an unexpected phone call." };
   if (a === "email")
     return { level: "danger", title: "🚨 DANGER", body: "Never share your SSN by email or text. Legitimate organizations do not ask for your SSN this way. This is almost certainly a scam." };
-  return { level: "warn", title: "⚠️ CAUTION", body: "When in doubt, don't share it. Call your guardian or a trusted family member before doing anything." };
+  return { level: "warn", title: "⚠️ CAUTION", body: "When in doubt, don't share it. Alert your guardian through KinGuard or contact a trusted family member before doing anything." };
 }
 
 function levelColor(l: "safe" | "warn" | "danger") {
