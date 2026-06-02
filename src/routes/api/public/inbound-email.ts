@@ -18,7 +18,7 @@ type LogRow = {
 
 async function writeLog(row: LogRow) {
   try {
-    await supabaseAdmin.from("inbound_email_logs").insert(row);
+    await supabaseAdmin.from("inbound_email_logs").insert(row as never);
   } catch (e) {
     console.error("[inbound-email] failed to write log", e);
   }
