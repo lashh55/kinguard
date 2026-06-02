@@ -49,8 +49,8 @@ function Onboarding() {
           </div>
 
           <div className="mt-8">
-            {step === "role" && <RoleStep onPick={setStep} />}
-            {step === "senior" && <SeniorForm onCreated={(c) => { setCode(c); setStep("invite"); }} onBack={() => setStep("role")} />}
+            {step === "role" && <RoleStep onPick={setStep} onSignIn={() => { setSeniorMode("signin"); setStep("senior"); }} onSignUp={() => { setSeniorMode("signup"); setStep("senior"); }} />}
+            {step === "senior" && <SeniorForm initialMode={seniorMode} onCreated={(c) => { setCode(c); setStep("invite"); }} onBack={() => setStep("role")} />}
             {step === "guardian" && <GuardianForm onLinked={() => setStep("linked")} onBack={() => setStep("role")} />}
             {step === "invite" && <InviteCodeView code={code!} onContinue={() => navigate({ to: "/dashboard" })} />}
             {step === "linked" && <LinkedView onContinue={() => navigate({ to: "/dashboard" })} />}
