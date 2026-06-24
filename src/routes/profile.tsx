@@ -395,7 +395,7 @@ function ProfileScreen() {
 }
 
 function FamilyCodeCard() {
-  const { user, profile } = useAuth();
+  const { profile } = useAuth();
   const { t } = useI18n();
   const setCode = useServerFn(setFamilyCodeWord);
   const revealCode = useServerFn(revealFamilyCodeWord);
