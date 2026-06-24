@@ -16,7 +16,7 @@ export const setFamilyCodeWord = createServerFn({ method: "POST" })
   )
   .handler(async ({ data, context }) => {
     const { randomBytes, createCipheriv } = await import("crypto");
-    const key = getKey();
+    const key = await getKey();
     const iv = randomBytes(12);
     const cipher = createCipheriv("aes-256-gcm", key, iv);
     const enc = Buffer.concat([cipher.update(data.codeWord, "utf8"), cipher.final()]);
@@ -70,7 +70,7 @@ export const revealFamilyCodeWord = createServerFn({ method: "POST" })
       throw new Error("No code word set");
     }
     const { createDecipheriv } = await import("crypto");
-    const key = getKey();
+    const key = await getKey();
     const decipher = createDecipheriv(
       "aes-256-gcm",
       key,
