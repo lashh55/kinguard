@@ -93,6 +93,34 @@ function LearnScreen() {
   );
 }
 
+function FamilyCodeTip() {
+  const { t } = useI18n();
+  return (
+    <section className="px-5 mt-6">
+      <h2>{t("Tip: Family Safety Code 🔑")}</h2>
+      <div className="card-soft mt-2" style={{ background: "var(--color-cream)", borderTop: "6px solid var(--color-rose)" }}>
+        <p className="font-bold" style={{ fontSize: 18 }}>
+          {t("What is a family code word?")}
+        </p>
+        <p className="mt-1">
+          {t("A short, private phrase your family shares — like apple-river-sunset — that only your real loved ones know.")}
+        </p>
+        <p className="font-bold mt-3">{t("Why AARP recommends it")}</p>
+        <p className="mt-1">
+          {t("AARP recommends a family code word to stop grandparent scams and impersonator scams. When a caller says they are your grandchild, your bank, or the police and pressures you for money or information, ask for the code word. A real loved one will know it. A scammer will not.")}
+        </p>
+        <p className="font-bold mt-3">{t("How to use it")}</p>
+        <ul className="list-disc pl-5 mt-1 space-y-1">
+          <li>{t("Set yours under Profile → Family Safety Code.")}</li>
+          <li>{t("Share it with trusted family by phone or in person — never by text or email.")}</li>
+          <li>{t("If someone cannot say it, hang up and do not share personal information.")}</li>
+        </ul>
+        <Link to="/profile" className="btn-base btn-primary w-full mt-4">{t("Set my code word")}</Link>
+      </div>
+    </section>
+  );
+}
+
 function Slides() {
   const [i, setI] = useState(0);
   const { t } = useI18n();
