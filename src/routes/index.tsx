@@ -56,6 +56,8 @@ function Onboarding() {
             {step === "invite" && <InviteCodeView code={code!} onContinue={() => navigate({ to: "/dashboard" })} />}
             {step === "linked" && <LinkedView onContinue={() => navigate({ to: "/dashboard" })} />}
           </div>
+
+          <ScamVignette />
         </div>
       </div>
     </div>
