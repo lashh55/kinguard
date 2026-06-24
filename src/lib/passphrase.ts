@@ -15,7 +15,7 @@ const WORDS = [
 function pickWord(): string {
   const buf = new Uint32Array(1);
   crypto.getRandomValues(buf);
-  return UNIQUE[buf[0] % UNIQUE.length];
+  return WORDS[buf[0] % WORDS.length];
 }
 
 export function generatePassphrase(): string {
