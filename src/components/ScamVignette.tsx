@@ -73,8 +73,8 @@ export function ScamVignette() {
         aria-live="polite"
       >
         <div className="flex items-start gap-4">
-          <div className="text-5xl leading-none shrink-0" aria-hidden>{v.emoji}</div>
           <div className="min-w-0 flex-1">
+
             <p className="font-extrabold" style={{ fontSize: 18, color: "var(--color-brown)" }}>
               {v.name}, {v.age}
             </p>
