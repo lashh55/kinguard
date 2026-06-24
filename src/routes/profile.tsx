@@ -1,5 +1,6 @@
 import { createFileRoute, useNavigate, Link } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
+import { useServerFn } from "@tanstack/react-start";
 import { useAuth } from "@/lib/auth";
 import { ScreenShell } from "@/components/ScreenShell";
 import { supabase } from "@/integrations/supabase/client";
@@ -10,6 +11,12 @@ import { normalizeStats } from "@/lib/badges";
 import { LearningTree, LearningTreeWithTooltip } from "@/components/LearningTree";
 import { useI18n, LanguageToggle } from "@/lib/i18n";
 import { track } from "@/lib/analytics";
+import { generatePassphrase } from "@/lib/passphrase";
+import {
+  setFamilyCodeWord,
+  revealFamilyCodeWord,
+  clearFamilyCodeWord,
+} from "@/lib/familyCode.functions";
 
 export const Route = createFileRoute("/profile")({
   component: ProfileScreen,
