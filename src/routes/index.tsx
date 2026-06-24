@@ -370,8 +370,16 @@ function GuardianForm({ onLinked, onBack }: { onLinked: () => void; onBack: () =
 
 function InviteCodeView({ code, onContinue }: { code: string; onContinue: () => void }) {
   const { t } = useI18n();
+  const [busy, setBusy] = useState(false);
+
+  const handleContinue = async () => {
+    setBusy(true);
+    await onContinue();
+    setBusy(false);
+  };
+
   return (
-    <div className="card-soft text-center space-y-4">
+    <div className="card-soft text-center space-y-4" aria-busy={busy}>
       <h2>{t("You're protected! 🎉")}</h2>
       <p>{t("Share this code with your family member so they can protect you:")}</p>
       <div className="invite-code text-5xl font-extrabold tracking-widest py-4 rounded-2xl"
@@ -381,18 +389,40 @@ function InviteCodeView({ code, onContinue }: { code: string; onContinue: () => 
       <p className="text-sm" style={{ color: "var(--color-muted-foreground)" }}>
         {t("Multiple family members can use this same code.")}
       </p>
-      <button className="btn-base btn-primary w-full" onClick={onContinue}>{t("Continue to my dashboard")}</button>
+      <button className="btn-base btn-primary w-full" onClick={handleContinue} disabled={busy}>
+        {busy ? (
+          <span className="inline-flex items-center justify-center gap-2">
+            <span className="inline-block h-4 w-4 rounded-full border-2 animate-spin" style={{ borderColor: "currentColor", borderTopColor: "transparent" }} />
+            {t("Opening your dashboard…")}
+          </span>
+        ) : t("Continue to my dashboard")}
+      </button>
     </div>
   );
 }
 
 function LinkedView({ onContinue }: { onContinue: () => void }) {
   const { t } = useI18n();
+  const [busy, setBusy] = useState(false);
+
+  const handleContinue = async () => {
+    setBusy(true);
+    await onContinue();
+    setBusy(false);
+  };
+
   return (
-    <div className="card-soft text-center space-y-4">
+    <div className="card-soft text-center space-y-4" aria-busy={busy}>
       <h2>{t("Connected! 💙")}</h2>
       <p>{t("You're now protecting your loved one. You'll see their alerts in your dashboard.")}</p>
-      <button className="btn-base btn-primary w-full" onClick={onContinue}>{t("Go to dashboard")}</button>
+      <button className="btn-base btn-primary w-full" onClick={handleContinue} disabled={busy}>
+        {busy ? (
+          <span className="inline-flex items-center justify-center gap-2">
+            <span className="inline-block h-4 w-4 rounded-full border-2 animate-spin" style={{ borderColor: "currentColor", borderTopColor: "transparent" }} />
+            {t("Opening your dashboard…")}
+          </span>
+        ) : t("Go to dashboard")}
+      </button>
     </div>
   );
 }
