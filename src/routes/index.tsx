@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import { useAuth } from "@/lib/auth";
 import { supabase } from "@/integrations/supabase/client";
 import { PhotoPanel } from "@/components/PhotoPanel";
+import { ScamVignette } from "@/components/ScamVignette";
 import logo from "@/assets/kinguard-logo.png";
 import { useI18n, LanguageToggle } from "@/lib/i18n";
 import { track } from "@/lib/analytics";
@@ -55,6 +56,8 @@ function Onboarding() {
             {step === "invite" && <InviteCodeView code={code!} onContinue={() => navigate({ to: "/dashboard" })} />}
             {step === "linked" && <LinkedView onContinue={() => navigate({ to: "/dashboard" })} />}
           </div>
+
+          <ScamVignette />
         </div>
       </div>
     </div>
