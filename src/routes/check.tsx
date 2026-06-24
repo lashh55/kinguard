@@ -87,7 +87,7 @@ function CheckScreen() {
         <div className="card-soft" style={{ background: "var(--color-sky)" }}>
           <p className="font-extrabold" style={{ fontSize: 20 }}>{t("📧 Got a suspicious email?")}</p>
           <p className="mt-2" style={{ fontSize: 18 }}>
-            {t("Just forward it to the address below. No copying or pasting needed. KinGuard will check it and alert you and your guardians right away.")}
+            {t("Just forward it to KinGuard's secure scan address below. No copying or pasting needed. KinGuard will check it and alert you and your guardians right away.")}
           </p>
           <div
             className="mt-3 rounded-xl px-4 py-3 font-extrabold text-center break-all"
@@ -104,7 +104,7 @@ function CheckScreen() {
             {copied ? t("✅ Copied!") : t("📋 Copy email address")}
           </button>
           <p className="mt-3" style={{ fontSize: 16 }}>
-            {t("Open the suspicious email in your inbox, tap Forward, and send it to this address. That's all you need to do.")}
+            {t("Open the suspicious email, tap Forward, and send it to this address. That is all you need to do.")}
           </p>
         </div>
       </section>
