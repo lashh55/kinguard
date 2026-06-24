@@ -57,8 +57,15 @@ function Onboarding() {
             {step === "linked" && <LinkedView onContinue={() => navigate({ to: "/dashboard" })} />}
           </div>
 
+          <FeatureIcons />
           <ScamVignette />
+          <div className="mt-8 text-center">
+            <a href="/learn" className="btn-base btn-outline inline-block">
+              {t("Learn more about scams →")}
+            </a>
+          </div>
         </div>
+
       </div>
     </div>
   );
