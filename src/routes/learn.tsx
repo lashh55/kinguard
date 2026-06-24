@@ -63,6 +63,7 @@ function LearnScreen() {
     <ScreenShell>
       <header className="px-5 pt-6 pb-3"><h1>🎓 {t("Learn")}</h1></header>
       <Slides />
+      <FamilyCodeTip />
       <Cards />
       {profile && (
         <section className="px-5 mt-6">
