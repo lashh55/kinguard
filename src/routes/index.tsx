@@ -57,14 +57,53 @@ function Onboarding() {
             {step === "linked" && <LinkedView onContinue={() => navigate({ to: "/dashboard" })} />}
           </div>
 
+          <FeatureIcons />
           <ScamVignette />
+          <div className="mt-8 text-center">
+            <a href="/learn" className="btn-base btn-outline inline-block">
+              {t("Learn more about scams →")}
+            </a>
+          </div>
         </div>
+
       </div>
     </div>
   );
 }
 
+function FeatureIcons() {
+  const { t } = useI18n();
+  const items = [
+    { icon: "🔍", label: t("Check a message") },
+    { icon: "🛡️", label: t("SSN Shield") },
+    { icon: "📚", label: t("Learn & Quiz") },
+    { icon: "🚨", label: t("Get help fast") },
+  ];
+  return (
+    <section className="mt-10">
+      <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+        {items.map((it) => (
+          <div
+            key={it.label}
+            className="card-soft text-center p-4"
+            style={{
+              background: "color-mix(in oklab, var(--color-cream) 70%, white)",
+              border: "2px solid color-mix(in oklab, var(--color-rose) 18%, transparent)",
+            }}
+          >
+            <div className="text-4xl" aria-hidden>{it.icon}</div>
+            <p className="mt-2 font-bold" style={{ color: "var(--color-brown)", fontSize: 15 }}>
+              {it.label}
+            </p>
+          </div>
+        ))}
+      </div>
+    </section>
+  );
+}
+
 function RoleStep({ onPick, onSignIn, onSignUp }: { onPick: (s: Step) => void; onSignIn: () => void; onSignUp: () => void }) {
+
   const { t } = useI18n();
   return (
     <div className="space-y-4">
