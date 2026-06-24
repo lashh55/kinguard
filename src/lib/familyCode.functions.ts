@@ -2,11 +2,10 @@ import { createServerFn } from "@tanstack/react-start";
 import { z } from "zod";
 import { requireSupabaseAuth } from "@/integrations/supabase/auth-middleware";
 
-function getKey() {
+async function getKey() {
   const raw = process.env.FAMILY_CODE_ENCRYPTION_KEY;
   if (!raw) throw new Error("FAMILY_CODE_ENCRYPTION_KEY missing");
-  // Derive a 32-byte key from the secret (any length) via SHA-256
-  const { createHash } = require("crypto") as typeof import("crypto");
+  const { createHash } = await import("crypto");
   return createHash("sha256").update(raw).digest();
 }
 
