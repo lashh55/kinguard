@@ -154,15 +154,18 @@ function SeniorForm({ onCreated, onBack, initialMode = "signup" }: { onCreated: 
   const isInvalidCreds = !!err && /invalid login credentials|invalid email or password/i.test(err);
 
   return (
-    <form onSubmit={submit} className="card-soft space-y-4 relative">
+    <form onSubmit={submit} className="card-soft space-y-4 relative" aria-busy={busy}>
       {busy && mode === "signup" && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center" style={{ backgroundColor: "rgba(61,43,43,0.25)" }}>
-          <div className="card-soft text-center space-y-5 p-8 max-w-sm mx-4">
-            <div className="mx-auto h-12 w-12 rounded-full border-[5px] animate-spin"
+        <div className="fixed inset-0 z-50 flex items-center justify-center" role="status" aria-live="polite" style={{ backgroundColor: "rgba(61,43,43,0.35)" }}>
+          <div className="card-soft text-center space-y-6 p-10 max-w-md mx-4 shadow-xl">
+            <div className="mx-auto h-16 w-16 rounded-full border-[6px] animate-spin"
               style={{ borderColor: "var(--color-rose)", borderTopColor: "transparent" }} />
-            <h2 style={{ color: "var(--color-rose)" }}>
+            <h2 className="text-2xl" style={{ color: "var(--color-rose)" }}>
               {t("Setting up your KinGuard protection... just a moment!")}
             </h2>
+            <p className="text-lg" style={{ color: "var(--color-muted-foreground)" }}>
+              {t("We're getting everything ready for you. Please don't close this window.")}
+            </p>
           </div>
         </div>
       )}
@@ -367,8 +370,16 @@ function GuardianForm({ onLinked, onBack }: { onLinked: () => void; onBack: () =
 
 function InviteCodeView({ code, onContinue }: { code: string; onContinue: () => void }) {
   const { t } = useI18n();
+  const [busy, setBusy] = useState(false);
+
+  const handleContinue = async () => {
+    setBusy(true);
+    await onContinue();
+    setBusy(false);
+  };
+
   return (
-    <div className="card-soft text-center space-y-4">
+    <div className="card-soft text-center space-y-4" aria-busy={busy}>
       <h2>{t("You're protected! 🎉")}</h2>
       <p>{t("Share this code with your family member so they can protect you:")}</p>
       <div className="invite-code text-5xl font-extrabold tracking-widest py-4 rounded-2xl"
@@ -378,18 +389,40 @@ function InviteCodeView({ code, onContinue }: { code: string; onContinue: () => 
       <p className="text-sm" style={{ color: "var(--color-muted-foreground)" }}>
         {t("Multiple family members can use this same code.")}
       </p>
-      <button className="btn-base btn-primary w-full" onClick={onContinue}>{t("Continue to my dashboard")}</button>
+      <button className="btn-base btn-primary w-full" onClick={handleContinue} disabled={busy}>
+        {busy ? (
+          <span className="inline-flex items-center justify-center gap-2">
+            <span className="inline-block h-4 w-4 rounded-full border-2 animate-spin" style={{ borderColor: "currentColor", borderTopColor: "transparent" }} />
+            {t("Opening your dashboard…")}
+          </span>
+        ) : t("Continue to my dashboard")}
+      </button>
     </div>
   );
 }
 
 function LinkedView({ onContinue }: { onContinue: () => void }) {
   const { t } = useI18n();
+  const [busy, setBusy] = useState(false);
+
+  const handleContinue = async () => {
+    setBusy(true);
+    await onContinue();
+    setBusy(false);
+  };
+
   return (
-    <div className="card-soft text-center space-y-4">
+    <div className="card-soft text-center space-y-4" aria-busy={busy}>
       <h2>{t("Connected! 💙")}</h2>
       <p>{t("You're now protecting your loved one. You'll see their alerts in your dashboard.")}</p>
-      <button className="btn-base btn-primary w-full" onClick={onContinue}>{t("Go to dashboard")}</button>
+      <button className="btn-base btn-primary w-full" onClick={handleContinue} disabled={busy}>
+        {busy ? (
+          <span className="inline-flex items-center justify-center gap-2">
+            <span className="inline-block h-4 w-4 rounded-full border-2 animate-spin" style={{ borderColor: "currentColor", borderTopColor: "transparent" }} />
+            {t("Opening your dashboard…")}
+          </span>
+        ) : t("Go to dashboard")}
+      </button>
     </div>
   );
 }
