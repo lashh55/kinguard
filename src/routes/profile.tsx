@@ -199,6 +199,14 @@ function ProfileScreen() {
                   </span>
                 )}
               </h2>
+              <div
+                className="rounded-xl p-3 mb-3"
+                style={{ background: "var(--color-cream)", border: "2px solid var(--color-rose)" }}
+              >
+                <p className="font-bold" style={{ fontSize: 15 }}>
+                  🔑 {t("Share your family code word with your trusted guardians by phone or in person — never by text or email. If someone cannot say your code word, do not share personal information with them.")}
+                </p>
+              </div>
               {guardians.length === 0 ? (
                 <p style={{ color: "var(--color-muted-foreground)" }}>
                   {t("No one is linked yet. Share your invite code above.")}
