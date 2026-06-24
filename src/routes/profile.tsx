@@ -1,5 +1,6 @@
 import { createFileRoute, useNavigate, Link } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
+import { useServerFn } from "@tanstack/react-start";
 import { useAuth } from "@/lib/auth";
 import { ScreenShell } from "@/components/ScreenShell";
 import { supabase } from "@/integrations/supabase/client";
@@ -10,6 +11,12 @@ import { normalizeStats } from "@/lib/badges";
 import { LearningTree, LearningTreeWithTooltip } from "@/components/LearningTree";
 import { useI18n, LanguageToggle } from "@/lib/i18n";
 import { track } from "@/lib/analytics";
+import { generatePassphrase } from "@/lib/passphrase";
+import {
+  setFamilyCodeWord,
+  revealFamilyCodeWord,
+  clearFamilyCodeWord,
+} from "@/lib/familyCode.functions";
 
 export const Route = createFileRoute("/profile")({
   component: ProfileScreen,
@@ -163,6 +170,8 @@ function ProfileScreen() {
 
         {isSenior && (
           <>
+            <FamilyCodeCard />
+
             <div>
               <h2 className="mb-2">{t("Knowledge Tree 🌳")}</h2>
               <ScoreCard
@@ -190,6 +199,14 @@ function ProfileScreen() {
                   </span>
                 )}
               </h2>
+              <div
+                className="rounded-xl p-3 mb-3"
+                style={{ background: "var(--color-cream)", border: "2px solid var(--color-rose)" }}
+              >
+                <p className="font-bold" style={{ fontSize: 15 }}>
+                  🔑 {t("Share your family code word with your trusted guardians by phone or in person — never by text or email. If someone cannot say your code word, do not share personal information with them.")}
+                </p>
+              </div>
               {guardians.length === 0 ? (
                 <p style={{ color: "var(--color-muted-foreground)" }}>
                   {t("No one is linked yet. Share your invite code above.")}
@@ -374,5 +391,198 @@ function ProfileScreen() {
         )}
       </section>
     </ScreenShell>
+  );
+}
+
+function FamilyCodeCard() {
+  const { profile } = useAuth();
+  const { t } = useI18n();
+  const setCode = useServerFn(setFamilyCodeWord);
+  const revealCode = useServerFn(revealFamilyCodeWord);
+  const clearCode = useServerFn(clearFamilyCodeWord);
+
+  const [firstLetter, setFirstLetter] = useState<string | null>(null);
+  const [hasCode, setHasCode] = useState(false);
+  const [editing, setEditing] = useState(false);
+  const [draft, setDraft] = useState<string>(() => generatePassphrase());
+  const [saving, setSaving] = useState(false);
+  const [revealing, setRevealing] = useState(false);
+  const [revealOpen, setRevealOpen] = useState(false);
+  const [password, setPassword] = useState("");
+  const [revealed, setRevealed] = useState<string | null>(null);
+
+  useEffect(() => {
+    if (!profile) return;
+    (async () => {
+      const { data } = await supabase
+        .from("profiles")
+        .select("family_code_word_first_letter, family_code_word_set_at")
+        .eq("id", profile.id)
+        .maybeSingle();
+      const fl = (data as any)?.family_code_word_first_letter ?? null;
+      setFirstLetter(fl);
+      setHasCode(!!fl);
+    })();
+  }, [profile]);
+
+  const handleSave = async () => {
+    const code = draft.trim();
+    if (code.length < 2) { toast(t("Please enter a code word.")); return; }
+    setSaving(true);
+    try {
+      const res = await setCode({ data: { codeWord: code } });
+      setFirstLetter(res.firstLetter);
+      setHasCode(true);
+      setEditing(false);
+      setDraft(generatePassphrase());
+      toast(t("✅ Your family code word is saved."));
+    } catch (e: any) {
+      toast(e?.message || t("Could not save. Try again."));
+    } finally { setSaving(false); }
+  };
+
+  const handleReveal = async () => {
+    if (!password) return;
+    setRevealing(true);
+    try {
+      const res = await revealCode({ data: { password } });
+      setRevealed(res.codeWord);
+      setPassword("");
+    } catch (e: any) {
+      toast(e?.message || t("Incorrect password."));
+    } finally { setRevealing(false); }
+  };
+
+  const handleRemove = async () => {
+    if (!confirm(t("Remove your family code word?"))) return;
+    await clearCode({});
+    setHasCode(false);
+    setFirstLetter(null);
+    setRevealed(null);
+    toast(t("Code word removed."));
+  };
+
+  return (
+    <div className="card-soft" style={{ borderTop: "6px solid var(--color-rose)" }}>
+      <h2 className="mb-1">🔑 {t("Family Safety Code")}</h2>
+      <p className="text-sm mb-3" style={{ color: "var(--color-muted-foreground)" }}>
+        {t("When someone calls claiming to be family or an official, ask them to say your code word. If they cannot, it is likely a scam.")}
+      </p>
+
+      {!hasCode && !editing && (
+        <button className="btn-base btn-primary w-full" onClick={() => { setDraft(generatePassphrase()); setEditing(true); }}>
+          {t("Create my code word")}
+        </button>
+      )}
+
+      {hasCode && !editing && (
+        <>
+          <div className="rounded-xl p-3 mb-3 text-center" style={{ background: "var(--color-cream)" }}>
+            <p className="font-bold" style={{ fontSize: 18 }}>
+              {t("Your code word is set — starts with")}{" "}
+              <span style={{ fontSize: 24, color: "var(--color-rose)" }}>{firstLetter}</span>
+            </p>
+          </div>
+          <div className="grid grid-cols-1 gap-2">
+            <button className="btn-base btn-sky w-full" onClick={() => setRevealOpen(true)}>
+              👁️ {t("Reveal code word")}
+            </button>
+            <button className="btn-base btn-outline w-full" onClick={() => { setDraft(generatePassphrase()); setEditing(true); }}>
+              {t("Change code word")}
+            </button>
+            <button className="btn-base btn-outline w-full" onClick={handleRemove} style={{ color: "#E74C3C" }}>
+              {t("Remove code word")}
+            </button>
+          </div>
+        </>
+      )}
+
+      {editing && (
+        <div className="space-y-3">
+          <div>
+            <label className="font-bold block mb-1">{t("Your code word")}</label>
+            <input
+              className="input-large w-full"
+              style={{ fontSize: 22, fontWeight: 700, letterSpacing: "0.02em" }}
+              value={draft}
+              onChange={(e) => setDraft(e.target.value)}
+              placeholder="apple-river-sunset"
+            />
+            <button
+              className="btn-base btn-outline w-full mt-2"
+              onClick={() => setDraft(generatePassphrase())}
+              type="button"
+            >
+              🎲 {t("Generate a new one")}
+            </button>
+            <p className="text-sm mt-2" style={{ color: "var(--color-muted-foreground)" }}>
+              {t("Keep the suggested one, or type your own — something only your family would know.")}
+            </p>
+          </div>
+          <div className="grid grid-cols-2 gap-2">
+            <button className="btn-base btn-outline" onClick={() => setEditing(false)} disabled={saving}>
+              {t("Cancel")}
+            </button>
+            <button className="btn-base btn-primary" onClick={handleSave} disabled={saving}>
+              {saving ? t("Saving…") : t("Save")}
+            </button>
+          </div>
+        </div>
+      )}
+
+      {revealOpen && (
+        <div
+          role="dialog"
+          aria-modal="true"
+          className="fixed inset-0 z-50 flex items-center justify-center p-4"
+          style={{ background: "rgba(0,0,0,0.5)" }}
+          onClick={() => { if (!revealing) { setRevealOpen(false); setRevealed(null); setPassword(""); } }}
+        >
+          <div className="card-soft w-full max-w-md" onClick={(e) => e.stopPropagation()}>
+            <p className="font-extrabold" style={{ fontSize: 20 }}>🔒 {t("Confirm it's you")}</p>
+            {!revealed ? (
+              <>
+                <p className="mt-2">
+                  {t("For your safety, enter your password to reveal your code word.")}
+                </p>
+                <input
+                  type="password"
+                  className="input-large w-full mt-3"
+                  placeholder={t("Your password")}
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  autoFocus
+                />
+                <div className="grid grid-cols-2 gap-2 mt-3">
+                  <button className="btn-base btn-outline" disabled={revealing}
+                    onClick={() => { setRevealOpen(false); setPassword(""); }}>
+                    {t("Cancel")}
+                  </button>
+                  <button className="btn-base btn-primary" disabled={revealing || !password}
+                    onClick={handleReveal}>
+                    {revealing ? t("Checking…") : t("Reveal")}
+                  </button>
+                </div>
+              </>
+            ) : (
+              <>
+                <div className="rounded-xl p-4 mt-3 text-center" style={{ background: "var(--color-cream)" }}>
+                  <p className="text-sm font-bold mb-1" style={{ color: "var(--color-muted-foreground)" }}>
+                    {t("Your code word")}
+                  </p>
+                  <p className="font-extrabold" style={{ fontSize: 26, color: "var(--color-rose)" }}>
+                    {revealed}
+                  </p>
+                </div>
+                <button className="btn-base btn-primary w-full mt-3"
+                  onClick={() => { setRevealOpen(false); setRevealed(null); }}>
+                  {t("Done")}
+                </button>
+              </>
+            )}
+          </div>
+        </div>
+      )}
+    </div>
   );
 }

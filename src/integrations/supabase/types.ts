@@ -171,6 +171,11 @@ export type Database = {
         Row: {
           challenge_stats: Json
           created_at: string
+          family_code_word_ciphertext: string | null
+          family_code_word_first_letter: string | null
+          family_code_word_iv: string | null
+          family_code_word_set_at: string | null
+          family_code_word_tag: string | null
           font_size: string
           full_name: string
           id: string
@@ -182,6 +187,11 @@ export type Database = {
         Insert: {
           challenge_stats?: Json
           created_at?: string
+          family_code_word_ciphertext?: string | null
+          family_code_word_first_letter?: string | null
+          family_code_word_iv?: string | null
+          family_code_word_set_at?: string | null
+          family_code_word_tag?: string | null
           font_size?: string
           full_name: string
           id: string
@@ -193,6 +203,11 @@ export type Database = {
         Update: {
           challenge_stats?: Json
           created_at?: string
+          family_code_word_ciphertext?: string | null
+          family_code_word_first_letter?: string | null
+          family_code_word_iv?: string | null
+          family_code_word_set_at?: string | null
+          family_code_word_tag?: string | null
           font_size?: string
           full_name?: string
           id?: string
