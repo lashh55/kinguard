@@ -142,26 +142,17 @@ function CheckScreen() {
           <summary className="font-extrabold cursor-pointer" style={{ fontSize: 20 }}>
             {t("How do I copy and paste?")}
           </summary>
-          <div className="mt-4 space-y-4" style={{ fontSize: 18 }}>
-            <div>
-              <p className="font-extrabold mb-1">{t("📱 On a phone or tablet")}</p>
-              <ol className="list-decimal pl-6 space-y-1">
-                <li>{t("Press and hold your finger on the message until words become highlighted.")}</li>
-                <li>{t("Drag the little blue dots to cover all the text you want.")}</li>
-                <li>{t("Tap \"Copy\" in the small menu that appears.")}</li>
-                <li>{t("Come back to this page, press and hold inside the box above, then tap \"Paste\".")}</li>
-              </ol>
-            </div>
-            <div>
-              <p className="font-extrabold mb-1">{t("💻 On a computer")}</p>
-              <ol className="list-decimal pl-6 space-y-1">
-                <li>{t("Click at the start of the message, hold the mouse button, and drag to the end to highlight it.")}</li>
-                <li>{t("Press the Ctrl key and the C key at the same time (on a Mac, use Command + C).")}</li>
-                <li>{t("Click inside the box above on this page.")}</li>
-                <li>{t("Press Ctrl + V (on a Mac, Command + V) to paste it in.")}</li>
-              </ol>
-            </div>
+          <div className="mt-4 space-y-4" style={{ fontSize: 20 }}>
+            <p>
+              <span className="font-extrabold">{t("On your phone:")}</span>{" "}
+              {t("Press and hold the message, tap Copy, come back here and press and hold in the box, then tap Paste.")}
+            </p>
+            <p>
+              <span className="font-extrabold">{t("On your computer:")}</span>{" "}
+              {t("Click the message and press Ctrl+A then Ctrl+C. Click inside the box above and press Ctrl+V.")}
+            </p>
           </div>
+
         </details>
       </section>
 
