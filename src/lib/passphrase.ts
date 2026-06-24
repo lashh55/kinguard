@@ -32,5 +32,9 @@ function pickWord(): string {
 }
 
 export function generatePassphrase(): string {
-  return `${pickWord()}-${pickWord()}-${pickWord()}`;
+  let a = pickWord();
+  let b = pickWord();
+  while (b === a) b = pickWord();
+  return `${a}-${b}`;
 }
+
