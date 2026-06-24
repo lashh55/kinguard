@@ -154,15 +154,18 @@ function SeniorForm({ onCreated, onBack, initialMode = "signup" }: { onCreated: 
   const isInvalidCreds = !!err && /invalid login credentials|invalid email or password/i.test(err);
 
   return (
-    <form onSubmit={submit} className="card-soft space-y-4 relative">
+    <form onSubmit={submit} className="card-soft space-y-4 relative" aria-busy={busy}>
       {busy && mode === "signup" && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center" style={{ backgroundColor: "rgba(61,43,43,0.25)" }}>
-          <div className="card-soft text-center space-y-5 p-8 max-w-sm mx-4">
-            <div className="mx-auto h-12 w-12 rounded-full border-[5px] animate-spin"
+        <div className="fixed inset-0 z-50 flex items-center justify-center" role="status" aria-live="polite" style={{ backgroundColor: "rgba(61,43,43,0.35)" }}>
+          <div className="card-soft text-center space-y-6 p-10 max-w-md mx-4 shadow-xl">
+            <div className="mx-auto h-16 w-16 rounded-full border-[6px] animate-spin"
               style={{ borderColor: "var(--color-rose)", borderTopColor: "transparent" }} />
-            <h2 style={{ color: "var(--color-rose)" }}>
+            <h2 className="text-2xl" style={{ color: "var(--color-rose)" }}>
               {t("Setting up your KinGuard protection... just a moment!")}
             </h2>
+            <p className="text-lg" style={{ color: "var(--color-muted-foreground)" }}>
+              {t("We're getting everything ready for you. Please don't close this window.")}
+            </p>
           </div>
         </div>
       )}
