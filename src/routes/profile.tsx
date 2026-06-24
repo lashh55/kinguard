@@ -170,6 +170,8 @@ function ProfileScreen() {
 
         {isSenior && (
           <>
+            <FamilyCodeCard />
+
             <div>
               <h2 className="mb-2">{t("Knowledge Tree 🌳")}</h2>
               <ScoreCard
