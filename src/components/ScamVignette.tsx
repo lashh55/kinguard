@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { ChevronLeft, ChevronRight, Pause, Play } from "lucide-react";
 
 type Vignette = {
   name: string;
@@ -48,13 +49,36 @@ const VIGNETTES: Vignette[] = [
   },
 ];
 
+const ROTATE_MS = 10000;
+
 export function ScamVignette() {
   const [i, setI] = useState(0);
+  const [paused, setPaused] = useState(false);
+  const [hovered, setHovered] = useState(false);
+
   useEffect(() => {
-    const t = setInterval(() => setI((n) => (n + 1) % VIGNETTES.length), 7000);
+    if (paused || hovered) return;
+    const t = setInterval(() => setI((n) => (n + 1) % VIGNETTES.length), ROTATE_MS);
     return () => clearInterval(t);
-  }, []);
+  }, [paused, hovered]);
+
   const v = VIGNETTES[i];
+  const prev = () => setI((n) => (n - 1 + VIGNETTES.length) % VIGNETTES.length);
+  const next = () => setI((n) => (n + 1) % VIGNETTES.length);
+
+  const arrowStyle: React.CSSProperties = {
+    width: 52,
+    height: 52,
+    borderRadius: 9999,
+    background: "white",
+    border: "2px solid color-mix(in oklab, var(--color-rose) 40%, transparent)",
+    color: "var(--color-brown)",
+    display: "inline-flex",
+    alignItems: "center",
+    justifyContent: "center",
+    boxShadow: "0 2px 8px rgba(0,0,0,0.08)",
+  };
+
   return (
     <section className="mt-12">
       <div className="text-center mb-4">
@@ -71,10 +95,11 @@ export function ScamVignette() {
           border: "2px solid color-mix(in oklab, var(--color-rose) 22%, transparent)",
         }}
         aria-live="polite"
+        onMouseEnter={() => setHovered(true)}
+        onMouseLeave={() => setHovered(false)}
       >
         <div className="flex items-start gap-4">
           <div className="min-w-0 flex-1">
-
             <p className="font-extrabold" style={{ fontSize: 18, color: "var(--color-brown)" }}>
               {v.name}, {v.age}
             </p>
@@ -87,15 +112,49 @@ export function ScamVignette() {
             <p className="mt-3" style={{ fontSize: 16, lineHeight: 1.5 }}>
               {v.story}
             </p>
-            <p
-              className="mt-3 font-bold italic"
-              style={{ color: "var(--color-brown)" }}
-            >
+            <p className="mt-3 font-bold italic" style={{ color: "var(--color-brown)" }}>
               💡 {v.takeaway}
             </p>
           </div>
         </div>
-        <div className="flex justify-center gap-2 mt-4" role="tablist" aria-label="Story navigation">
+
+        <div className="flex items-center justify-between gap-3 mt-5">
+          <button
+            onClick={prev}
+            aria-label="Previous story"
+            style={arrowStyle}
+          >
+            <ChevronLeft size={28} strokeWidth={2.5} />
+          </button>
+
+          <button
+            onClick={() => setPaused((p) => !p)}
+            aria-label={paused ? "Resume auto-rotate" : "Pause auto-rotate"}
+            className="inline-flex items-center gap-2 font-bold"
+            style={{
+              padding: "10px 18px",
+              borderRadius: 9999,
+              background: "white",
+              border: "2px solid color-mix(in oklab, var(--color-rose) 40%, transparent)",
+              color: "var(--color-brown)",
+              fontSize: 16,
+              boxShadow: "0 2px 8px rgba(0,0,0,0.08)",
+            }}
+          >
+            {paused ? <Play size={20} /> : <Pause size={20} />}
+            {paused ? "Play" : "Pause"}
+          </button>
+
+          <button
+            onClick={next}
+            aria-label="Next story"
+            style={arrowStyle}
+          >
+            <ChevronRight size={28} strokeWidth={2.5} />
+          </button>
+        </div>
+
+        <div className="flex justify-center gap-3 mt-5" role="tablist" aria-label="Story navigation">
           {VIGNETTES.map((_, idx) => (
             <button
               key={idx}
@@ -105,9 +164,14 @@ export function ScamVignette() {
               onClick={() => setI(idx)}
               className="rounded-full transition-all"
               style={{
-                width: idx === i ? 24 : 8,
-                height: 8,
-                background: idx === i ? "var(--color-rose)" : "color-mix(in oklab, var(--color-brown) 25%, transparent)",
+                width: idx === i ? 40 : 18,
+                height: 18,
+                background:
+                  idx === i
+                    ? "var(--color-rose)"
+                    : "color-mix(in oklab, var(--color-brown) 30%, transparent)",
+                border: "none",
+                cursor: "pointer",
               }}
             />
           ))}
