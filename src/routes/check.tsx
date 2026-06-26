@@ -90,10 +90,11 @@ function CheckScreen() {
             {t("Just forward it to KinGuard's secure scan address below. No copying or pasting needed. KinGuard will check it and alert you and your guardians right away.")}
           </p>
           <div
-            className="mt-3 rounded-xl px-4 py-3 font-extrabold text-center break-all"
-            style={{ background: "#fff", color: "#3D2B2B", fontSize: 22, border: "2px dashed #3D2B2B" }}
+            className="mt-3 rounded-xl px-4 py-3 text-center break-all"
+            style={{ background: "#fff", color: "#3D2B2B", border: "2px dashed #3D2B2B" }}
           >
-            {FORWARD_EMAIL}
+            <p className="font-extrabold" style={{ fontSize: 28 }}>scan@KinGuard</p>
+            <p className="font-bold mt-1" style={{ fontSize: 14, opacity: 0.8 }}>{FORWARD_EMAIL}</p>
           </div>
           <button
             type="button"
