@@ -94,6 +94,8 @@ function ProfileScreen() {
   const [confirmNewCode, setConfirmNewCode] = useState(false);
   const [regenerating, setRegenerating] = useState(false);
   const [copiedCode, setCopiedCode] = useState(false);
+  const [confirmRemoveGuardian, setConfirmRemoveGuardian] = useState<GuardianRow | null>(null);
+  const [removingGuardian, setRemovingGuardian] = useState(false);
 
   useEffect(() => { if (!loading && !user) navigate({ to: "/" }); }, [loading, user, navigate]);
 
@@ -128,10 +130,14 @@ function ProfileScreen() {
     await refreshProfile();
   };
 
-  const removeGuardian = async (linkId: string) => {
-    const { error } = await supabase.from("guardian_relationships").delete().eq("id", linkId);
+  const removeGuardian = async () => {
+    if (!confirmRemoveGuardian) return;
+    setRemovingGuardian(true);
+    const { error } = await supabase.from("guardian_relationships").delete().eq("id", confirmRemoveGuardian.link_id);
+    setRemovingGuardian(false);
     if (error) { toast(t("Could not remove. Try again.")); return; }
-    setGuardians((g) => g.filter((r) => r.link_id !== linkId));
+    setGuardians((g) => g.filter((r) => r.link_id !== confirmRemoveGuardian.link_id));
+    setConfirmRemoveGuardian(null);
     toast(t("✅ Guardian removed"));
   };
 
@@ -354,7 +360,7 @@ function ProfileScreen() {
                         <button
                           className="btn-base w-full mt-3"
                           style={{ background: "#E74C3C", color: "#fff", minHeight: 44 }}
-                          onClick={() => removeGuardian(g.link_id)}
+                          onClick={() => setConfirmRemoveGuardian(g)}
                         >
                           {t("🗑️ Remove Guardian")}
                         </button>
@@ -369,6 +375,48 @@ function ProfileScreen() {
                 </p>
               )}
             </div>
+
+            {confirmRemoveGuardian && (
+              <div
+                role="dialog"
+                aria-modal="true"
+                className="fixed inset-0 z-50 flex items-center justify-center p-4"
+                style={{ background: "rgba(0,0,0,0.5)" }}
+                onClick={() => !removingGuardian && setConfirmRemoveGuardian(null)}
+              >
+                <div
+                  className="card-soft w-full max-w-md"
+                  style={{ background: "var(--color-card)", border: "3px solid #E74C3C" }}
+                  onClick={(e) => e.stopPropagation()}
+                >
+                  <p className="font-extrabold" style={{ fontSize: 20, color: "#E74C3C" }}>
+                    {t("Remove guardian?")}
+                  </p>
+                  <p className="mt-2">
+                    {t("Are you sure you want to remove")} <span className="font-bold">{confirmRemoveGuardian.full_name}</span> {t("as your guardian? They will no longer receive your alerts.")}
+                  </p>
+                  <div className="flex gap-3 mt-4">
+                    <button
+                      type="button"
+                      className="btn-secondary flex-1"
+                      disabled={removingGuardian}
+                      onClick={() => setConfirmRemoveGuardian(null)}
+                    >
+                      {t("Cancel")}
+                    </button>
+                    <button
+                      type="button"
+                      className="btn-base flex-1"
+                      style={{ background: "#E74C3C", color: "#fff" }}
+                      disabled={removingGuardian}
+                      onClick={removeGuardian}
+                    >
+                      {removingGuardian ? t("Removing…") : t("Yes, remove")}
+                    </button>
+                  </div>
+                </div>
+              </div>
+            )}
 
             {(() => {
               const slotsAvail = 5 - guardians.length;
