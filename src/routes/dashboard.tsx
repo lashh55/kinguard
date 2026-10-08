@@ -332,6 +332,9 @@ function GuardianDashboard() {
   const [linking, setLinking] = useState(false);
   const [linkMsg, setLinkMsg] = useState<{ ok: boolean; text: string } | null>(null);
   const [showAdd, setShowAdd] = useState(false);
+  const [confirmRemove, setConfirmRemove] = useState<{ id: string; name: string } | null>(null);
+  const [removing, setRemoving] = useState(false);
+  const [removeMsg, setRemoveMsg] = useState<string | null>(null);
 
   const addSenior = async (e: React.FormEvent) => {
     e.preventDefault();
