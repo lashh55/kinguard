@@ -331,6 +331,7 @@ function GuardianDashboard() {
   const [newLabel, setNewLabel] = useState("");
   const [linking, setLinking] = useState(false);
   const [linkMsg, setLinkMsg] = useState<{ ok: boolean; text: string } | null>(null);
+  const [showAdd, setShowAdd] = useState(false);
 
   const addSenior = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -344,8 +345,8 @@ function GuardianDashboard() {
       return;
     }
     try { (window as any).gtag?.("event", "guardian_linked"); } catch {}
-    setNewCode(""); setNewLabel("");
-    setLinkMsg({ ok: true, text: "Linked! Your loved one now appears below." });
+    setNewCode(""); setNewLabel(""); setShowAdd(false);
+    setLinkMsg({ ok: true, text: "Linked! Your senior now appears in your list." });
     setReload((r) => r + 1);
   };
 
@@ -465,7 +466,7 @@ function GuardianDashboard() {
           <div className="card-soft text-center">
             <p className="font-bold mb-2">No one linked yet</p>
             <p className="text-sm" style={{ color: "var(--color-muted-foreground)" }}>
-              Ask your loved one for their 6-letter invite code, then enter it below to link.
+              Ask your loved one for their 6-character invite code, then tap "Protect a new senior" below.
             </p>
           </div>
         ) : (
@@ -494,33 +495,48 @@ function GuardianDashboard() {
         )}
 
         <div className="card-soft mt-4">
-          <p className="font-extrabold" style={{ fontSize: 18 }}>
-            Add a loved one ({seniors.length} of 3)
-          </p>
-          {seniors.length >= 3 ? (
-            <p className="text-sm mt-1" style={{ color: "var(--color-muted-foreground)" }}>
-              You're protecting the maximum of 3 loved ones.
+          <button
+            type="button"
+            className="btn-base btn-primary w-full"
+            disabled={seniors.length >= 3}
+            aria-disabled={seniors.length >= 3}
+            style={seniors.length >= 3 ? { opacity: 0.5, cursor: "not-allowed", filter: "grayscale(1)" } : undefined}
+            onClick={() => { setShowAdd((v) => !v); setLinkMsg(null); }}
+          >
+            ➕ Protect a new senior ({seniors.length} of 3)
+          </button>
+          {seniors.length >= 3 && (
+            <p className="text-sm mt-2 text-center font-bold" style={{ color: "var(--color-muted-foreground)" }}>
+              You are protecting the maximum of 3 seniors.
             </p>
-          ) : (
+          )}
+          {showAdd && seniors.length < 3 && (
             <form onSubmit={addSenior} className="space-y-3 mt-3">
-              <input
-                className="w-full rounded-xl border px-4 py-3 text-lg invite-code uppercase"
-                placeholder="6-character invite code"
-                maxLength={6}
-                value={newCode}
-                onChange={(e) => setNewCode(e.target.value.toUpperCase())}
-                aria-label="Invite code"
-              />
-              <input
-                className="w-full rounded-xl border px-4 py-3 text-lg"
-                placeholder="Relationship (e.g. Mom, Grandpa)"
-                value={newLabel}
-                onChange={(e) => setNewLabel(e.target.value)}
-                aria-label="Relationship"
-              />
-              <button type="submit" className="btn-primary w-full" disabled={linking}>
-                {linking ? "Linking…" : "Link loved one"}
-              </button>
+              <label className="block">
+                <span className="block font-bold mb-1">Senior's invite code</span>
+                <input
+                  className="input-large invite-code uppercase tracking-widest"
+                  required
+                  maxLength={6}
+                  value={newCode}
+                  onChange={(e) => setNewCode(e.target.value.toUpperCase())}
+                />
+              </label>
+              <label className="block">
+                <span className="block font-bold mb-1">Your relationship (e.g. Daughter, Son, Friend)</span>
+                <input
+                  className="input-large"
+                  required
+                  value={newLabel}
+                  onChange={(e) => setNewLabel(e.target.value)}
+                />
+              </label>
+              <div className="flex gap-2">
+                <button type="button" className="btn-base btn-outline flex-1" onClick={() => setShowAdd(false)}>Cancel</button>
+                <button type="submit" className="btn-base btn-primary flex-1" disabled={linking}>
+                  {linking ? "Linking…" : "Add senior"}
+                </button>
+              </div>
             </form>
           )}
           {linkMsg && (
