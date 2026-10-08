@@ -1,3 +1,4 @@
+import { pageHead } from "@/lib/pageHead";
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useEffect, useMemo, useState } from "react";
 import { ScreenShell } from "@/components/ScreenShell";
@@ -23,6 +24,7 @@ import slide9 from "@/assets/slide-9.png";
 const SLIDE_IMAGES = [slide1, slide2, slide3, slide4, slide5, slide6, slide7, slide8, slide9];
 
 export const Route = createFileRoute("/learn")({
+  head: () => pageHead("Learn to spot scams", "Explore KinGuard scam lessons, quizzes, and safety challenges."),
   component: LearnScreen,
 });
 

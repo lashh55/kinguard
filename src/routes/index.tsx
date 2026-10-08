@@ -1,3 +1,4 @@
+import { pageHead } from "@/lib/pageHead";
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import { useAuth } from "@/lib/auth";
@@ -12,6 +13,7 @@ import { PasswordStrengthMeter } from "@/components/PasswordStrengthMeter";
 import { generatePassphrase } from "@/lib/passphrase";
 
 export const Route = createFileRoute("/")({
+  head: () => pageHead("Protecting the people you love", "Start your KinGuard protection or sign in to check suspicious messages and connect with guardians."),
   component: Onboarding,
 });
 

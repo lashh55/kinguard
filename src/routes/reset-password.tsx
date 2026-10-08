@@ -1,3 +1,4 @@
+import { pageHead } from "@/lib/pageHead";
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
@@ -7,6 +8,7 @@ import { generatePassphrase } from "@/lib/passphrase";
 import logo from "@/assets/kinguard-logo.png";
 
 export const Route = createFileRoute("/reset-password")({
+  head: () => pageHead("Reset your password", "Choose a strong new password for your KinGuard account."),
   component: ResetPassword,
 });
 

@@ -1,3 +1,4 @@
+import { pageHead } from "@/lib/pageHead";
 import { createFileRoute, useNavigate, Link } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import { useServerFn } from "@tanstack/react-start";
@@ -19,6 +20,7 @@ import {
 } from "@/lib/familyCode.functions";
 
 export const Route = createFileRoute("/profile")({
+  head: () => pageHead("Your profile", "Manage your KinGuard profile, guardian connections, and safety preferences."),
   component: ProfileScreen,
 });
 

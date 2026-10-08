@@ -1,10 +1,11 @@
+import { pageHead } from "@/lib/pageHead";
 import { createFileRoute } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { AdminShell, AdminTable } from "@/components/AdminShell";
 import { logAdminView } from "@/lib/admin";
 
-export const Route = createFileRoute("/_admin/admin/messages")({ component: MessagesPage });
+export const Route = createFileRoute("/_admin/admin/messages")({ head: () => pageHead("Admin messages", "Review KinGuard suspicious message checks and scam risk scores."), component: MessagesPage });
 
 type Row = {
   id: string; senior_id: string; senior_name: string | null; channel: string;
