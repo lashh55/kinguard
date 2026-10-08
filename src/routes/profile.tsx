@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { useServerFn } from "@tanstack/react-start";
 import { useAuth } from "@/lib/auth";
 import { ScreenShell } from "@/components/ScreenShell";
+import { Copy, Check } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 import { ScoreCard } from "@/components/ScoreCard";
@@ -92,6 +93,7 @@ function ProfileScreen() {
   const [deleting, setDeleting] = useState(false);
   const [confirmNewCode, setConfirmNewCode] = useState(false);
   const [regenerating, setRegenerating] = useState(false);
+  const [copiedCode, setCopiedCode] = useState(false);
 
   useEffect(() => { if (!loading && !user) navigate({ to: "/" }); }, [loading, user, navigate]);
 
@@ -170,6 +172,31 @@ function ProfileScreen() {
     }
   };
 
+  const copyInviteCode = async () => {
+    const code = profile.invite_code;
+    if (!code) return;
+    try {
+      if (navigator.clipboard?.writeText) {
+        await navigator.clipboard.writeText(code);
+      } else {
+        const ta = document.createElement("textarea");
+        ta.value = code;
+        ta.setAttribute("readonly", "");
+        ta.style.position = "fixed";
+        ta.style.left = "-9999px";
+        document.body.appendChild(ta);
+        ta.select();
+        document.execCommand("copy");
+        document.body.removeChild(ta);
+      }
+      setCopiedCode(true);
+      toast(t("Code copied!"));
+      setTimeout(() => setCopiedCode(false), 2500);
+    } catch {
+      toast(t("Could not copy. Please read the code aloud instead."));
+    }
+  };
+
   const isSenior = profile.role === "senior";
 
   return (
@@ -185,8 +212,33 @@ function ProfileScreen() {
           {isSenior && profile.invite_code && (
             <div className="mt-3">
               <p className="font-bold mb-1">{t("Your invite code:")}</p>
-              <div className="invite-code text-3xl font-extrabold tracking-widest text-center py-3 rounded-xl"
-                style={{ background: "var(--color-sky)" }}>{profile.invite_code}</div>
+              <div className="flex items-stretch gap-2">
+                <div className="invite-code text-3xl font-extrabold tracking-widest text-center py-3 rounded-xl flex-1"
+                  style={{ background: "var(--color-sky)" }}>{profile.invite_code}</div>
+                <button
+                  type="button"
+                  aria-label={t("Copy invite code")}
+                  title={t("Copy invite code")}
+                  onClick={copyInviteCode}
+                  className="shrink-0 rounded-xl flex flex-col items-center justify-center gap-1 px-3"
+                  style={{
+                    minWidth: 76,
+                    background: copiedCode ? "var(--color-cream)" : "var(--color-card)",
+                    border: "3px solid var(--color-rose)",
+                    color: "var(--color-rose)",
+                  }}
+                >
+                  {copiedCode ? <Check size={26} strokeWidth={3} /> : <Copy size={26} />}
+                  <span className="text-xs font-bold leading-none whitespace-nowrap">
+                    {copiedCode ? t("Copied!") : t("Copy")}
+                  </span>
+                </button>
+              </div>
+              {copiedCode && (
+                <p className="text-sm font-extrabold mt-2" style={{ color: "var(--color-rose)" }}>
+                  ✅ {t("Code copied!")}
+                </p>
+              )}
               <p className="text-sm mt-2" style={{ color: "var(--color-muted-foreground)" }}>
                 {t("Share this with up to 5 family members. Each can link to you with this same code.")}
               </p>
