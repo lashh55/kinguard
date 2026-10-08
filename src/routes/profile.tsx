@@ -146,6 +146,28 @@ function ProfileScreen() {
     }
   };
 
+  const regenerateInviteCode = async () => {
+    setRegenerating(true);
+    try {
+      const alphabet = "23456789ABCDEFGHJKLMNPQRSTUVWXYZ";
+      const bytes = new Uint32Array(6);
+      crypto.getRandomValues(bytes);
+      const code = Array.from(bytes, (b) => alphabet[b % alphabet.length]).join("");
+      const { error } = await supabase
+        .from("profiles")
+        .update({ invite_code: code })
+        .eq("id", profile.id);
+      if (error) throw error;
+      setProfile({ ...profile, invite_code: code });
+      setConfirmNewCode(false);
+      toast(t("Your new invite code is ready. Share it with your guardians."));
+    } catch (e: any) {
+      toast(e?.message || t("Could not generate a new code. Try again."));
+    } finally {
+      setRegenerating(false);
+    }
+  };
+
   const isSenior = profile.role === "senior";
 
   return (
