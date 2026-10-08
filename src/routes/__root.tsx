@@ -5,6 +5,8 @@ import { AuthProvider } from "@/lib/auth";
 import { I18nProvider } from "@/lib/i18n";
 import { Toaster } from "@/components/ui/sonner";
 import { initAnalytics } from "@/lib/analytics";
+import { SiteNavigation } from "@/components/SiteNavigation";
+import { BackToTop } from "@/components/BackToTop";
 
 function NotFoundComponent() {
   return (
@@ -30,8 +32,6 @@ export const Route = createRootRoute({
       { name: "twitter:title", content: "KinGuard — Protecting the people you love" },
       { property: "og:description", content: "Senior-focused scam protection with AI scam detection, caregiver alerts, and SSN Shield." },
       { name: "twitter:description", content: "Senior-focused scam protection with AI scam detection, caregiver alerts, and SSN Shield." },
-      { property: "og:image", content: "https://storage.googleapis.com/gpt-engineer-file-uploads/attachments/og-images/8f507abc-89c0-4723-8dac-fe4c794425a5" },
-      { name: "twitter:image", content: "https://storage.googleapis.com/gpt-engineer-file-uploads/attachments/og-images/8f507abc-89c0-4723-8dac-fe4c794425a5" },
       { name: "twitter:card", content: "summary_large_image" },
       { property: "og:type", content: "website" },
     ],
@@ -56,7 +56,9 @@ function RootComponent() {
   return (
     <I18nProvider>
       <AuthProvider>
+        <SiteNavigation />
         <Outlet />
+        <BackToTop />
         <Toaster
           position="top-center"
           duration={3000}

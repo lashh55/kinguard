@@ -18,6 +18,7 @@ export const Route = createFileRoute("/scams")({
       { property: "og:description", content: "Plain-language guides to the most common scams targeting seniors and their families." },
       { property: "og:url", content: "https://getkinguard.com/scams" },
       { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary_large_image" },
     ],
     links: [{ rel: "canonical", href: "https://getkinguard.com/scams" }],
   }),

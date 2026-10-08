@@ -1,3 +1,4 @@
+import { pageHead } from "@/lib/pageHead";
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import { useAuth } from "@/lib/auth";
@@ -5,13 +6,14 @@ import { supabase } from "@/integrations/supabase/client";
 import { PhotoPanel } from "@/components/PhotoPanel";
 import { ScamVignette } from "@/components/ScamVignette";
 import logo from "@/assets/kinguard-logo.png";
-import { useI18n, LanguageToggle } from "@/lib/i18n";
+import { useI18n } from "@/lib/i18n";
 import { track } from "@/lib/analytics";
 import { PasswordInput } from "@/components/PasswordInput";
 import { PasswordStrengthMeter } from "@/components/PasswordStrengthMeter";
 import { generatePassphrase } from "@/lib/passphrase";
 
 export const Route = createFileRoute("/")({
+  head: () => pageHead("Protecting the people you love", "Start your KinGuard protection or sign in to check suspicious messages and connect with guardians."),
   component: Onboarding,
 });
 
@@ -38,9 +40,6 @@ function Onboarding() {
       <PhotoPanel widthPct={35} />
       <div className="sm:w-[65%]">
         <div className="px-5 py-8 max-w-xl mx-auto">
-          <div className="flex justify-end mb-2">
-            <LanguageToggle />
-          </div>
           <div className="flex flex-col items-center text-center">
             <img src={logo} alt="KinGuard logo" className="w-44 h-44 object-contain" />
             <h1 className="mt-2" style={{ color: "var(--color-rose)", fontSize: 38 }}>KinGuard</h1>
@@ -53,7 +52,7 @@ function Onboarding() {
             {step === "role" && <RoleStep onPick={setStep} onSignIn={() => { setSeniorMode("signin"); setStep("senior"); }} onSignUp={() => { setSeniorMode("signup"); setStep("senior"); }} />}
             {step === "senior" && <SeniorForm initialMode={seniorMode} onCreated={(c) => { setCode(c); setStep("invite"); }} onBack={() => setStep("role")} />}
             {step === "guardian" && <GuardianForm onLinked={() => setStep("linked")} onBack={() => setStep("role")} />}
-            {step === "invite" && <InviteCodeView code={code!} onContinue={() => navigate({ to: "/dashboard" })} />}
+            {step === "invite" && code && <InviteCodeView code={code} onContinue={() => navigate({ to: "/dashboard" })} />}
             {step === "linked" && <LinkedView onContinue={() => navigate({ to: "/dashboard" })} />}
           </div>
 

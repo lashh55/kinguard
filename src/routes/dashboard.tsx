@@ -1,3 +1,4 @@
+import { pageHead } from "@/lib/pageHead";
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import { useAuth } from "@/lib/auth";
@@ -13,6 +14,7 @@ import { track } from "@/lib/analytics";
 import { toast } from "sonner";
 
 export const Route = createFileRoute("/dashboard")({
+  head: () => pageHead("Your protection overview", "Review your KinGuard scam alerts, guardian connections, and protection activity."),
   component: Dashboard,
 });
 

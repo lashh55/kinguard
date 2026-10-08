@@ -1,3 +1,4 @@
+import { pageHead } from "@/lib/pageHead";
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useState } from "react";
 import { toast } from "sonner";
@@ -10,6 +11,7 @@ import { useI18n } from "@/lib/i18n";
 import { track } from "@/lib/analytics";
 
 export const Route = createFileRoute("/check")({
+  head: () => pageHead("Check a suspicious message", "Check suspicious texts and emails with KinGuard and review scam risk and safety recommendations."),
   component: CheckScreen,
 });
 

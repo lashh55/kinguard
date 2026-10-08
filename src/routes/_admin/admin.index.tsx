@@ -1,10 +1,11 @@
+import { pageHead } from "@/lib/pageHead";
 import { createFileRoute } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { AdminShell } from "@/components/AdminShell";
 import { logAdminView } from "@/lib/admin";
 
-export const Route = createFileRoute("/_admin/admin/")({ component: AdminHome });
+export const Route = createFileRoute("/_admin/admin/")({ head: () => pageHead("Admin overview", "Review read-only KinGuard protection statistics and recent user activity."), component: AdminHome });
 
 type Stats = {
   total_seniors: number; total_guardians: number; total_links: number;

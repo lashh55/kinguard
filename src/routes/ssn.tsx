@@ -1,3 +1,4 @@
+import { pageHead } from "@/lib/pageHead";
 import { createFileRoute } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import { ScreenShell } from "@/components/ScreenShell";
@@ -10,6 +11,7 @@ import { SsnDisclaimer } from "@/components/SsnDisclaimer";
 import { track } from "@/lib/analytics";
 
 export const Route = createFileRoute("/ssn")({
+  head: () => pageHead("SSN Shield", "Assess requests for Social Security information without sharing your number."),
   component: SsnShield,
 });
 

@@ -147,6 +147,9 @@
 }
 
 @layer utilities {
+  html { scroll-padding-top: 160px; }
+  .site-navigation nav { max-height: calc(100dvh - 100px); overscroll-behavior: contain; }
+  .site-back-to-top svg { width: 26px; height: 26px; }
   .invite-code {
     font-variant-numeric: slashed-zero;
     font-feature-settings: "zero";

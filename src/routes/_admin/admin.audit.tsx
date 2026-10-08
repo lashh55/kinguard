@@ -1,10 +1,11 @@
+import { pageHead } from "@/lib/pageHead";
 import { createFileRoute } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { AdminShell, AdminTable } from "@/components/AdminShell";
 import { logAdminView } from "@/lib/admin";
 
-export const Route = createFileRoute("/_admin/admin/audit")({ component: AuditPage });
+export const Route = createFileRoute("/_admin/admin/audit")({ head: () => pageHead("Admin audit log", "Review read-only KinGuard administrator access activity."), component: AuditPage });
 
 type Row = { id: string; admin_email: string; action: string; path: string | null; created_at: string };
 

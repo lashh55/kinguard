@@ -13,6 +13,7 @@ export const Route = createFileRoute("/for-guardians")({
       { property: "og:description", content: "Real-time scam alerts for the adult children and caregivers of seniors." },
       { property: "og:url", content: "https://getkinguard.com/for-guardians" },
       { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary_large_image" },
     ],
     links: [{ rel: "canonical", href: "https://getkinguard.com/for-guardians" }],
     scripts: [{

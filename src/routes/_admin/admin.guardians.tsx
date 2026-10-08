@@ -1,10 +1,11 @@
+import { pageHead } from "@/lib/pageHead";
 import { createFileRoute } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { AdminShell, AdminTable } from "@/components/AdminShell";
 import { logAdminView } from "@/lib/admin";
 
-export const Route = createFileRoute("/_admin/admin/guardians")({ component: GuardiansPage });
+export const Route = createFileRoute("/_admin/admin/guardians")({ head: () => pageHead("Admin guardians", "Review KinGuard guardian accounts and linked senior counts."), component: GuardiansPage });
 
 type Row = { id: string; full_name: string; created_at: string; linked_seniors: number };
 
