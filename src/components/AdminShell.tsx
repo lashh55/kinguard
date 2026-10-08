@@ -1,51 +1,8 @@
-import { Link, useRouterState } from "@tanstack/react-router";
 import { ReactNode } from "react";
-import { useAuth } from "@/lib/auth";
-
-const NAV = [
-  { to: "/admin", label: "Home" },
-  { to: "/admin/seniors", label: "Seniors" },
-  { to: "/admin/guardians", label: "Guardians" },
-  { to: "/admin/messages", label: "Messages" },
-  { to: "/admin/sos", label: "SOS" },
-  { to: "/admin/audit", label: "Audit" },
-];
 
 export function AdminShell({ title, children }: { title: string; children: ReactNode }) {
-  const { signOut } = useAuth();
-  const path = useRouterState({ select: (s) => s.location.pathname });
   return (
     <div className="min-h-screen bg-background">
-      <header className="border-b" style={{ background: "var(--color-sky)" }}>
-        <div className="max-w-6xl mx-auto px-5 py-4 flex flex-wrap items-center gap-4 justify-between">
-          <div className="font-bold text-lg">KinGuard Admin</div>
-          <nav className="flex flex-wrap gap-2">
-            {NAV.map((n) => {
-              const active = path === n.to;
-              return (
-                <Link key={n.to} to={n.to}
-                  className="px-3 py-1.5 rounded-md text-sm font-bold"
-                  style={{
-                    background: active ? "var(--color-tan)" : "transparent",
-                    color: active ? "#fff" : "var(--color-brown)",
-                  }}>
-                  {n.label}
-                </Link>
-              );
-            })}
-          </nav>
-          <div className="flex gap-3 items-center">
-            <Link to="/dashboard" className="text-sm underline">← Back to KinGuard</Link>
-            <button
-              onClick={() => signOut()}
-              className="btn-base"
-              style={{ background: "var(--color-rose)", color: "#fff", minHeight: 44, padding: "8px 18px", fontSize: 16, fontWeight: 800 }}
-            >
-              Sign Out
-            </button>
-          </div>
-        </div>
-      </header>
       <main className="max-w-6xl mx-auto px-5 py-6">
         <h1 className="text-2xl font-bold mb-4">{title}</h1>
         {children}

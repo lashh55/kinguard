@@ -1,0 +1,2 @@
+- Mount shared site navigation and back-to-top controls inside the root auth/i18n providers; one shared implementation keeps every page consistent.
+- Keep page-specific bottom navigation in ScreenShell and mark it for scroll-control clearance; this preserves app navigation without overlapping floating controls.
