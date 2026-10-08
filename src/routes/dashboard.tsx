@@ -354,7 +354,7 @@ function GuardianDashboard() {
   };
 
   const removeSenior = async () => {
-    if (!confirmRemove) return;
+    if (!confirmRemove || !profile) return;
     setRemoving(true);
     const { error } = await supabase
       .from("guardian_relationships")
