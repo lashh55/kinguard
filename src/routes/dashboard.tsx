@@ -326,6 +326,28 @@ function GuardianDashboard() {
   const [seniors, setSeniors] = useState<LinkedSenior[]>([]);
   const [recentAlerts, setRecentAlerts] = useState<Alert[]>([]);
   const [seniorMap, setSeniorMap] = useState<Record<string, string>>({});
+  const [reload, setReload] = useState(0);
+  const [newCode, setNewCode] = useState("");
+  const [newLabel, setNewLabel] = useState("");
+  const [linking, setLinking] = useState(false);
+  const [linkMsg, setLinkMsg] = useState<{ ok: boolean; text: string } | null>(null);
+
+  const addSenior = async (e: React.FormEvent) => {
+    e.preventDefault();
+    const code = newCode.trim().toUpperCase();
+    if (code.length !== 6) { setLinkMsg({ ok: false, text: "Invite codes are 6 characters." }); return; }
+    setLinking(true); setLinkMsg(null);
+    const { error } = await supabase.rpc("link_guardian_by_code", { _code: code, _label: newLabel.trim() || "Family" });
+    setLinking(false);
+    if (error) {
+      setLinkMsg({ ok: false, text: error.message.includes("Invalid") ? "That code didn't match anyone. Please check it and try again." : error.message });
+      return;
+    }
+    try { (window as any).gtag?.("event", "guardian_linked"); } catch {}
+    setNewCode(""); setNewLabel("");
+    setLinkMsg({ ok: true, text: "Linked! Your loved one now appears below." });
+    setReload((r) => r + 1);
+  };
 
   useEffect(() => {
     if (!profile) return;
@@ -393,7 +415,7 @@ function GuardianDashboard() {
       });
       setSeniors(enriched);
     })();
-  }, [profile]);
+  }, [profile, reload]);
 
   // Realtime: fan-out alerts from any linked senior (forwarded emails included)
   useEffect(() => {
@@ -470,6 +492,43 @@ function GuardianDashboard() {
             ))}
           </ul>
         )}
+
+        <div className="card-soft mt-4">
+          <p className="font-extrabold" style={{ fontSize: 18 }}>
+            Add a loved one ({seniors.length} of 3)
+          </p>
+          {seniors.length >= 3 ? (
+            <p className="text-sm mt-1" style={{ color: "var(--color-muted-foreground)" }}>
+              You're protecting the maximum of 3 loved ones.
+            </p>
+          ) : (
+            <form onSubmit={addSenior} className="space-y-3 mt-3">
+              <input
+                className="w-full rounded-xl border px-4 py-3 text-lg invite-code uppercase"
+                placeholder="6-character invite code"
+                maxLength={6}
+                value={newCode}
+                onChange={(e) => setNewCode(e.target.value.toUpperCase())}
+                aria-label="Invite code"
+              />
+              <input
+                className="w-full rounded-xl border px-4 py-3 text-lg"
+                placeholder="Relationship (e.g. Mom, Grandpa)"
+                value={newLabel}
+                onChange={(e) => setNewLabel(e.target.value)}
+                aria-label="Relationship"
+              />
+              <button type="submit" className="btn-primary w-full" disabled={linking}>
+                {linking ? "Linking…" : "Link loved one"}
+              </button>
+            </form>
+          )}
+          {linkMsg && (
+            <p className="text-sm mt-2 font-bold" style={{ color: linkMsg.ok ? "#2ECC71" : "var(--color-destructive)" }}>
+              {linkMsg.text}
+            </p>
+          )}
+        </div>
       </section>
 
       <section className="px-5 mt-6">
