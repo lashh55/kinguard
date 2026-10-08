@@ -220,18 +220,25 @@ function ProfileScreen() {
                   aria-label={t("Copy invite code")}
                   title={t("Copy invite code")}
                   onClick={copyInviteCode}
-                  className="shrink-0 rounded-xl flex flex-col items-center justify-center gap-0.5 px-2"
+                  className="shrink-0 rounded-xl flex flex-col items-center justify-center gap-1 px-3"
                   style={{
-                    minWidth: 64,
+                    minWidth: 76,
                     background: copiedCode ? "var(--color-cream)" : "var(--color-card)",
                     border: "3px solid var(--color-rose)",
                     color: "var(--color-rose)",
                   }}
                 >
                   {copiedCode ? <Check size={26} strokeWidth={3} /> : <Copy size={26} />}
-                  <span className="text-xs font-bold leading-none">{copiedCode ? t("Code copied!") : t("Copy")}</span>
+                  <span className="text-xs font-bold leading-none whitespace-nowrap">
+                    {copiedCode ? t("Copied!") : t("Copy")}
+                  </span>
                 </button>
               </div>
+              {copiedCode && (
+                <p className="text-sm font-extrabold mt-2" style={{ color: "var(--color-rose)" }}>
+                  ✅ {t("Code copied!")}
+                </p>
+              )}
               <p className="text-sm mt-2" style={{ color: "var(--color-muted-foreground)" }}>
                 {t("Share this with up to 5 family members. Each can link to you with this same code.")}
               </p>
