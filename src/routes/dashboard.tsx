@@ -499,6 +499,14 @@ function GuardianDashboard() {
                   <div>
                     <p className="font-extrabold" style={{ fontSize: 19 }}>You are protecting: {s.full_name}</p>
                     <p className="text-sm" style={{ color: "var(--color-muted-foreground)" }}>{s.relationship_label || "Family"}</p>
+                    <button
+                      type="button"
+                      className="mt-2 text-sm font-bold underline underline-offset-2"
+                      style={{ color: "var(--color-muted-foreground)" }}
+                      onClick={() => { setRemoveMsg(null); setConfirmRemove({ id: s.id, name: s.full_name }); }}
+                    >
+                      Remove
+                    </button>
                   </div>
                   {s.alertCount > 0 ? (
                     <span className="badge-score-danger px-3 py-1 rounded-full text-sm font-bold">{s.alertCount} flagged</span>
