@@ -90,6 +90,8 @@ function ProfileScreen() {
   const [confirmDelete, setConfirmDelete] = useState(false);
   const [deleteText, setDeleteText] = useState("");
   const [deleting, setDeleting] = useState(false);
+  const [confirmNewCode, setConfirmNewCode] = useState(false);
+  const [regenerating, setRegenerating] = useState(false);
 
   useEffect(() => { if (!loading && !user) navigate({ to: "/" }); }, [loading, user, navigate]);
 
@@ -146,6 +148,28 @@ function ProfileScreen() {
     }
   };
 
+  const regenerateInviteCode = async () => {
+    setRegenerating(true);
+    try {
+      const alphabet = "23456789ABCDEFGHJKLMNPQRSTUVWXYZ";
+      const bytes = new Uint32Array(6);
+      crypto.getRandomValues(bytes);
+      const code = Array.from(bytes, (b) => alphabet[b % alphabet.length]).join("");
+      const { error } = await supabase
+        .from("profiles")
+        .update({ invite_code: code })
+        .eq("id", profile.id);
+      if (error) throw error;
+      await refreshProfile();
+      setConfirmNewCode(false);
+      toast(t("Your new invite code is ready. Share it with your guardians."));
+    } catch (e: any) {
+      toast(e?.message || t("Could not generate a new code. Try again."));
+    } finally {
+      setRegenerating(false);
+    }
+  };
+
   const isSenior = profile.role === "senior";
 
   return (
@@ -166,6 +190,37 @@ function ProfileScreen() {
               <p className="text-sm mt-2" style={{ color: "var(--color-muted-foreground)" }}>
                 {t("Share this with up to 5 family members. Each can link to you with this same code.")}
               </p>
+              <button
+                type="button"
+                className="btn-secondary w-full mt-3"
+                disabled={regenerating}
+                onClick={() => setConfirmNewCode(true)}
+              >
+                {regenerating ? t("Generating…") : t("Generate new code")}
+              </button>
+            </div>
+          )}
+          {confirmNewCode && (
+            <div className="fixed inset-0 z-50 flex items-center justify-center p-5" style={{ background: "rgba(0,0,0,0.5)" }}>
+              <div className="card-soft w-full max-w-md" style={{ background: "var(--color-card)" }}>
+                <h2 className="mb-2">⚠️ {t("Generate a new invite code?")}</h2>
+                <p className="mb-4">
+                  {t("This will invalidate your current code. All existing guardians will need to re-enter your new code.")}
+                </p>
+                <div className="flex gap-3">
+                  <button type="button" className="btn-secondary flex-1" onClick={() => setConfirmNewCode(false)}>
+                    {t("Cancel")}
+                  </button>
+                  <button
+                    type="button"
+                    className="btn-primary flex-1"
+                    disabled={regenerating}
+                    onClick={regenerateInviteCode}
+                  >
+                    {regenerating ? t("Generating…") : t("Yes, generate new code")}
+                  </button>
+                </div>
+              </div>
             </div>
           )}
         </div>
