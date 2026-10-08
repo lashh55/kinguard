@@ -360,7 +360,7 @@ function ProfileScreen() {
                         <button
                           className="btn-base w-full mt-3"
                           style={{ background: "#E74C3C", color: "#fff", minHeight: 44 }}
-                          onClick={() => removeGuardian(g.link_id)}
+                          onClick={() => setConfirmRemoveGuardian(g)}
                         >
                           {t("🗑️ Remove Guardian")}
                         </button>
