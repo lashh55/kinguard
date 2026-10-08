@@ -160,7 +160,7 @@ function ProfileScreen() {
         .update({ invite_code: code })
         .eq("id", profile.id);
       if (error) throw error;
-      setProfile({ ...profile, invite_code: code });
+      await refreshProfile();
       setConfirmNewCode(false);
       toast(t("Your new invite code is ready. Share it with your guardians."));
     } catch (e: any) {
