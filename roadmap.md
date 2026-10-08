@@ -1,3 +1,3 @@
-- [ ] Add shared sticky navigation and mobile menu across all pages.
-- [ ] Add accessible back-to-top control and bilingual labels.
-- [ ] Verify navigation, scrolling, and page metadata.
+- [x] Add shared sticky navigation and mobile menu across all pages.
+- [x] Add accessible back-to-top control and bilingual labels.
+- [x] Verify navigation, scrolling, and page metadata.
