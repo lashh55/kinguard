@@ -48,7 +48,7 @@ export function SiteNavigation() {
   }, [open]);
 
   return (
-    <header className="site-navigation sticky top-0 z-40 border-b bg-background">
+    <header className={`site-navigation sticky top-0 z-40 border-b ${isAdminPage ? "bg-sky" : user ? "bg-cream" : "bg-background"}`}>
       <div className="mx-auto flex max-w-6xl flex-wrap items-center justify-between gap-3 px-4 py-3">
         <Link to="/" className="flex shrink-0 items-center gap-2" onClick={() => setOpen(false)}>
           <img src={logo} alt="" className="h-10 w-10 object-contain" />

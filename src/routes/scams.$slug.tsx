@@ -118,7 +118,14 @@ export const Route = createFileRoute("/scams/$slug")({
   },
   head: ({ loaderData, params }) => {
     if (!loaderData) {
-      return { meta: [{ title: "Scam guide — KinGuard" }] };
+      return { meta: [
+        { title: "Scam guide — KinGuard" },
+        { name: "description", content: "Learn how to recognize common scams with KinGuard." },
+        { property: "og:title", content: "Scam guide — KinGuard" },
+        { property: "og:description", content: "Learn how to recognize common scams with KinGuard." },
+        { property: "og:type", content: "article" },
+        { name: "twitter:card", content: "summary_large_image" },
+      ] };
     }
     const { guide } = loaderData;
     const url = `https://getkinguard.com/scams/${params.slug}`;
@@ -130,6 +137,7 @@ export const Route = createFileRoute("/scams/$slug")({
         { property: "og:description", content: guide.description },
         { property: "og:url", content: url },
         { property: "og:type", content: "article" },
+        { name: "twitter:card", content: "summary_large_image" },
       ],
       links: [{ rel: "canonical", href: url }],
       scripts: [{

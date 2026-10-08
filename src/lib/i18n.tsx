@@ -51,6 +51,7 @@ const DICT: Record<string, string> = {
   "Open menu": "Abrir menú",
   "Close menu": "Cerrar menú",
   "Main navigation": "Navegación principal",
+  "SSN Shield": "Protección del SSN",
   "Common scams": "Estafas comunes",
   "For guardians": "Para guardianes",
   "Privacy": "Privacidad",

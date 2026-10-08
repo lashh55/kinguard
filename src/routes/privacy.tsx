@@ -7,6 +7,10 @@ export const Route = createFileRoute("/privacy")({
     meta: [
       { title: "Privacy & Safety — KinGuard" },
       { name: "description", content: "How KinGuard protects your data and what we never collect." },
+      { property: "og:title", content: "Privacy & Safety — KinGuard" },
+      { property: "og:description", content: "How KinGuard protects your data and what we never collect." },
+      { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary_large_image" },
     ],
   }),
 });
