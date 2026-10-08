@@ -1,8 +1,10 @@
 import { Link } from "@tanstack/react-router";
 import { ReactNode } from "react";
 import logo from "@/assets/kinguard-logo.png";
+import { useI18n } from "@/lib/i18n";
 
 export function MarketingShell({ children }: { children: ReactNode }) {
+  const { t } = useI18n();
   return (
     <div className="min-h-screen bg-background flex flex-col">
       <header className="px-5 py-4 border-b" style={{ borderColor: "color-mix(in oklab, var(--color-brown) 12%, transparent)" }}>
@@ -22,13 +24,23 @@ export function MarketingShell({ children }: { children: ReactNode }) {
         <div className="max-w-3xl mx-auto px-5 py-8">{children}</div>
       </main>
       <footer className="px-5 py-8 mt-12 border-t text-sm" style={{ borderColor: "color-mix(in oklab, var(--color-brown) 12%, transparent)", color: "var(--color-muted-foreground)" }}>
-        <div className="max-w-3xl mx-auto flex flex-wrap gap-4 justify-between">
-          <span>© {new Date().getFullYear()} empowerment4life LLC</span>
-          <div className="flex gap-4">
+        <div className="max-w-3xl mx-auto">
+          <div className="flex flex-wrap gap-4 justify-center text-center">
             <Link to="/privacy" className="hover:underline">Privacy</Link>
             <Link to="/scams" className="hover:underline">Scam guides</Link>
             <Link to="/for-guardians" className="hover:underline">For guardians</Link>
           </div>
+          <p className="text-center text-xs mt-4 leading-relaxed break-words">
+            © {new Date().getFullYear()} KinGuard. {t("All rights reserved.")} | {t("Designed by")}{" "}
+            <a
+              href="https://empowerment4ai.com"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="hover:underline underline-offset-4"
+            >
+              Empowerment4AI.com
+            </a>
+          </p>
         </div>
       </footer>
     </div>
