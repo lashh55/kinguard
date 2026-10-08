@@ -33,7 +33,7 @@ function ScamsHub() {
       </p>
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-8">
         {SCAMS.map((s) => (
-          <Link key={s.slug} to={`/scams/${s.slug}`} className="card-soft block hover:opacity-90 transition">
+          <Link key={s.slug} to="/scams/$slug" params={{ slug: s.slug }} className="card-soft block hover:opacity-90 transition">
             <div className="text-3xl mb-2">{s.emoji}</div>
             <h2 style={{ fontSize: 22 }}>{s.title}</h2>
             <p className="mt-2">{s.blurb}</p>
