@@ -172,6 +172,31 @@ function ProfileScreen() {
     }
   };
 
+  const copyInviteCode = async () => {
+    const code = profile.invite_code;
+    if (!code) return;
+    try {
+      if (navigator.clipboard?.writeText) {
+        await navigator.clipboard.writeText(code);
+      } else {
+        const ta = document.createElement("textarea");
+        ta.value = code;
+        ta.setAttribute("readonly", "");
+        ta.style.position = "fixed";
+        ta.style.left = "-9999px";
+        document.body.appendChild(ta);
+        ta.select();
+        document.execCommand("copy");
+        document.body.removeChild(ta);
+      }
+      setCopiedCode(true);
+      toast(t("Code copied!"));
+      setTimeout(() => setCopiedCode(false), 2500);
+    } catch {
+      toast(t("Could not copy. Please read the code aloud instead."));
+    }
+  };
+
   const isSenior = profile.role === "senior";
 
   return (
