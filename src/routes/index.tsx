@@ -312,9 +312,9 @@ function GuardianForm({ onLinked, onBack }: { onLinked: () => void; onBack: () =
     try {
       let uid: string | undefined;
       if (mode === "signin") {
-        const { data, error } = await supabase.auth.signInWithPassword({ email, password });
+        const { error } = await supabase.auth.signInWithPassword({ email, password });
         if (error) throw error;
-        uid = data.user?.id;
+        return; // signed in — the page redirects to the dashboard automatically
       } else {
         const redirectUrl = `${window.location.origin}/dashboard`;
         const { data, error } = await supabase.auth.signUp({
@@ -361,12 +361,16 @@ function GuardianForm({ onLinked, onBack }: { onLinked: () => void; onBack: () =
         <PasswordInput required minLength={mode === "signup" ? 10 : undefined} value={password} onChange={(e) => setPassword(e.target.value)} />
       </FormRow>
       {mode === "signin" && <ForgotPassword email={email} />}
-      <FormRow label={t("Relationship to senior (e.g. Daughter, Son, Friend)")}>
-        <input className="input-large" required value={rel} onChange={(e) => setRel(e.target.value)} />
-      </FormRow>
-      <FormRow label={t("Invite code")} hint={t("Ask the person you want to protect for their invite code. They must create their account first.")}>
-        <input className="invite-code input-large uppercase tracking-widest" required value={code} onChange={(e) => setCode(e.target.value.toUpperCase())} />
-      </FormRow>
+      {mode === "signup" && (
+        <>
+          <FormRow label={t("Relationship to senior (e.g. Daughter, Son, Friend)")}>
+            <input className="input-large" required value={rel} onChange={(e) => setRel(e.target.value)} />
+          </FormRow>
+          <FormRow label={t("Invite code")} hint={t("Ask the person you want to protect for their invite code. They must create their account first.")}>
+            <input className="invite-code input-large uppercase tracking-widest" required value={code} onChange={(e) => setCode(e.target.value.toUpperCase())} />
+          </FormRow>
+        </>
+      )}
       {err && (
         <div className="text-sm font-bold" style={{ color: "var(--color-danger)" }}>
           {isSignIn && isInvalidCreds ? (
@@ -382,7 +386,7 @@ function GuardianForm({ onLinked, onBack }: { onLinked: () => void; onBack: () =
         </div>
       )}
       <button className="btn-base btn-primary w-full" disabled={busy}>
-        {busy ? t("Connecting…") : t("Connect and Protect")}
+        {busy ? t("Connecting…") : isSignIn ? t("Sign In") : t("Connect and Protect")}
       </button>
       <p className="text-center text-sm" style={{ color: "var(--color-muted-foreground)" }}>
         {isSignIn ? (
