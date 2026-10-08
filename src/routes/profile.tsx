@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { useServerFn } from "@tanstack/react-start";
 import { useAuth } from "@/lib/auth";
 import { ScreenShell } from "@/components/ScreenShell";
+import { Copy, Check } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 import { ScoreCard } from "@/components/ScoreCard";
@@ -92,6 +93,7 @@ function ProfileScreen() {
   const [deleting, setDeleting] = useState(false);
   const [confirmNewCode, setConfirmNewCode] = useState(false);
   const [regenerating, setRegenerating] = useState(false);
+  const [copiedCode, setCopiedCode] = useState(false);
 
   useEffect(() => { if (!loading && !user) navigate({ to: "/" }); }, [loading, user, navigate]);
 
