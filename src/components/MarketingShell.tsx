@@ -1,8 +1,10 @@
 import { Link } from "@tanstack/react-router";
 import { ReactNode } from "react";
 import logo from "@/assets/kinguard-logo.png";
+import { useI18n } from "@/lib/i18n";
 
 export function MarketingShell({ children }: { children: ReactNode }) {
+  const { t } = useI18n();
   return (
     <div className="min-h-screen bg-background flex flex-col">
       <header className="px-5 py-4 border-b" style={{ borderColor: "color-mix(in oklab, var(--color-brown) 12%, transparent)" }}>
