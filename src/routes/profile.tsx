@@ -94,6 +94,8 @@ function ProfileScreen() {
   const [confirmNewCode, setConfirmNewCode] = useState(false);
   const [regenerating, setRegenerating] = useState(false);
   const [copiedCode, setCopiedCode] = useState(false);
+  const [confirmRemoveGuardian, setConfirmRemoveGuardian] = useState<GuardianRow | null>(null);
+  const [removingGuardian, setRemovingGuardian] = useState(false);
 
   useEffect(() => { if (!loading && !user) navigate({ to: "/" }); }, [loading, user, navigate]);
 
