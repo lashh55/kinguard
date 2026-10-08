@@ -90,6 +90,8 @@ function ProfileScreen() {
   const [confirmDelete, setConfirmDelete] = useState(false);
   const [deleteText, setDeleteText] = useState("");
   const [deleting, setDeleting] = useState(false);
+  const [confirmNewCode, setConfirmNewCode] = useState(false);
+  const [regenerating, setRegenerating] = useState(false);
 
   useEffect(() => { if (!loading && !user) navigate({ to: "/" }); }, [loading, user, navigate]);
 
