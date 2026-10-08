@@ -130,10 +130,14 @@ function ProfileScreen() {
     await refreshProfile();
   };
 
-  const removeGuardian = async (linkId: string) => {
-    const { error } = await supabase.from("guardian_relationships").delete().eq("id", linkId);
+  const removeGuardian = async () => {
+    if (!confirmRemoveGuardian) return;
+    setRemovingGuardian(true);
+    const { error } = await supabase.from("guardian_relationships").delete().eq("id", confirmRemoveGuardian.link_id);
+    setRemovingGuardian(false);
     if (error) { toast(t("Could not remove. Try again.")); return; }
-    setGuardians((g) => g.filter((r) => r.link_id !== linkId));
+    setGuardians((g) => g.filter((r) => r.link_id !== confirmRemoveGuardian.link_id));
+    setConfirmRemoveGuardian(null);
     toast(t("✅ Guardian removed"));
   };
 
