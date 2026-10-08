@@ -38,7 +38,7 @@ export function MarketingShell({ children }: { children: ReactNode }) {
               rel="noopener noreferrer"
               className="hover:underline underline-offset-4"
             >
-              Empowerment4AI.com
+              Empowerment4AILLC.com
             </a>
           </p>
         </div>
