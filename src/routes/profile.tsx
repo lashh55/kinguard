@@ -166,6 +166,37 @@ function ProfileScreen() {
               <p className="text-sm mt-2" style={{ color: "var(--color-muted-foreground)" }}>
                 {t("Share this with up to 5 family members. Each can link to you with this same code.")}
               </p>
+              <button
+                type="button"
+                className="btn-secondary w-full mt-3"
+                disabled={regenerating}
+                onClick={() => setConfirmNewCode(true)}
+              >
+                {regenerating ? t("Generating…") : t("Generate new code")}
+              </button>
+            </div>
+          )}
+          {confirmNewCode && (
+            <div className="fixed inset-0 z-50 flex items-center justify-center p-5" style={{ background: "rgba(0,0,0,0.5)" }}>
+              <div className="card-soft w-full max-w-md" style={{ background: "var(--color-card)" }}>
+                <h2 className="mb-2">⚠️ {t("Generate a new invite code?")}</h2>
+                <p className="mb-4">
+                  {t("This will invalidate your current code. All existing guardians will need to re-enter your new code.")}
+                </p>
+                <div className="flex gap-3">
+                  <button type="button" className="btn-secondary flex-1" onClick={() => setConfirmNewCode(false)}>
+                    {t("Cancel")}
+                  </button>
+                  <button
+                    type="button"
+                    className="btn-primary flex-1"
+                    disabled={regenerating}
+                    onClick={regenerateInviteCode}
+                  >
+                    {regenerating ? t("Generating…") : t("Yes, generate new code")}
+                  </button>
+                </div>
+              </div>
             </div>
           )}
         </div>
