@@ -100,6 +100,7 @@ const DICT: Record<string, string> = {
   "Suspicious message": "Mensaje sospechoso",
   "just now": "ahora mismo",
   "Family": "Familia",
+  "When someone calls claiming to be family or an official, ask them to say your code word. If they cannot, treat that call with caution.": "Cuando alguien llame diciendo ser un familiar o un funcionario, pídales que digan su palabra clave. Si no pueden, trate esa llamada con precaución.",
 
   // Check page
   "Check a Suspicious Message_title": "Verificar un Mensaje Sospechoso",
