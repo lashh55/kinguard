@@ -623,7 +623,7 @@ function FamilyCodeCard() {
     <div className="card-soft" style={{ borderTop: "6px solid var(--color-rose)" }}>
       <h2 className="mb-1">🔑 {t("Family Safety Code")}</h2>
       <p className="text-sm mb-3" style={{ color: "var(--color-muted-foreground)" }}>
-        {t("When someone calls claiming to be family or an official, ask them to say your code word. If they cannot, it is likely a scam.")}
+        {t("When someone calls claiming to be family or an official, ask them to say your code word. If they cannot, treat that call with caution.")}
       </p>
 
       {!hasCode && !editing && (
