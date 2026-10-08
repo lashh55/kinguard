@@ -376,6 +376,48 @@ function ProfileScreen() {
               )}
             </div>
 
+            {confirmRemoveGuardian && (
+              <div
+                role="dialog"
+                aria-modal="true"
+                className="fixed inset-0 z-50 flex items-center justify-center p-4"
+                style={{ background: "rgba(0,0,0,0.5)" }}
+                onClick={() => !removingGuardian && setConfirmRemoveGuardian(null)}
+              >
+                <div
+                  className="card-soft w-full max-w-md"
+                  style={{ background: "var(--color-card)", border: "3px solid #E74C3C" }}
+                  onClick={(e) => e.stopPropagation()}
+                >
+                  <p className="font-extrabold" style={{ fontSize: 20, color: "#E74C3C" }}>
+                    {t("Remove guardian?")}
+                  </p>
+                  <p className="mt-2">
+                    {t(`Are you sure you want to remove ${confirmRemoveGuardian.full_name} as your guardian? They will no longer receive your alerts.`)}
+                  </p>
+                  <div className="flex gap-3 mt-4">
+                    <button
+                      type="button"
+                      className="btn-secondary flex-1"
+                      disabled={removingGuardian}
+                      onClick={() => setConfirmRemoveGuardian(null)}
+                    >
+                      {t("Cancel")}
+                    </button>
+                    <button
+                      type="button"
+                      className="btn-base flex-1"
+                      style={{ background: "#E74C3C", color: "#fff" }}
+                      disabled={removingGuardian}
+                      onClick={removeGuardian}
+                    >
+                      {removingGuardian ? t("Removing…") : t("Yes, remove")}
+                    </button>
+                  </div>
+                </div>
+              </div>
+            )}
+
             {(() => {
               const slotsAvail = 5 - guardians.length;
               const neglected = guardians.filter((g) => {
