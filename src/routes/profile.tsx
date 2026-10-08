@@ -393,7 +393,7 @@ function ProfileScreen() {
                     {t("Remove guardian?")}
                   </p>
                   <p className="mt-2">
-                    {t(`Are you sure you want to remove ${confirmRemoveGuardian.full_name} as your guardian? They will no longer receive your alerts.`)}
+                    {t("Are you sure you want to remove")} <span className="font-bold">{confirmRemoveGuardian.full_name}</span> {t("as your guardian? They will no longer receive your alerts.")}
                   </p>
                   <div className="flex gap-3 mt-4">
                     <button
