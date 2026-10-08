@@ -187,8 +187,26 @@ function ProfileScreen() {
           {isSenior && profile.invite_code && (
             <div className="mt-3">
               <p className="font-bold mb-1">{t("Your invite code:")}</p>
-              <div className="invite-code text-3xl font-extrabold tracking-widest text-center py-3 rounded-xl"
-                style={{ background: "var(--color-sky)" }}>{profile.invite_code}</div>
+              <div className="flex items-stretch gap-2">
+                <div className="invite-code text-3xl font-extrabold tracking-widest text-center py-3 rounded-xl flex-1"
+                  style={{ background: "var(--color-sky)" }}>{profile.invite_code}</div>
+                <button
+                  type="button"
+                  aria-label={t("Copy invite code")}
+                  title={t("Copy invite code")}
+                  onClick={copyInviteCode}
+                  className="shrink-0 rounded-xl flex flex-col items-center justify-center gap-0.5 px-2"
+                  style={{
+                    minWidth: 64,
+                    background: copiedCode ? "var(--color-cream)" : "var(--color-card)",
+                    border: "3px solid var(--color-rose)",
+                    color: "var(--color-rose)",
+                  }}
+                >
+                  {copiedCode ? <Check size={26} strokeWidth={3} /> : <Copy size={26} />}
+                  <span className="text-xs font-bold leading-none">{copiedCode ? t("Code copied!") : t("Copy")}</span>
+                </button>
+              </div>
               <p className="text-sm mt-2" style={{ color: "var(--color-muted-foreground)" }}>
                 {t("Share this with up to 5 family members. Each can link to you with this same code.")}
               </p>
