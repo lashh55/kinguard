@@ -353,6 +353,25 @@ function GuardianDashboard() {
     setReload((r) => r + 1);
   };
 
+  const removeSenior = async () => {
+    if (!confirmRemove) return;
+    setRemoving(true);
+    const { error } = await supabase
+      .from("guardian_relationships")
+      .delete()
+      .eq("guardian_id", profile.id)
+      .eq("senior_id", confirmRemove.id);
+    setRemoving(false);
+    if (error) {
+      toast.error("Something went wrong. Please try again.");
+      setConfirmRemove(null);
+      return;
+    }
+    setRemoveMsg(`You are no longer protecting ${confirmRemove.name}.`);
+    setConfirmRemove(null);
+    setReload((r) => r + 1);
+  };
+
   useEffect(() => {
     if (!profile) return;
     (async () => {
