@@ -332,6 +332,9 @@ function GuardianDashboard() {
   const [linking, setLinking] = useState(false);
   const [linkMsg, setLinkMsg] = useState<{ ok: boolean; text: string } | null>(null);
   const [showAdd, setShowAdd] = useState(false);
+  const [confirmRemove, setConfirmRemove] = useState<{ id: string; name: string } | null>(null);
+  const [removing, setRemoving] = useState(false);
+  const [removeMsg, setRemoveMsg] = useState<string | null>(null);
 
   const addSenior = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -347,6 +350,25 @@ function GuardianDashboard() {
     try { (window as any).gtag?.("event", "guardian_linked"); } catch {}
     setNewCode(""); setNewLabel(""); setShowAdd(false);
     setLinkMsg({ ok: true, text: "Linked! Your senior now appears in your list." });
+    setReload((r) => r + 1);
+  };
+
+  const removeSenior = async () => {
+    if (!confirmRemove || !profile) return;
+    setRemoving(true);
+    const { error } = await supabase
+      .from("guardian_relationships")
+      .delete()
+      .eq("guardian_id", profile.id)
+      .eq("senior_id", confirmRemove.id);
+    setRemoving(false);
+    if (error) {
+      toast.error("Something went wrong. Please try again.");
+      setConfirmRemove(null);
+      return;
+    }
+    setRemoveMsg(`You are no longer protecting ${confirmRemove.name}.`);
+    setConfirmRemove(null);
     setReload((r) => r + 1);
   };
 
@@ -477,6 +499,14 @@ function GuardianDashboard() {
                   <div>
                     <p className="font-extrabold" style={{ fontSize: 19 }}>You are protecting: {s.full_name}</p>
                     <p className="text-sm" style={{ color: "var(--color-muted-foreground)" }}>{s.relationship_label || "Family"}</p>
+                    <button
+                      type="button"
+                      className="mt-2 text-sm font-bold underline underline-offset-2"
+                      style={{ color: "var(--color-muted-foreground)" }}
+                      onClick={() => { setRemoveMsg(null); setConfirmRemove({ id: s.id, name: s.full_name }); }}
+                    >
+                      Remove
+                    </button>
                   </div>
                   {s.alertCount > 0 ? (
                     <span className="badge-score-danger px-3 py-1 rounded-full text-sm font-bold">{s.alertCount} flagged</span>
@@ -492,6 +522,9 @@ function GuardianDashboard() {
               </li>
             ))}
           </ul>
+        )}
+        {removeMsg && (
+          <p className="text-sm mt-2 font-bold" style={{ color: "var(--color-muted-foreground)" }}>{removeMsg}</p>
         )}
 
         <div className="card-soft mt-4">
@@ -577,6 +610,49 @@ function GuardianDashboard() {
       <section className="px-5 mt-6 mb-4">
         <Link to="/profile" className="btn-base btn-outline w-full">Manage my profile</Link>
       </section>
+
+      {confirmRemove && (
+        <div
+          className="fixed inset-0 z-50 flex items-center justify-center px-5"
+          style={{ background: "rgba(15, 23, 42, 0.6)" }}
+          role="dialog"
+          aria-modal="true"
+          aria-label="Confirm removing senior"
+          onClick={() => { if (!removing) setConfirmRemove(null); }}
+        >
+          <div
+            className="card-soft w-full max-w-sm text-center"
+            style={{ background: "var(--color-card, #fff)" }}
+            onClick={(e) => e.stopPropagation()}
+          >
+            <p className="font-extrabold" style={{ fontSize: 20, color: "var(--color-destructive)" }}>
+              Stop protecting {confirmRemove.name}?
+            </p>
+            <p className="mt-2 text-base">
+              Are you sure you want to stop protecting {confirmRemove.name}? This cannot be undone.
+            </p>
+            <div className="flex gap-2 mt-4">
+              <button
+                type="button"
+                className="btn-base btn-outline flex-1"
+                disabled={removing}
+                onClick={() => setConfirmRemove(null)}
+              >
+                Cancel
+              </button>
+              <button
+                type="button"
+                className="btn-base btn-primary flex-1"
+                disabled={removing}
+                style={{ background: "var(--color-destructive)", borderColor: "var(--color-destructive)" }}
+                onClick={removeSenior}
+              >
+                {removing ? "Removing…" : "Yes, remove"}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </ScreenShell>
   );
 }
