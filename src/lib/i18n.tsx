@@ -284,8 +284,10 @@ const DICT: Record<string, string> = {
   "Text": "Texto",
   "Call": "Llamada",
   "SSN Request": "Solicitud de SSN",
-  "Message": "Mensaje",
-};
+   "Message": "Mensaje",
+   "All rights reserved.": "Todos los derechos reservados.",
+   "Designed by": "Diseñado por",
+ };
 
 type Ctx = { lang: Lang; setLang: (l: Lang) => void; t: (s: string) => string };
 const I18nCtx = createContext<Ctx>({ lang: "en", setLang: () => {}, t: (s) => s });
