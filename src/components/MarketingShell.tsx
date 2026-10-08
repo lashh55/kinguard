@@ -33,12 +33,12 @@ export function MarketingShell({ children }: { children: ReactNode }) {
           <p className="text-center text-xs mt-4 leading-relaxed break-words">
             © {new Date().getFullYear()} KinGuard. {t("All rights reserved.")} | {t("Designed by")}{" "}
             <a
-              href="https://empowerment4ai.com"
+              href="https://empowerment4aillc.com"
               target="_blank"
               rel="noopener noreferrer"
               className="hover:underline underline-offset-4"
             >
-              Empowerment4AI.com
+              Empowerment4AILLC.com
             </a>
           </p>
         </div>
