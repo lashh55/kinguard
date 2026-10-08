@@ -465,7 +465,7 @@ function GuardianDashboard() {
           <div className="card-soft text-center">
             <p className="font-bold mb-2">No one linked yet</p>
             <p className="text-sm" style={{ color: "var(--color-muted-foreground)" }}>
-              Ask your loved one for their 6-letter invite code, then sign in again to link.
+              Ask your loved one for their 6-letter invite code, then enter it below to link.
             </p>
           </div>
         ) : (
