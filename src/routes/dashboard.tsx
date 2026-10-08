@@ -523,6 +523,9 @@ function GuardianDashboard() {
             ))}
           </ul>
         )}
+        {removeMsg && (
+          <p className="text-sm mt-2 font-bold" style={{ color: "var(--color-muted-foreground)" }}>{removeMsg}</p>
+        )}
 
         <div className="card-soft mt-4">
           <button
@@ -607,6 +610,49 @@ function GuardianDashboard() {
       <section className="px-5 mt-6 mb-4">
         <Link to="/profile" className="btn-base btn-outline w-full">Manage my profile</Link>
       </section>
+
+      {confirmRemove && (
+        <div
+          className="fixed inset-0 z-50 flex items-center justify-center px-5"
+          style={{ background: "rgba(15, 23, 42, 0.6)" }}
+          role="dialog"
+          aria-modal="true"
+          aria-label="Confirm removing senior"
+          onClick={() => { if (!removing) setConfirmRemove(null); }}
+        >
+          <div
+            className="card-soft w-full max-w-sm text-center"
+            style={{ background: "var(--color-card, #fff)" }}
+            onClick={(e) => e.stopPropagation()}
+          >
+            <p className="font-extrabold" style={{ fontSize: 20, color: "var(--color-destructive)" }}>
+              Stop protecting {confirmRemove.name}?
+            </p>
+            <p className="mt-2 text-base">
+              Are you sure you want to stop protecting {confirmRemove.name}? This cannot be undone.
+            </p>
+            <div className="flex gap-2 mt-4">
+              <button
+                type="button"
+                className="btn-base btn-outline flex-1"
+                disabled={removing}
+                onClick={() => setConfirmRemove(null)}
+              >
+                Cancel
+              </button>
+              <button
+                type="button"
+                className="btn-base btn-primary flex-1"
+                disabled={removing}
+                style={{ background: "var(--color-destructive)", borderColor: "var(--color-destructive)" }}
+                onClick={removeSenior}
+              >
+                {removing ? "Removing…" : "Yes, remove"}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </ScreenShell>
   );
 }
