@@ -50,7 +50,7 @@ const DICT: Record<string, string> = {
   "Connected! 💙": "¡Conectado! 💙",
   "Request sent! ⏳": "¡Solicitud enviada! ⏳",
   "Your loved one must approve you in KinGuard. Once they do, you will see their alerts in your dashboard.": "Su ser querido debe aprobarle en KinGuard. Cuando lo haga, verá sus alertas en su panel.",
-  "This code expires 24 hours after it is created. Tap \"Generate new code\" for a fresh one.": "Este código vence 24 horas después de crearse. Toque \"Generar código nuevo\" para obtener uno nuevo.",
+  "This code expires 24 hours after it is created. Tap \"Generate new code\" for a fresh one.": "Este código vence 24 horas después de crearse. Toque \"Generar nuevo código\" para obtener uno nuevo.",
   "You're now protecting your loved one. You'll see their alerts in your dashboard.": "Ahora estás protegiendo a tu ser querido. Verás sus alertas en tu panel.",
   "Go to dashboard": "Ir al panel",
   "Loading…": "Cargando…",
