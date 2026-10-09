@@ -217,6 +217,7 @@ function ProfileScreen() {
           {isSenior && profile.invite_code && (
             <div className="mt-3">
               <p className="font-bold mb-1">{t("Your invite code:")}</p>
+              <p className="text-sm mb-2" style={{ color: "var(--color-muted-foreground)" }}>{t("This code expires 24 hours after it is created. Tap \"Generate new code\" for a fresh one.")}</p>
               <div className="flex items-stretch gap-2">
                 <div className="invite-code text-3xl font-extrabold tracking-widest text-center py-3 rounded-xl flex-1"
                   style={{ background: "var(--color-sky)" }}>{profile.invite_code}</div>

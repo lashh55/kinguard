@@ -1,3 +1,5 @@
+import { NeverNotice } from "@/components/NeverNotice";
+import { GuardianRequests, GuardianNotices } from "@/components/GuardianRequests";
 import { pageHead } from "@/lib/pageHead";
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
@@ -205,6 +207,8 @@ function SeniorDashboard() {
       <header className="px-5 pt-4 pb-4">
         <h1>Hello, {profile.full_name.split(" ")[0]} 👋</h1>
       </header>
+      <GuardianRequests onChange={() => supabase.rpc("get_my_guardians").then(({ data }) => setGuardianCount((data ?? []).length))} />
+      <section className="px-5 mb-3"><NeverNotice /></section>
 
       {unreadCount > 0 && (
         <section className="px-5 mb-3">
@@ -411,6 +415,13 @@ function GuardianDashboard() {
   const [confirmRemove, setConfirmRemove] = useState<{ id: string; name: string } | null>(null);
   const [removing, setRemoving] = useState(false);
   const [removeMsg, setRemoveMsg] = useState<string | null>(null);
+  const [pendingCount, setPendingCount] = useState(0);
+  useEffect(() => {
+    if (!profile) return;
+    supabase.from("guardian_relationships").select("id", { count: "exact", head: true })
+      .eq("guardian_id", profile.id).eq("status", "pending")
+      .then(({ count }) => setPendingCount(count ?? 0));
+  }, [profile, reload]);
 
   const addSenior = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -425,7 +436,7 @@ function GuardianDashboard() {
     }
     try { (window as any).gtag?.("event", "guardian_linked"); } catch {}
     setNewCode(""); setNewLabel(""); setShowAdd(false);
-    setLinkMsg({ ok: true, text: "Linked! Your senior now appears in your list." });
+    setLinkMsg({ ok: true, text: es ? "Solicitud enviada. Aparecerá en su lista cuando su ser querido la apruebe." : "Request sent! They'll appear in your list once your loved one approves you." });
     setReload((r) => r + 1);
   };
 
@@ -564,7 +575,15 @@ function GuardianDashboard() {
         <p className="mt-1" style={{ color: "var(--color-muted-foreground)" }}>
           You're protecting {seniors.length} {seniors.length === 1 ? "loved one" : "loved ones"}.
         </p>
+        {pendingCount > 0 && (
+          <p className="mt-1 font-bold" style={{ color: "var(--color-rose)" }}>
+            {es
+              ? `⏳ Esperando aprobación: ${pendingCount}. Su ser querido debe aprobarle en KinGuard.`
+              : `⏳ Waiting for approval: ${pendingCount}. Your loved one must approve you in KinGuard.`}
+          </p>
+        )}
       </header>
+      <GuardianNotices />
 
       <section className="px-5">
         <h2 className="mb-2">You are protecting</h2>
@@ -617,19 +636,19 @@ function GuardianDashboard() {
           <button
             type="button"
             className="btn-base btn-primary w-full"
-            disabled={seniors.length >= 3}
-            aria-disabled={seniors.length >= 3}
-            style={seniors.length >= 3 ? { opacity: 0.5, cursor: "not-allowed", filter: "grayscale(1)" } : undefined}
+            disabled={seniors.length + pendingCount >= 3}
+            aria-disabled={seniors.length + pendingCount >= 3}
+            style={seniors.length + pendingCount >= 3 ? { opacity: 0.5, cursor: "not-allowed", filter: "grayscale(1)" } : undefined}
             onClick={() => { setShowAdd((v) => !v); setLinkMsg(null); }}
           >
-            ➕ {es ? "Proteger a un nuevo adulto mayor" : "Protect a new senior"} ({seniors.length} {es ? "de" : "of"} 3)
+            ➕ {es ? "Proteger a un nuevo adulto mayor" : "Protect a new senior"} ({seniors.length + pendingCount} {es ? "de" : "of"} 3)
           </button>
-          {seniors.length >= 3 && (
+          {seniors.length + pendingCount >= 3 && (
             <p className="text-sm mt-2 text-center font-bold" style={{ color: "var(--color-muted-foreground)" }}>
               You are protecting the maximum of 3 seniors.
             </p>
           )}
-          {showAdd && seniors.length < 3 && (
+          {showAdd && seniors.length + pendingCount < 3 && (
             <form onSubmit={addSenior} className="space-y-3 mt-3">
               <label className="block">
                 <span className="block font-bold mb-1">{es ? "Código de invitación del adulto mayor" : "Senior's invite code"}</span>

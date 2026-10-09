@@ -80,6 +80,36 @@ export type Database = {
         }
         Relationships: []
       }
+      guardian_notices: {
+        Row: {
+          created_at: string
+          guardian_id: string
+          id: string
+          new_guardian_name: string
+          read_at: string | null
+          senior_id: string
+          senior_name: string
+        }
+        Insert: {
+          created_at?: string
+          guardian_id: string
+          id?: string
+          new_guardian_name: string
+          read_at?: string | null
+          senior_id: string
+          senior_name: string
+        }
+        Update: {
+          created_at?: string
+          guardian_id?: string
+          id?: string
+          new_guardian_name?: string
+          read_at?: string | null
+          senior_id?: string
+          senior_name?: string
+        }
+        Relationships: []
+      }
       guardian_relationships: {
         Row: {
           created_at: string
@@ -180,6 +210,7 @@ export type Database = {
           full_name: string
           id: string
           invite_code: string | null
+          invite_code_created_at: string
           quiz_progress: Json
           role: string
           ssn_shield_progress: Json
@@ -196,6 +227,7 @@ export type Database = {
           full_name: string
           id: string
           invite_code?: string | null
+          invite_code_created_at?: string
           quiz_progress?: Json
           role: string
           ssn_shield_progress?: Json
@@ -212,6 +244,7 @@ export type Database = {
           full_name?: string
           id?: string
           invite_code?: string | null
+          invite_code_created_at?: string
           quiz_progress?: Json
           role?: string
           ssn_shield_progress?: Json
@@ -476,11 +509,25 @@ export type Database = {
           total_alerts_reviewed: number
         }[]
       }
+      get_pending_guardian_requests: {
+        Args: never
+        Returns: {
+          created_at: string
+          full_name: string
+          link_id: string
+          relationship_label: string
+        }[]
+      }
       is_admin: { Args: never; Returns: boolean }
       is_guardian_of: { Args: { _senior: string }; Returns: boolean }
       link_guardian_by_code: {
         Args: { _code: string; _label: string }
         Returns: string
+      }
+      purge_old_email_content: { Args: never; Returns: undefined }
+      respond_guardian_request: {
+        Args: { _approve: boolean; _link_id: string }
+        Returns: undefined
       }
     }
     Enums: {

@@ -1,3 +1,3 @@
 - Mount shared site navigation and back-to-top controls inside the root auth/i18n providers; one shared implementation keeps every page consistent.
 - Keep page-specific bottom navigation in ScreenShell and mark it for scroll-control clearance; this preserves app navigation without overlapping floating controls.
-- Use pageHead for simple content-route metadata and custom heads for scam guides; each page needs distinct sharing metadata.
+- Use pageHead for simple content-route metadata and custom heads for scam guides; each page needs distinct sharing metadata.- Guardian links start as "pending" and become active only via the senior-called respond_guardian_request RPC; is_guardian_of only trusts active rows, so unapproved guardians see nothing.

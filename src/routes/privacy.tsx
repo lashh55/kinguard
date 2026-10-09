@@ -1,3 +1,4 @@
+import { NeverNotice } from "@/components/NeverNotice";
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { ScreenShell } from "@/components/ScreenShell";
 
@@ -22,6 +23,7 @@ function PrivacyPage() {
         <h1>🔒 Privacy &amp; Safety</h1>
       </header>
 
+      <section className="px-5 mb-3"><NeverNotice /></section>
       {/* SSN Banner */}
       <section className="px-5">
         <div className="rounded-2xl p-4 text-center" style={{ background: "#E74C3C", color: "#fff", fontSize: 15 }}>
