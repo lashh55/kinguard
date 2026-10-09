@@ -138,6 +138,8 @@ const DICT: Record<string, string> = {
   "✅ Marked as safe": "✅ Marcado como seguro",
   "✅ Sender blocked": "✅ Remitente bloqueado",
   "← Back to dashboard": "← Volver al panel",
+  "Pause": "Pausar",
+  "Play": "Reproducir",
 
   // SSN Shield
   "🛡️ SSN Shield": "🛡️ Escudo SSN",

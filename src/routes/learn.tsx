@@ -113,11 +113,31 @@ function LearnScreen() {
 
 function Slides() {
   const [i, setI] = useState(0);
+  const [paused, setPaused] = useState(
+    () => typeof window !== "undefined" && window.matchMedia?.("(prefers-reduced-motion: reduce)").matches
+  );
   const { t } = useI18n();
+
+  useEffect(() => {
+    if (paused) return;
+    const id = window.setInterval(() => setI((p) => (p + 1) % SLIDES.length), 10000);
+    return () => window.clearInterval(id);
+  }, [paused]);
+
+  const manual = (fn: (p: number) => number) => {
+    setPaused(true);
+    setI(fn);
+  };
+
   return (
     <section className="px-5 mt-2">
       <h2 className="mb-2">{t("KinGuard Lessons")}</h2>
-      <div className="rounded-2xl overflow-hidden" style={{ background: "var(--color-cream)" }}>
+      <div
+        className="rounded-2xl overflow-hidden"
+        style={{ background: "var(--color-cream)" }}
+        onMouseEnter={() => setPaused(true)}
+        onTouchStart={() => setPaused(true)}
+      >
         <img
           src={SLIDE_IMAGES[i % SLIDE_IMAGES.length]}
           alt={`Lesson slide ${i + 1}`}
@@ -125,13 +145,27 @@ function Slides() {
         />
       </div>
       <div className="flex items-center justify-between mt-3">
-        <button className="btn-base btn-outline" style={{ minHeight: 44, padding: "8px 14px" }} onClick={() => setI((p) => (p - 1 + SLIDES.length) % SLIDES.length)}>←</button>
+        <button className="btn-base btn-outline" style={{ minHeight: 44, padding: "8px 14px" }} onClick={() => manual((p) => (p - 1 + SLIDES.length) % SLIDES.length)}>←</button>
+        <button
+          className="btn-base btn-outline"
+          style={{ minHeight: 44, padding: "8px 14px" }}
+          onClick={() => setPaused((p) => !p)}
+          aria-label={paused ? t("Play") : t("Pause")}
+        >
+          {paused ? `▶ ${t("Play")}` : `⏸ ${t("Pause")}`}
+        </button>
         <div className="flex gap-1">
           {SLIDES.map((_, idx) => (
-            <span key={idx} className="rounded-full" style={{ width: 8, height: 8, background: idx === i ? "var(--color-rose)" : "var(--color-border)" }} />
+            <button
+              key={idx}
+              aria-label={`Slide ${idx + 1}`}
+              onClick={() => manual(() => idx)}
+              className="rounded-full"
+              style={{ width: 8, height: 8, background: idx === i ? "var(--color-rose)" : "var(--color-border)" }}
+            />
           ))}
         </div>
-        <button className="btn-base btn-outline" style={{ minHeight: 44, padding: "8px 14px" }} onClick={() => setI((p) => (p + 1) % SLIDES.length)}>→</button>
+        <button className="btn-base btn-outline" style={{ minHeight: 44, padding: "8px 14px" }} onClick={() => manual((p) => (p + 1) % SLIDES.length)}>→</button>
       </div>
     </section>
   );
