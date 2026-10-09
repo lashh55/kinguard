@@ -243,8 +243,8 @@ function ProfileScreen() {
             <div className="space-y-3 mb-3">
               <NameFields first={editFirst} initial={editInitial} onFirst={setEditFirst} onInitial={setEditInitial} />
               <div className="flex gap-2">
-                <button type="button" className="btn-primary flex-1" disabled={savingName} onClick={saveName}>{t("Save")}</button>
-                <button type="button" className="btn-secondary flex-1" onClick={() => setEditingName(false)}>{t("Cancel")}</button>
+                <button type="button" className="btn-big btn-primary flex-1" disabled={savingName} onClick={saveName}>{t("Save")}</button>
+                <button type="button" className="btn-big btn-primary flex-1" style={{ background: "transparent", border: "2px solid var(--color-tan)" }} onClick={() => setEditingName(false)}>{t("Cancel")}</button>
               </div>
             </div>
           ) : (
@@ -306,7 +306,7 @@ function ProfileScreen() {
                   {t("This will invalidate your current code. All existing guardians will need to re-enter your new code.")}
                 </p>
                 <div className="flex gap-3">
-                  <button type="button" className="btn-secondary flex-1" onClick={() => setConfirmNewCode(false)}>
+                  <button type="button" className="btn-big btn-primary flex-1" style={{ background: "transparent", border: "2px solid var(--color-tan)" }} onClick={() => setConfirmNewCode(false)}>
                     {t("Cancel")}
                   </button>
                   <button
@@ -424,7 +424,7 @@ function ProfileScreen() {
                   <div className="flex gap-3 mt-4">
                     <button
                       type="button"
-                      className="btn-secondary flex-1"
+                      className="btn-big btn-primary flex-1" style={{ background: "transparent", border: "2px solid var(--color-tan)" }}
                       disabled={removingGuardian}
                       onClick={() => setConfirmRemoveGuardian(null)}
                     >
