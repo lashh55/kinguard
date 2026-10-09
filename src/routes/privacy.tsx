@@ -1,6 +1,9 @@
 import { NeverNotice } from "@/components/NeverNotice";
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { ScreenShell } from "@/components/ScreenShell";
+import { GuardianDisclaimer } from "@/components/GuardianDisclaimer";
+import { useI18n } from "@/lib/i18n";
+import { Button } from "@/components/ui/button";
 
 export const Route = createFileRoute("/privacy")({
   component: PrivacyPage,
@@ -17,6 +20,8 @@ export const Route = createFileRoute("/privacy")({
 });
 
 function PrivacyPage() {
+  const { lang } = useI18n();
+  const es = lang === "es";
   return (
     <ScreenShell>
       <header className="px-5 pt-6 pb-3">
@@ -90,6 +95,7 @@ function PrivacyPage() {
       </Section>
 
       <Section title="Guardian System &amp; Trust" bg="#DFC18F">
+        <div className="mb-4"><GuardianDisclaimer /></div>
         <ul className="list-disc pl-5 space-y-1">
           <li>Maximum 5 guardians per senior</li>
           <li>Only the senior can invite guardians</li>
@@ -131,6 +137,7 @@ function PrivacyPage() {
       </Section>
 
       <div className="px-5 mt-6 mb-4">
+        <Button asChild variant="link" className="mb-3"><Link to="/terms">{es ? "Términos de servicio" : "Terms of Service"}</Link></Button>
         <Link to="/profile" className="btn-base btn-outline w-full">← Back to profile</Link>
       </div>
     </ScreenShell>

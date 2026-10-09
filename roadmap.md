@@ -1,3 +1,5 @@
 - [x] Add shared sticky navigation and mobile menu across all pages.
 - [x] Add accessible back-to-top control and bilingual labels.
 - [x] Verify navigation, scrolling, and page metadata.
+- [x] Add shared bilingual guardian disclaimer to new-link notices and legal pages.
+- [ ] Verify required acknowledgment and both legal pages in English and Spanish.
