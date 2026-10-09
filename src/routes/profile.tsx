@@ -287,23 +287,7 @@ function ProfileScreen() {
           <>
             <FamilyCodeCard />
 
-            <div>
-              <h2 className="mb-2">{t("Knowledge Tree 🌳")}</h2>
-              <ScoreCard
-                stats={profile.challenge_stats}
-                tree={
-                  <LearningTree
-                    stats={normalizeStats(profile.challenge_stats)}
-                    size={48}
-                  />
-                }
-              />
-            </div>
-
-            <div>
-              <h2 className="mb-2">{t("My Badges 🏅")}</h2>
-              <BadgeGrid stats={profile.challenge_stats} />
-            </div>
+            <FamilyCodeExplainer />
 
             <div className="card-soft">
               <h2 className="mb-2">
@@ -393,7 +377,9 @@ function ProfileScreen() {
                     {t("Remove guardian?")}
                   </p>
                   <p className="mt-2">
-                    {t("Are you sure you want to remove")} <span className="font-bold">{confirmRemoveGuardian.full_name}</span> {t("as your guardian? They will no longer receive your alerts.")}
+                    {lang === "es"
+                      ? <>¿Está seguro de que desea quitar a <span className="font-bold">{confirmRemoveGuardian.full_name}</span> como su guardián?</>
+                      : <>Are you sure you want to remove <span className="font-bold">{confirmRemoveGuardian.full_name}</span> as your guardian?</>}
                   </p>
                   <div className="flex gap-3 mt-4">
                     <button
@@ -411,7 +397,7 @@ function ProfileScreen() {
                       disabled={removingGuardian}
                       onClick={removeGuardian}
                     >
-                      {removingGuardian ? t("Removing…") : t("Yes, remove")}
+                      {removingGuardian ? t("Removing…") : (lang === "es" ? "Quitar" : "Remove")}
                     </button>
                   </div>
                 </div>
@@ -438,32 +424,6 @@ function ProfileScreen() {
             })()}
 
             <div className="card-soft">
-              <h2 className="mb-2">{t("Guardian Activity")}</h2>
-              {activity.length === 0 && guardians.every((g) => g.last_alert_view_at) ? (
-                <p style={{ color: "var(--color-muted-foreground)" }}>
-                  {t("No guardian activity yet. When your guardians open the app or view your alerts, you'll see it here.")}
-                </p>
-              ) : (
-                <ul className="space-y-2">
-                  {activity.map((a) => (
-                    <li key={a.id} className="text-sm flex items-start gap-2">
-                      <span style={{ color: "var(--color-muted-foreground)" }}>•</span>
-                      <span className="flex-1">
-                        {actionLabel(a, t)} — <span style={{ color: "var(--color-muted-foreground)" }}>{timeframe(a.created_at)}</span>
-                      </span>
-                    </li>
-                  ))}
-                  {guardians.filter((g) => !g.last_alert_view_at).map((g) => (
-                    <li key={g.link_id} className="text-sm flex items-start gap-2">
-                      <span>🔴</span>
-                      <span className="flex-1">{g.full_name} {t("has never viewed your alerts")}</span>
-                    </li>
-                  ))}
-                </ul>
-              )}
-            </div>
-
-            <div className="card-soft">
               <p className="font-bold mb-2">{t("Text size")}</p>
               <div className="flex gap-2">
                 <button className={`btn-base flex-1 ${profile.font_size==="large"?"btn-sky":"btn-outline"}`} onClick={() => setFont("large")}>{t("Large")}</button>
@@ -475,7 +435,7 @@ function ProfileScreen() {
 
         <Link to="/privacy" className="btn-base btn-outline w-full">{t("🔒 Privacy & Safety")}</Link>
 
-        <button className="btn-base btn-outline w-full" onClick={async () => { await signOut(); navigate({ to: "/" }); }}>
+        <button className="btn-base btn-outline w-full" onClick={() => askSignOut()}>
           {t("Sign Out")}
         </button>
 
@@ -740,6 +700,24 @@ function FamilyCodeCard() {
           </div>
         </div>
       )}
+    </div>
+  );
+}
+
+function FamilyCodeExplainer() {
+  const { t } = useI18n();
+  return (
+    <div className="card-soft" style={{ background: "var(--color-cream)", borderTop: "6px solid var(--color-rose)" }}>
+      <p className="font-bold" style={{ fontSize: 18 }}>{t("What is a family code word?")}</p>
+      <p className="mt-1">{t("A short, private phrase your family shares — like apple-river-sunset — that only your real loved ones know.")}</p>
+      <p className="font-bold mt-3">{t("Why AARP recommends it")}</p>
+      <p className="mt-1">{t("AARP recommends a family code word to stop grandparent scams and impersonator scams. When a caller says they are your grandchild, your bank, or the police and pressures you for money or information, ask for the code word. A real loved one will know it. A scammer will not.")}</p>
+      <p className="font-bold mt-3">{t("How to use it")}</p>
+      <ul className="list-disc pl-5 mt-1 space-y-1">
+        <li>{t("Create yours above with the \"Create my code word\" button.")}</li>
+        <li>{t("Share it with trusted family by phone or in person — never by text or email.")}</li>
+        <li>{t("If someone cannot say it, hang up and do not share personal information.")}</li>
+      </ul>
     </div>
   );
 }
