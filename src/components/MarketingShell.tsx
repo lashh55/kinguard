@@ -3,7 +3,7 @@ import { ReactNode } from "react";
 import { useI18n } from "@/lib/i18n";
 
 export function MarketingShell({ children }: { children: ReactNode }) {
-  const { t } = useI18n();
+  const { t, lang } = useI18n();
   return (
     <div className="min-h-screen bg-background flex flex-col">
       <main className="flex-1">
@@ -13,6 +13,7 @@ export function MarketingShell({ children }: { children: ReactNode }) {
         <div className="max-w-3xl mx-auto">
           <div className="flex flex-wrap gap-4 justify-center text-center">
             <Link to="/privacy" className="hover:underline">{t("Privacy")}</Link>
+            <Link to="/terms" className="hover:underline">{lang === "es" ? "Términos de servicio" : "Terms of Service"}</Link>
             <Link to="/scams" className="hover:underline">{t("Scam guides")}</Link>
             <Link to="/for-guardians" className="hover:underline">{t("For guardians")}</Link>
           </div>

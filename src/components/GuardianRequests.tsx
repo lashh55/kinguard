@@ -2,6 +2,9 @@ import { useEffect, useState } from "react";
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
 import { useI18n } from "@/lib/i18n";
+import { GuardianDisclaimer } from "@/components/GuardianDisclaimer";
+import { Checkbox } from "@/components/ui/checkbox";
+import { Button } from "@/components/ui/button";
 
 type Req = { link_id: string; full_name: string; relationship_label: string | null; created_at: string };
 
@@ -67,36 +70,59 @@ export function SeniorGuardianNotice() {
   const { lang } = useI18n();
   const es = lang === "es";
   const [items, setItems] = useState<Notice[]>([]);
+  const [accepted, setAccepted] = useState<Record<string, boolean>>({});
+  const [saving, setSaving] = useState<string | null>(null);
   useEffect(() => {
-    (async () => {
+    let active = true;
+    const load = async () => {
       const { data: u } = await supabase.auth.getUser();
       const uid = u.user?.id;
       if (!uid) return;
       const { data } = await supabase.from("guardian_notices").select("id,new_guardian_name,senior_name,created_at")
         .eq("guardian_id", uid).eq("senior_id", uid)
         .is("read_at", null).order("created_at", { ascending: false }).limit(10);
-      setItems((data as Notice[]) ?? []);
-    })();
+      if (active) setItems((data as Notice[]) ?? []);
+    };
+    void load();
+    const interval = setInterval(load, 15000);
+    return () => { active = false; clearInterval(interval); };
   }, []);
   const dismiss = async (id: string) => {
+    if (!accepted[id] || saving) return;
+    setSaving(id);
+    const { error } = await supabase.from("guardian_notices").update({ read_at: new Date().toISOString() }).eq("id", id);
+    setSaving(null);
+    if (error) { toast.error(error.message); return; }
     setItems((p) => p.filter((x) => x.id !== id));
-    await supabase.from("guardian_notices").update({ read_at: new Date().toISOString() }).eq("id", id);
   };
   if (!items.length) return null;
   return (
     <section className="px-5 mb-3 space-y-2">
       {items.map((n) => (
-        <div key={n.id} className="card-soft" style={{ border: "3px solid var(--color-rose)" }}>
+        <div key={n.id} className="card-soft border-rose border-2">
           <p className="font-bold">
             🔔 {es
               ? `${n.new_guardian_name} ahora es su guardián. ¿No conoce a esta persona? Quítela.`
               : `${n.new_guardian_name} is now your guardian. Don't know this person? Remove them.`}
           </p>
-          <div className="flex gap-3 mt-2 items-center">
-            <a href="/profile" className="btn-base btn-outline text-sm">
+          <div className="mt-3"><GuardianDisclaimer /></div>
+          <label htmlFor={`guardian-disclaimer-${n.id}`} className="flex items-start gap-3 mt-4 cursor-pointer leading-relaxed">
+            <Checkbox
+              id={`guardian-disclaimer-${n.id}`}
+              required
+              className="h-6 w-6 mt-1"
+              checked={accepted[n.id] === true}
+              onCheckedChange={(checked) => setAccepted((prev) => ({ ...prev, [n.id]: checked === true }))}
+            />
+            <span>{es ? "Entiendo. Yo elegí a este guardián." : "I understand. I chose this guardian myself."}</span>
+          </label>
+          <div className="flex flex-wrap gap-3 mt-4 items-center">
+            <Button asChild variant="outline" className="h-auto min-h-11 whitespace-normal">
+              <a href="/profile">
               {es ? "Ver mis guardianes" : "View my guardians"}
-            </a>
-            <button className="text-sm underline" onClick={() => dismiss(n.id)}>{es ? "Entendido" : "OK"}</button>
+              </a>
+            </Button>
+            <Button disabled={!accepted[n.id] || saving !== null} onClick={() => dismiss(n.id)}>{es ? "Entendido" : "OK"}</Button>
           </div>
         </div>
       ))}
