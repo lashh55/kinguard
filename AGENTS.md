@@ -1,4 +1,6 @@
 - Mount shared site navigation and back-to-top controls inside the root auth/i18n providers; one shared implementation keeps every page consistent.
+- Render scam results and guardian replies through shared scam-alert components; mark senior alerts read only after rendering the result and saving senior_viewed_at successfully.
+- Persist guardian scam receipts through the self-scoped record_scam_alert_view RPC with profile/alert cascading references; this prevents forged names, cross-family access, and orphaned replies.
 - Keep page-specific bottom navigation in ScreenShell and mark it for scroll-control clearance; this preserves app navigation without overlapping floating controls.
 - Share guardian disclaimer copy across senior notices and legal pages; persist acknowledged notices using guardian_notices.read_at only after the required checkbox is checked and the save succeeds.
 - Use pageHead for simple content-route metadata and custom heads for scam guides; each page needs distinct sharing metadata.- Guardian links start as "pending" and become active only via the senior-called respond_guardian_request RPC; is_guardian_of only trusts active rows, so unapproved guardians see nothing.
