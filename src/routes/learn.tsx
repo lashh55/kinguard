@@ -100,6 +100,10 @@ function LearnScreen() {
         refreshProfile();
       }} />
       <Videos />
+      <div className="px-5 mt-6 mb-4">
+        <Link to="/dashboard" className="btn-base btn-outline w-full">{t("← Back to dashboard")}</Link>
+      </div>
+
       {current && profile && (
         <BadgeCelebration badge={current} name={profile.full_name} onDismiss={dismiss} />
       )}
