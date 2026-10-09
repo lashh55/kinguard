@@ -2,7 +2,7 @@ import { NeverNotice } from "@/components/NeverNotice";
 import { GuardianRequests, GuardianNotices, SeniorGuardianNotice } from "@/components/GuardianRequests";
 import { pageHead } from "@/lib/pageHead";
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useAuth } from "@/lib/auth";
 import { supabase } from "@/integrations/supabase/client";
 import { ScreenShell, ScoreBadge } from "@/components/ScreenShell";
@@ -70,7 +70,18 @@ type SosEvent = {
   created_at: string;
   acknowledged_at: string | null;
   acknowledged_by_name: string | null;
+  claimed_by?: string | null;
+  claimed_by_name?: string | null;
+  claimed_at?: string | null;
+  helper_names?: string[] | null;
+  urgent?: boolean | null;
+  unreached_by_name?: string | null;
+  last_alerted_at?: string | null;
 };
+const SOS_COLS = "id,senior_id,senior_first_name,created_at,acknowledged_at,acknowledged_by_name,claimed_by,claimed_by_name,claimed_at,helper_names,urgent,unreached_by_name,last_alerted_at";
+const REALERT_MS = 10 * 60 * 1000;
+const sosOverdue = (e: SosEvent, now: number) =>
+  !e.acknowledged_at && !e.claimed_by && now - new Date(e.last_alerted_at || e.created_at).getTime() >= REALERT_MS;
 
 const fmtTime = (iso: string) =>
   new Date(iso).toLocaleTimeString([], { hour: "numeric", minute: "2-digit" });
@@ -145,7 +156,7 @@ function SeniorDashboard() {
   // Latest SOS + live "guardian saw your alert" updates
   useEffect(() => {
     if (!profile) return;
-    supabase.from("sos_events").select("id,created_at,acknowledged_at,acknowledged_by_name")
+    supabase.from("sos_events").select(SOS_COLS)
       .eq("senior_id", profile.id).order("created_at", { ascending: false }).limit(1)
       .then(({ data }) => {
         const s = data?.[0] as any;
@@ -155,11 +166,15 @@ function SeniorDashboard() {
       .on("postgres_changes", { event: "UPDATE", schema: "public", table: "sos_events", filter: `senior_id=eq.${profile.id}` },
         (payload) => {
           const s = payload.new as any;
-          if (!s.acknowledged_at) return;
-          setLastSos((prev) => (prev && prev.id !== s.id ? prev : s));
-          toast(lang === "es"
-            ? `${s.acknowledged_by_name || "Su guardián"} vio su alerta a las ${fmtTime(s.acknowledged_at)}.`
-            : `${s.acknowledged_by_name || "Your guardian"} saw your alert at ${fmtTime(s.acknowledged_at)}.`, { duration: 10000 });
+          setLastSos((prev) => {
+            if (prev && prev.id !== s.id) return prev;
+            if (s.acknowledged_at && !prev?.acknowledged_at) {
+              toast(lang === "es" ? `${s.acknowledged_by_name || "Su guardián"} confirmó que usted está bien.` : `${s.acknowledged_by_name || "Your guardian"} marked you as OK.`, { duration: 10000 });
+            } else if (s.claimed_by && !s.acknowledged_at && prev?.claimed_by !== s.claimed_by) {
+              toast(lang === "es" ? `${s.claimed_by_name || "Su guardián"} se está comunicando con usted.` : `${s.claimed_by_name || "Your guardian"} is contacting you.`, { duration: 10000 });
+            }
+            return s;
+          });
         })
       .subscribe();
     return () => { supabase.removeChannel(ch); };
@@ -295,7 +310,7 @@ function SeniorDashboard() {
             toast(t("Please add a guardian before using SOS Alert."));
             return;
           }
-          const { data, error } = await supabase.from("sos_events").insert({ senior_id: user!.id }).select("id,created_at,acknowledged_at,acknowledged_by_name").single();
+          const { data, error } = await supabase.from("sos_events").insert({ senior_id: user!.id }).select(SOS_COLS).single();
           if (error) { toast.error(error.message); return; }
           track("help_requested");
           setLastSos(data as any);
@@ -310,8 +325,12 @@ function SeniorDashboard() {
           <p className="text-center font-bold" role="status" style={{ fontSize: 17 }}>
             {lastSos.acknowledged_at
               ? (lang === "es"
-                  ? `${lastSos.acknowledged_by_name || "Su guardián"} vio su alerta a las ${fmtTime(lastSos.acknowledged_at)}.`
-                  : `${lastSos.acknowledged_by_name || "Your guardian"} saw your alert at ${fmtTime(lastSos.acknowledged_at)}.`)
+                  ? `✅ ${lastSos.acknowledged_by_name || "Su guardián"} confirmó que usted está bien.`
+                  : `✅ ${lastSos.acknowledged_by_name || "Your guardian"} marked you as OK.`)
+              : lastSos.claimed_by
+              ? (lang === "es"
+                  ? `📞 ${lastSos.claimed_by_name || "Su guardián"} se está comunicando con usted.`
+                  : `📞 ${lastSos.claimed_by_name || "Your guardian"} is contacting you.`)
               : (lang === "es" ? "Su alerta fue enviada. Sus guardianes la verán en KinGuard." : "Your alert was sent. Your guardians will see it in KinGuard.")}
           </p>
         )}
@@ -389,7 +408,7 @@ function GuardianDashboard() {
   useEffect(() => {
     if (!profile) return;
     const load = () => supabase.from("sos_events")
-      .select("id,senior_id,senior_first_name,created_at,acknowledged_at,acknowledged_by_name")
+      .select(SOS_COLS)
       .gte("created_at", new Date(Date.now() - 7 * 24 * 3600 * 1000).toISOString())
       .order("created_at", { ascending: false }).limit(10)
       .then(({ data }) => setSosEvents((data as SosEvent[]) ?? []));
@@ -402,11 +421,41 @@ function GuardianDashboard() {
       })
       .on("postgres_changes", { event: "UPDATE", schema: "public", table: "sos_events" }, (p) => {
         const e = p.new as SosEvent;
-        setSosEvents((prev) => prev.map((x) => x.id === e.id ? { ...x, ...e } : x));
+        setSosEvents((prev) => prev.map((x) => {
+          if (x.id !== e.id) return x;
+          if (!e.acknowledged_at && e.urgent && !e.claimed_by && x.claimed_by) {
+            const n = e.senior_first_name || (es ? "Su ser querido" : "Your loved one");
+            toast.error(es
+              ? `🚨 URGENTE: ${e.unreached_by_name || "Un guardián"} no pudo comunicarse con ${n}. Por favor comuníquese ahora.`
+              : `🚨 URGENT: ${e.unreached_by_name || "A guardian"} couldn't reach ${n}. Please contact them now.`, { duration: 15000 });
+          }
+          return { ...x, ...e };
+        }));
       })
       .subscribe();
     return () => { supabase.removeChannel(ch); };
   }, [profile]);
+
+  // Re-alert every guardian when nobody has responded for 10 minutes
+  const [nowTick, setNowTick] = useState(() => Date.now());
+  const realerted = useRef<Set<string>>(new Set());
+  useEffect(() => {
+    const iv = setInterval(() => setNowTick(Date.now()), 30000);
+    return () => clearInterval(iv);
+  }, []);
+  useEffect(() => {
+    for (const e of sosEvents) {
+      if (!sosOverdue(e, nowTick)) continue;
+      const bucket = Math.floor((nowTick - new Date(e.last_alerted_at || e.created_at).getTime()) / REALERT_MS);
+      const key = `${e.id}:${e.last_alerted_at}:${bucket}`;
+      if (realerted.current.has(key)) continue;
+      realerted.current.add(key);
+      const n = e.senior_first_name || (es ? "Su ser querido" : "Your loved one");
+      toast.error(es
+        ? `🚨 URGENTE: Nadie ha respondido a la alerta de ${n}. Por favor comuníquese ahora.`
+        : `🚨 URGENT: No one has responded to ${n}'s alert yet. Please contact them now.`, { duration: 15000 });
+    }
+  }, [sosEvents, nowTick, es]);
   const [reload, setReload] = useState(0);
   const [newCode, setNewCode] = useState("");
   const [newLabel, setNewLabel] = useState("");
@@ -554,12 +603,22 @@ function GuardianDashboard() {
 
   if (!profile) return null;
 
-  const checkIn = async (id: string) => {
-    const { error } = await supabase.rpc("acknowledge_sos", { _id: id });
+  const me = profile.full_name.split(" ")[0];
+  const claimSos = async (e: SosEvent) => {
+    const { error } = await supabase.rpc("claim_sos", { _id: e.id });
     if (error) { toast.error(error.message); return; }
     const now = new Date().toISOString();
-    const me = profile.full_name.split(" ")[0];
-    setSosEvents((prev) => prev.map((e) => e.id === id && !e.acknowledged_at ? { ...e, acknowledged_at: now, acknowledged_by_name: me } : e));
+    setSosEvents((prev) => prev.map((x) => x.id !== e.id ? x : x.claimed_by
+      ? { ...x, helper_names: Array.from(new Set([...(x.helper_names ?? []), me])) }
+      : { ...x, claimed_by: profile.id, claimed_by_name: me, claimed_at: now, urgent: false }));
+  };
+  const resolveSos = async (e: SosEvent, ok: boolean) => {
+    const { error } = await supabase.rpc("resolve_sos", { _id: e.id, _ok: ok });
+    if (error) { toast.error(error.message); return; }
+    const now = new Date().toISOString();
+    setSosEvents((prev) => prev.map((x) => x.id !== e.id ? x : ok
+      ? { ...x, acknowledged_at: now, acknowledged_by_name: me }
+      : { ...x, claimed_by: null, claimed_by_name: null, claimed_at: null, helper_names: [], urgent: true, unreached_by_name: me, last_alerted_at: now }));
   };
 
   return (
@@ -679,21 +738,59 @@ function GuardianDashboard() {
             {sosEvents.map((e) => {
               const name = e.senior_first_name || seniorMap[e.senior_id] || (es ? "Su ser querido" : "Your loved one");
               const open = !e.acknowledged_at;
+              const mine = e.claimed_by === profile.id;
+              const helping = (e.helper_names ?? []).includes(me);
+              const urgent = open && !e.claimed_by && (e.urgent || sosOverdue(e, nowTick));
               return (
-                <li key={e.id} className="card-soft" style={{ background: open ? "#E74C3C" : "#FDECEA", color: open ? "#fff" : "#7B1D14", border: "2px solid #C0392B" }}>
+                <li key={e.id} className="card-soft" style={{ background: open ? (urgent ? "#A93226" : "#E74C3C") : "#FDECEA", color: open ? "#fff" : "#7B1D14", border: urgent ? "4px solid #641E16" : "2px solid #C0392B" }}>
+                  {urgent && (
+                    <p className="font-extrabold mb-1" style={{ fontSize: 15, letterSpacing: 1 }}>
+                      ⚠️ {es ? "URGENTE" : "URGENT"}
+                      {e.unreached_by_name ? (es ? ` — ${e.unreached_by_name} no pudo comunicarse con ${name}` : ` — ${e.unreached_by_name} couldn't reach ${name}`) : (es ? " — nadie ha respondido todavía" : " — no one has responded yet")}
+                    </p>
+                  )}
                   <p className="font-extrabold" style={{ fontSize: 18 }}>
                     {es
                       ? `🚨 ${name} presionó el botón de alerta — por favor comuníquese con esta persona ahora.`
                       : `🚨 ${name} pressed the alert button — please contact them now.`}
                   </p>
                   <p className="text-sm mt-1">{es ? "Enviada a las" : "Sent at"} {fmtTime(e.created_at)} · {timeAgo(e.created_at)}</p>
+                  {open && e.claimed_by && (
+                    <p className="mt-2 font-bold" role="status" style={{ fontSize: 16 }}>
+                      📞 {mine
+                        ? (es ? `Usted se está comunicando con ${name} — desde las ${fmtTime(e.claimed_at!)}` : `You are contacting ${name} — started at ${fmtTime(e.claimed_at!)}`)
+                        : (es ? `${e.claimed_by_name} se está comunicando con ${name} — desde las ${fmtTime(e.claimed_at!)}` : `${e.claimed_by_name} is contacting ${name} — started at ${fmtTime(e.claimed_at!)}`)}
+                    </p>
+                  )}
+                  {open && (e.helper_names?.length ?? 0) > 0 && (
+                    <p className="text-sm mt-1">🤝 {es ? "También ayudan:" : "Also helping:"} {e.helper_names!.join(", ")}</p>
+                  )}
                   {open ? (
-                    <button type="button" className="btn-base w-full mt-3" style={{ background: "#fff", color: "#C0392B" }} onClick={() => checkIn(e.id)}>
-                      ✅ {es ? "Ya me comuniqué" : "I've checked in"}
-                    </button>
+                    mine ? (
+                      <div className="grid gap-2 mt-3">
+                        <button type="button" className="btn-base w-full" style={{ background: "#fff", color: "#1E8449" }} onClick={() => resolveSos(e, true)}>
+                          ✅ {es ? `${name} está bien` : `${name} is OK`}
+                        </button>
+                        <button type="button" className="btn-base w-full" style={{ background: "#641E16", color: "#fff" }} onClick={() => resolveSos(e, false)}>
+                          ❌ {es ? `No pude comunicarme con ${name}` : `I couldn't reach ${name}`}
+                        </button>
+                      </div>
+                    ) : e.claimed_by ? (
+                      helping ? (
+                        <p className="text-sm mt-2 font-bold">🤝 {es ? "Usted también está ayudando." : "You're helping too."}</p>
+                      ) : (
+                        <button type="button" className="btn-base w-full mt-3" style={{ background: "#fff", color: "#C0392B" }} onClick={() => claimSos(e)}>
+                          🤝 {es ? "Yo también ayudo" : "I'll help too"}
+                        </button>
+                      )
+                    ) : (
+                      <button type="button" className="btn-base w-full mt-3" style={{ background: "#fff", color: "#C0392B" }} onClick={() => claimSos(e)}>
+                        📞 {es ? `Me estoy comunicando con ${name}` : `I'm contacting ${name}`}
+                      </button>
+                    )
                   ) : (
                     <p className="text-sm mt-2 font-bold">
-                      ✅ {es ? `${e.acknowledged_by_name || "Un guardián"} se comunicó a las` : `${e.acknowledged_by_name || "A guardian"} checked in at`} {fmtTime(e.acknowledged_at!)}
+                      ✅ {es ? `${e.acknowledged_by_name || "Un guardián"} confirmó que ${name} está bien — a las` : `${e.acknowledged_by_name || "A guardian"} marked ${name} as OK at`} {fmtTime(e.acknowledged_at!)}
                     </p>
                   )}
                 </li>

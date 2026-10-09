@@ -389,28 +389,49 @@ export type Database = {
           acknowledged_at: string | null
           acknowledged_by: string | null
           acknowledged_by_name: string | null
+          claimed_at: string | null
+          claimed_by: string | null
+          claimed_by_name: string | null
           created_at: string
+          helper_names: string[]
           id: string
+          last_alerted_at: string
           senior_first_name: string | null
           senior_id: string
+          unreached_by_name: string | null
+          urgent: boolean
         }
         Insert: {
           acknowledged_at?: string | null
           acknowledged_by?: string | null
           acknowledged_by_name?: string | null
+          claimed_at?: string | null
+          claimed_by?: string | null
+          claimed_by_name?: string | null
           created_at?: string
+          helper_names?: string[]
           id?: string
+          last_alerted_at?: string
           senior_first_name?: string | null
           senior_id: string
+          unreached_by_name?: string | null
+          urgent?: boolean
         }
         Update: {
           acknowledged_at?: string | null
           acknowledged_by?: string | null
           acknowledged_by_name?: string | null
+          claimed_at?: string | null
+          claimed_by?: string | null
+          claimed_by_name?: string | null
           created_at?: string
+          helper_names?: string[]
           id?: string
+          last_alerted_at?: string
           senior_first_name?: string | null
           senior_id?: string
+          unreached_by_name?: string | null
+          urgent?: boolean
         }
         Relationships: []
       }
@@ -474,6 +495,7 @@ export type Database = {
         }[]
       }
       admin_log_view: { Args: { _path: string }; Returns: undefined }
+      claim_sos: { Args: { _id: string }; Returns: undefined }
       delete_my_account: { Args: never; Returns: undefined }
       find_user_id_by_email: { Args: { _email: string }; Returns: string }
       gen_invite_code: { Args: never; Returns: string }
@@ -525,6 +547,7 @@ export type Database = {
         Returns: string
       }
       purge_old_email_content: { Args: never; Returns: undefined }
+      resolve_sos: { Args: { _id: string; _ok: boolean }; Returns: undefined }
       respond_guardian_request: {
         Args: { _approve: boolean; _link_id: string }
         Returns: undefined
