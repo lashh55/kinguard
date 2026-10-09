@@ -334,7 +334,7 @@ function Quiz({ onBadges }: { onBadges: (b: ReturnType<typeof applyAnswer>["newB
           </>
         )}
       </div>
-      <Link to="/dashboard" className="btn-base btn-outline w-full mt-3">{t("← Back to dashboard")}</Link>
     </section>
+
   );
 }
