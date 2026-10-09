@@ -61,6 +61,18 @@ function Dashboard() {
   return profile.role === "guardian" ? <GuardianDashboard /> : <SeniorDashboard />;
 }
 
+type SosEvent = {
+  id: string;
+  senior_id: string;
+  senior_first_name?: string | null;
+  created_at: string;
+  acknowledged_at: string | null;
+  acknowledged_by_name: string | null;
+};
+
+const fmtTime = (iso: string) =>
+  new Date(iso).toLocaleTimeString([], { hour: "numeric", minute: "2-digit" });
+
 function SeniorDashboard() {
   const { user, profile } = useAuth();
   const { t, lang } = useI18n();
@@ -363,6 +375,30 @@ function GuardianDashboard() {
   const [seniors, setSeniors] = useState<LinkedSenior[]>([]);
   const [recentAlerts, setRecentAlerts] = useState<Alert[]>([]);
   const [seniorMap, setSeniorMap] = useState<Record<string, string>>({});
+  const [sosEvents, setSosEvents] = useState<SosEvent[]>([]);
+
+  // Guardian Alert (SOS) presses from linked seniors, live
+  useEffect(() => {
+    if (!profile) return;
+    const load = () => supabase.from("sos_events")
+      .select("id,senior_id,senior_first_name,created_at,acknowledged_at,acknowledged_by_name")
+      .gte("created_at", new Date(Date.now() - 7 * 24 * 3600 * 1000).toISOString())
+      .order("created_at", { ascending: false }).limit(10)
+      .then(({ data }) => setSosEvents((data as SosEvent[]) ?? []));
+    load();
+    const ch = supabase.channel(`sos_guardian_${profile.id}`)
+      .on("postgres_changes", { event: "INSERT", schema: "public", table: "sos_events" }, (p) => {
+        const e = p.new as SosEvent;
+        setSosEvents((prev) => [e, ...prev.filter((x) => x.id !== e.id)].slice(0, 10));
+        notifyGuardianSOS(e.senior_first_name || "Your loved one");
+      })
+      .on("postgres_changes", { event: "UPDATE", schema: "public", table: "sos_events" }, (p) => {
+        const e = p.new as SosEvent;
+        setSosEvents((prev) => prev.map((x) => x.id === e.id ? { ...x, ...e } : x));
+      })
+      .subscribe();
+    return () => { supabase.removeChannel(ch); };
+  }, [profile]);
   const [reload, setReload] = useState(0);
   const [newCode, setNewCode] = useState("");
   const [newLabel, setNewLabel] = useState("");
@@ -510,6 +546,14 @@ function GuardianDashboard() {
 
   if (!profile) return null;
 
+  const checkIn = async (id: string) => {
+    const { error } = await supabase.rpc("acknowledge_sos", { _id: id });
+    if (error) { toast.error(error.message); return; }
+    const now = new Date().toISOString();
+    const me = profile.full_name.split(" ")[0];
+    setSosEvents((prev) => prev.map((e) => e.id === id && !e.acknowledged_at ? { ...e, acknowledged_at: now, acknowledged_by_name: me } : e));
+  };
+
   return (
     <ScreenShell withPhotoPanel>
       <header className="px-5 pt-6 pb-4">
@@ -545,7 +589,9 @@ function GuardianDashboard() {
                       {es ? "Quitar" : "Remove"}
                     </button>
                   </div>
-                  {s.alertCount > 0 ? (
+                  {sosEvents.some((e) => e.senior_id === s.id && !e.acknowledged_at) ? (
+                    <span className="px-3 py-1 rounded-full text-sm font-bold" style={{ background: "#E74C3C", color: "#fff" }}>🚨 {es ? "Alerta" : "Alert"}</span>
+                  ) : s.alertCount > 0 ? (
                     <span className="badge-score-danger px-3 py-1 rounded-full text-sm font-bold">{s.alertCount} flagged</span>
                   ) : (
                     <span className="badge-score-safe px-3 py-1 rounded-full text-sm font-bold">All clear</span>
@@ -618,7 +664,34 @@ function GuardianDashboard() {
       </section>
 
       <section className="px-5 mt-6">
-        <h2 className="mb-2">Recent alerts</h2>
+        <h2 className="mb-2">{es ? "Alertas recientes" : "Recent alerts"}</h2>
+        {sosEvents.length > 0 && (
+          <ul className="space-y-2 mb-3" aria-live="polite">
+            {sosEvents.map((e) => {
+              const name = e.senior_first_name || seniorMap[e.senior_id] || (es ? "Su ser querido" : "Your loved one");
+              const open = !e.acknowledged_at;
+              return (
+                <li key={e.id} className="card-soft" style={{ background: open ? "#E74C3C" : "#FDECEA", color: open ? "#fff" : "#7B1D14", border: "2px solid #C0392B" }}>
+                  <p className="font-extrabold" style={{ fontSize: 18 }}>
+                    {es
+                      ? `🚨 ${name} presionó el botón de alerta — por favor comuníquese con esta persona ahora.`
+                      : `🚨 ${name} pressed the alert button — please contact them now.`}
+                  </p>
+                  <p className="text-sm mt-1">{es ? "Enviada a las" : "Sent at"} {fmtTime(e.created_at)} · {timeAgo(e.created_at)}</p>
+                  {open ? (
+                    <button type="button" className="btn-base w-full mt-3" style={{ background: "#fff", color: "#C0392B" }} onClick={() => checkIn(e.id)}>
+                      ✅ {es ? "Ya me comuniqué" : "I've checked in"}
+                    </button>
+                  ) : (
+                    <p className="text-sm mt-2 font-bold">
+                      ✅ {es ? `${e.acknowledged_by_name || "Un guardián"} se comunicó a las` : `${e.acknowledged_by_name || "A guardian"} checked in at`} {fmtTime(e.acknowledged_at!)}
+                    </p>
+                  )}
+                </li>
+              );
+            })}
+          </ul>
+        )}
         {recentAlerts.length === 0 ? (
           <div className="card-soft text-center font-bold" style={{ color: "#2ECC71" }}>
             ✅ No alerts across your loved ones.
