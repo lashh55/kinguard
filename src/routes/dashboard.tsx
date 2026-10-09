@@ -70,6 +70,7 @@ function SeniorDashboard() {
   const [guardianCount, setGuardianCount] = useState<number>(0);
   const [lastSeen, setLastSeen] = useState<number>(0);
   const [inboxOpen, setInboxOpen] = useState(false);
+  const [lastSos, setLastSos] = useState<SosEvent | null>(null);
 
   const seenKey = profile ? `kg_alerts_seen_${profile.id}` : "";
 
@@ -126,6 +127,29 @@ function SeniorDashboard() {
       .subscribe();
     return () => { supabase.removeChannel(channel); };
   }, [profile, t]);
+
+  // Latest SOS + live "guardian saw your alert" updates
+  useEffect(() => {
+    if (!profile) return;
+    supabase.from("sos_events").select("id,created_at,acknowledged_at,acknowledged_by_name")
+      .eq("senior_id", profile.id).order("created_at", { ascending: false }).limit(1)
+      .then(({ data }) => {
+        const s = data?.[0] as any;
+        if (s && Date.now() - new Date(s.created_at).getTime() < 24 * 3600 * 1000) setLastSos(s);
+      });
+    const ch = supabase.channel(`sos_senior_${profile.id}`)
+      .on("postgres_changes", { event: "UPDATE", schema: "public", table: "sos_events", filter: `senior_id=eq.${profile.id}` },
+        (payload) => {
+          const s = payload.new as any;
+          if (!s.acknowledged_at) return;
+          setLastSos((prev) => (prev && prev.id !== s.id ? prev : s));
+          toast(lang === "es"
+            ? `${s.acknowledged_by_name || "Su guardián"} vio su alerta a las ${fmtTime(s.acknowledged_at)}.`
+            : `${s.acknowledged_by_name || "Your guardian"} saw your alert at ${fmtTime(s.acknowledged_at)}.`, { duration: 10000 });
+        })
+      .subscribe();
+    return () => { supabase.removeChannel(ch); };
+  }, [profile, lang]);
 
   if (!profile) return null;
 
@@ -249,17 +273,28 @@ function SeniorDashboard() {
       <section className="px-5 mt-5 space-y-3">
         <Link to="/check" className="btn-base btn-primary w-full">🔍 {t("Check a Suspicious Message")}</Link>
         <Link to="/ssn" className="btn-base btn-primary w-full">🛡️ {t("Protect My SSN")}</Link>
-        <button className="btn-base btn-danger w-full" onClick={() => {
+        <button className="btn-base btn-danger w-full" onClick={async () => {
           if (guardianCount === 0) {
             toast(t("Please add a guardian before using SOS Alert."));
             return;
           }
+          const { data, error } = await supabase.from("sos_events").insert({ senior_id: user!.id }).select("id,created_at,acknowledged_at,acknowledged_by_name").single();
+          if (error) { toast.error(error.message); return; }
           track("help_requested");
-          notifyGuardianSOS(profile.full_name);
-          supabase.from("sos_events").insert({ senior_id: user!.id }).then(() => {});
+          setLastSos(data as any);
+          toast(lang === "es" ? "Su alerta fue enviada. Sus guardianes la verán en KinGuard." : "Your alert was sent. Your guardians will see it in KinGuard.", { duration: 8000 });
         }}>
           🆘 {t("I Need Help")}
         </button>
+        {lastSos && (
+          <p className="text-center font-bold" role="status" style={{ fontSize: 17 }}>
+            {lastSos.acknowledged_at
+              ? (lang === "es"
+                  ? `${lastSos.acknowledged_by_name || "Su guardián"} vio su alerta a las ${fmtTime(lastSos.acknowledged_at)}.`
+                  : `${lastSos.acknowledged_by_name || "Your guardian"} saw your alert at ${fmtTime(lastSos.acknowledged_at)}.`)
+              : (lang === "es" ? "Su alerta fue enviada. Sus guardianes la verán en KinGuard." : "Your alert was sent. Your guardians will see it in KinGuard.")}
+          </p>
+        )}
         {guardianCount === 0 && (
           <p className="text-sm text-center" style={{ color: "var(--color-muted-foreground)" }}>
             {t("Add a guardian in your profile to enable SOS Alert.")}
