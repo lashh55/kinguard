@@ -3,6 +3,9 @@ import { createContext, useContext, useEffect, useState, ReactNode } from "react
 export type Lang = "en" | "es";
 
 const DICT: Record<string, string> = {
+  "Create yours above with the \"Create my code word\" button.": "Cree la suya arriba con el botón \"Crear mi palabra clave\".",
+  "📋 Copy email address": "📋 Copiar dirección de correo",
+  "Create my code word": "Crear mi palabra clave",
   // Onboarding / Welcome
   "Protecting the people you love": "Protegiendo a las personas que amas",
   "I want to be protected": "Quiero estar protegido/a",

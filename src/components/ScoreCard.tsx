@@ -3,7 +3,7 @@ import { ChallengeStats, currentLevelBadge, nextLevelBadge, normalizeStats } fro
 import { useI18n } from "@/lib/i18n";
 
 export function ScoreCard({ stats: raw, compact, tree }: { stats: unknown; compact?: boolean; tree?: ReactNode }) {
-  const { t } = useI18n();
+  const { t, lang } = useI18n();
   const stats: ChallengeStats = normalizeStats(raw);
   const current = currentLevelBadge(stats.total_correct);
   const next = nextLevelBadge(stats.total_correct);
@@ -63,7 +63,7 @@ export function ScoreCard({ stats: raw, compact, tree }: { stats: unknown; compa
             />
           </div>
           <p className="text-sm mt-2 text-center font-bold">
-            {Math.max(0, progressTarget - stats.total_correct)} more correct answers to reach {next.name} {next.icon}
+            {(() => { const n = Math.max(0, progressTarget - stats.total_correct); return lang === "es" ? `${n} ${n === 1 ? "respuesta correcta más" : "respuestas correctas más"} para llegar a ${next.name}` : `${n} more correct ${n === 1 ? "answer" : "answers"} to reach ${next.name}`; })()} {next.icon}
           </p>
         </div>
       )}
