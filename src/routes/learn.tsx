@@ -41,12 +41,22 @@ const SCAM_CARDS = [
 ];
 
 const VIDEOS = [
-  { title: "How the IRS Scam Works", dur: "3 min" },
-  { title: "What a Tech Support Scam Sounds Like", dur: "4 min" },
-  { title: "Grandparent Scam: A Real Story", dur: "5 min" },
-  { title: "Romance Scams: Warning Signs", dur: "4 min" },
-  { title: "How to Freeze Your Credit", dur: "6 min" },
-  { title: "What To Do If You Were Scammed", dur: "5 min" },
+  { en: "How the IRS Scam Works", es: "Cómo funciona la estafa del IRS",
+    dEn: "Scammers pretend to be the IRS and demand fast payment. The real IRS always contacts you by mail first.",
+    dEs: "Los estafadores se hacen pasar por el IRS y exigen un pago inmediato. El IRS verdadero siempre se comunica primero por correo postal.",
+    url: "https://www.ftc.gov/media/video-0118-irs-imposter-scams" },
+  { en: "What a Tech Support Scam Sounds Like", es: "Cómo suena una estafa de soporte técnico",
+    dEn: "Scammers pose as big-name companies and say your computer has a problem. Never let a stranger take control of your computer.",
+    dEs: "Los estafadores se hacen pasar por empresas conocidas y dicen que su computadora tiene un problema. Nunca deje que un desconocido controle su computadora.",
+    url: "https://consumer.ftc.gov/media/79958" },
+  { en: "Grandparent Scam: How It Works", es: "La estafa del abuelo: cómo funciona",
+    dEn: "A caller pretends to be a grandchild in trouble and begs you to send money and keep it secret. Ask for your family code word.",
+    dEs: "Alguien llama haciéndose pasar por un nieto en apuros y le pide dinero y que guarde el secreto. Pida su palabra clave familiar.",
+    url: "https://www.consumer.ftc.gov/media/video-0117-family-emergency-imposter-scams" },
+  { en: "Romance Scams: Warning Signs", es: "Estafas románticas: señales de alerta",
+    dEn: "If an online love interest asks for money, it is a scam, no matter how good the story sounds.",
+    dEs: "Si un interés amoroso en línea le pide dinero, es una estafa, sin importar lo convincente que sea la historia.",
+    url: "https://consumer.ftc.gov/media/video-0119-online-romance-imposter-scams" },
 ];
 
 type Question = {
@@ -89,8 +99,7 @@ function LearnScreen() {
         badges.forEach((b) => notifyGuardians(profile.full_name, b));
         refreshProfile();
       }} />
-      {/* Watch & Learn hidden until real videos are added */}
-      {false && <Videos />}
+      <Videos />
       {current && profile && (
         <BadgeCelebration badge={current} name={profile.full_name} onDismiss={dismiss} />
       )}
@@ -182,28 +191,35 @@ function Cards() {
 }
 
 function Videos() {
-  const { t } = useI18n();
+  const { t, lang } = useI18n();
+  const es = lang === "es";
   return (
     <section className="px-5 mt-6 mb-4">
       <h2>{t("Watch & Learn 🎥")}</h2>
-      <p className="mt-1" style={{ color: "var(--color-muted-foreground)" }}>{t("Real scam situations explained in plain language — coming soon")}</p>
-      <div className="mt-3 grid grid-cols-2 gap-3">
+      <p className="mt-1" style={{ color: "var(--color-muted-foreground)" }}>
+        {es ? "Videos cortos de la Comisión Federal de Comercio (FTC) sobre cómo detectar estafas comunes." : "Short videos from the Federal Trade Commission (FTC) on how to spot common scams."}
+      </p>
+      <div className="mt-3 grid grid-cols-1 sm:grid-cols-2 gap-3">
         {VIDEOS.map((v) => (
-          <button
-            key={v.title}
-            className="rounded-2xl overflow-hidden text-left"
-            style={{ background: "var(--color-tan)" }}
-            onClick={() => toast(t("This video is coming soon! Check back for updates."))}
-          >
-            <div className="relative flex items-center justify-center" style={{ height: 110 }}>
-              <span style={{ fontSize: 40 }}>▶️</span>
-              <span className="absolute top-2 right-2 text-xs font-bold rounded-full px-2 py-1" style={{ background: "var(--color-rose)", color: "#fff" }}>{t("Coming Soon")}</span>
+          <div key={v.url}>
+            <div className="rounded-2xl overflow-hidden h-full flex flex-col" style={{ background: "var(--color-tan)" }}>
+              <div className="flex items-center justify-center" style={{ height: 90 }}>
+                <span style={{ fontSize: 40 }} aria-hidden="true">▶️</span>
+              </div>
+              <div className="p-3 bg-white flex-1 flex flex-col">
+                <p className="font-bold" style={{ fontSize: 17 }}>{es ? v.es : v.en}</p>
+                <p className="text-xs mt-1 font-bold" style={{ color: "var(--color-muted-foreground)" }}>1 min</p>
+                <p className="text-sm mt-2 flex-1">{es ? v.dEs : v.dEn}</p>
+                <a href={v.url} target="_blank" rel="noopener noreferrer" className="btn-base btn-primary w-full mt-3">
+                  {es ? "Ver en FTC.gov" : "Watch on FTC.gov"}
+                </a>
+                {es && <p className="text-xs mt-1 text-center" style={{ color: "var(--color-muted-foreground)" }}>Video en inglés</p>}
+              </div>
             </div>
-            <div className="p-3 bg-white">
-              <p className="font-bold" style={{ fontSize: 15 }}>{v.title}</p>
-              <p className="text-xs mt-1" style={{ color: "var(--color-muted-foreground)" }}>{v.dur}</p>
-            </div>
-          </button>
+            <p className="text-xs mt-1 px-1" style={{ color: "var(--color-muted-foreground)" }}>
+              {es ? "Video: Comisión Federal de Comercio" : "Video: Federal Trade Commission"}
+            </p>
+          </div>
         ))}
       </div>
     </section>
