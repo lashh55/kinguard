@@ -205,6 +205,8 @@ function SeniorDashboard() {
       <header className="px-5 pt-4 pb-4">
         <h1>Hello, {profile.full_name.split(" ")[0]} 👋</h1>
       </header>
+      <GuardianRequests onChange={() => supabase.rpc("get_my_guardians").then(({ data }) => setGuardianCount((data ?? []).length))} />
+      <section className="px-5 mb-3"><NeverNotice /></section>
 
       {unreadCount > 0 && (
         <section className="px-5 mb-3">
@@ -411,6 +413,13 @@ function GuardianDashboard() {
   const [confirmRemove, setConfirmRemove] = useState<{ id: string; name: string } | null>(null);
   const [removing, setRemoving] = useState(false);
   const [removeMsg, setRemoveMsg] = useState<string | null>(null);
+  const [pendingCount, setPendingCount] = useState(0);
+  useEffect(() => {
+    if (!profile) return;
+    supabase.from("guardian_relationships").select("id", { count: "exact", head: true })
+      .eq("guardian_id", profile.id).eq("status", "pending")
+      .then(({ count }) => setPendingCount(count ?? 0));
+  }, [profile, reload]);
 
   const addSenior = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -423,9 +432,8 @@ function GuardianDashboard() {
       setLinkMsg({ ok: false, text: error.message.includes("Invalid") ? "That code didn't match anyone. Please check it and try again." : error.message });
       return;
     }
-    try { (window as any).gtag?.("event", "guardian_linked"); } catch {}
     setNewCode(""); setNewLabel(""); setShowAdd(false);
-    setLinkMsg({ ok: true, text: "Linked! Your senior now appears in your list." });
+    setLinkMsg({ ok: true, text: es ? "Solicitud enviada. Aparecerá en su lista cuando su ser querido la apruebe." : "Request sent! They'll appear in your list once your loved one approves you." });
     setReload((r) => r + 1);
   };
 
@@ -564,7 +572,15 @@ function GuardianDashboard() {
         <p className="mt-1" style={{ color: "var(--color-muted-foreground)" }}>
           You're protecting {seniors.length} {seniors.length === 1 ? "loved one" : "loved ones"}.
         </p>
+        {pendingCount > 0 && (
+          <p className="mt-1 font-bold" style={{ color: "var(--color-rose)" }}>
+            {es
+              ? `⏳ Esperando aprobación: ${pendingCount}. Su ser querido debe aprobarle en KinGuard.`
+              : `⏳ Waiting for approval: ${pendingCount}. Your loved one must approve you in KinGuard.`}
+          </p>
+        )}
       </header>
+      <GuardianNotices />
 
       <section className="px-5">
         <h2 className="mb-2">You are protecting</h2>
