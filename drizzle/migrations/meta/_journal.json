@@ -43,6 +43,13 @@
       "when": 1791564572836,
       "tag": "0005_sos_claim_flow",
       "breakpoints": true
+    },
+    {
+      "idx": 6,
+      "version": "7",
+      "when": 1791588316111,
+      "tag": "0006_scam_alert_receipts_and_replies",
+      "breakpoints": true
     }
   ]
 }

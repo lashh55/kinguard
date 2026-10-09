@@ -331,6 +331,58 @@ export type Database = {
         }
         Relationships: []
       }
+      scam_alert_receipts: {
+        Row: {
+          alert_id: string
+          guardian_id: string
+          guardian_name: string
+          message: string | null
+          reply_key: string | null
+          senior_id: string
+          viewed_at: string
+        }
+        Insert: {
+          alert_id: string
+          guardian_id: string
+          guardian_name: string
+          message?: string | null
+          reply_key?: string | null
+          senior_id: string
+          viewed_at?: string
+        }
+        Update: {
+          alert_id?: string
+          guardian_id?: string
+          guardian_name?: string
+          message?: string | null
+          reply_key?: string | null
+          senior_id?: string
+          viewed_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "scam_alert_receipts_alert_id_fkey"
+            columns: ["alert_id"]
+            isOneToOne: false
+            referencedRelation: "scam_alerts"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "scam_alert_receipts_guardian_id_fkey"
+            columns: ["guardian_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "scam_alert_receipts_senior_id_fkey"
+            columns: ["senior_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       scam_alerts: {
         Row: {
           ai_recommendation: string | null
@@ -344,6 +396,7 @@ export type Database = {
           scam_score: number
           scam_type: string | null
           senior_id: string
+          senior_viewed_at: string | null
           status: string
         }
         Insert: {
@@ -358,6 +411,7 @@ export type Database = {
           scam_score?: number
           scam_type?: string | null
           senior_id: string
+          senior_viewed_at?: string | null
           status?: string
         }
         Update: {
@@ -372,6 +426,7 @@ export type Database = {
           scam_score?: number
           scam_type?: string | null
           senior_id?: string
+          senior_viewed_at?: string | null
           status?: string
         }
         Relationships: [
@@ -547,6 +602,10 @@ export type Database = {
         Returns: string
       }
       purge_old_email_content: { Args: never; Returns: undefined }
+      record_scam_alert_view: {
+        Args: { _alert_id: string; _message?: string; _reply_key?: string }
+        Returns: undefined
+      }
       resolve_sos: { Args: { _id: string; _ok: boolean }; Returns: undefined }
       respond_guardian_request: {
         Args: { _approve: boolean; _link_id: string }

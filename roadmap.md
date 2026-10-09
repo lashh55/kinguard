@@ -3,3 +3,6 @@
 - [x] Verify navigation, scrolling, and page metadata.
 - [x] Add shared bilingual guardian disclaimer to new-link notices and legal pages.
 - [x] Verify both legal pages and required acknowledgment in English and Spanish using a simulated new-link notice; no real guardian links changed.
+- [ ] Replace duplicate senior notices with one calm notice opening a full result before marking read.
+- [ ] Add per-alert guardian view receipts and optional replies with secure access and live senior updates.
+- [ ] Verify senior and guardian flows in English and Spanish.
