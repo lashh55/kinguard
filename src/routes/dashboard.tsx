@@ -1,4 +1,3 @@
-import { NeverNotice } from "@/components/NeverNotice";
 import { GuardianRequests, GuardianNotices, SeniorGuardianNotice } from "@/components/GuardianRequests";
 import { pageHead } from "@/lib/pageHead";
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
@@ -224,7 +223,6 @@ function SeniorDashboard() {
       </header>
       <GuardianRequests onChange={() => supabase.rpc("get_my_guardians").then(({ data }) => setGuardianCount((data ?? []).length))} />
       <SeniorGuardianNotice />
-      <section className="px-5 mb-3"><NeverNotice /></section>
 
       {unreadCount > 0 && (
         <section className="px-5 mb-3">
