@@ -95,8 +95,7 @@ function CheckScreen() {
             className="mt-3 rounded-xl px-4 py-3 text-center break-all"
             style={{ background: "#fff", color: "#3D2B2B", border: "2px dashed #3D2B2B" }}
           >
-            <p className="font-extrabold" style={{ fontSize: 28 }}>scan@KinGuard</p>
-            <p className="font-bold mt-1" style={{ fontSize: 14, opacity: 0.8 }}>{FORWARD_EMAIL}</p>
+            <p className="font-extrabold" style={{ fontSize: 24 }}>{FORWARD_EMAIL}</p>
           </div>
           <button
             type="button"
