@@ -323,6 +323,8 @@ type LinkedSenior = {
 
 function GuardianDashboard() {
   const { profile } = useAuth();
+  const { lang } = useI18n();
+  const es = lang === "es";
   const [seniors, setSeniors] = useState<LinkedSenior[]>([]);
   const [recentAlerts, setRecentAlerts] = useState<Alert[]>([]);
   const [seniorMap, setSeniorMap] = useState<Record<string, string>>({});
@@ -505,7 +507,7 @@ function GuardianDashboard() {
                       style={{ color: "var(--color-muted-foreground)" }}
                       onClick={() => { setRemoveMsg(null); setConfirmRemove({ id: s.id, name: s.full_name }); }}
                     >
-                      Remove
+                      {es ? "Quitar" : "Remove"}
                     </button>
                   </div>
                   {s.alertCount > 0 ? (
@@ -536,7 +538,7 @@ function GuardianDashboard() {
             style={seniors.length >= 3 ? { opacity: 0.5, cursor: "not-allowed", filter: "grayscale(1)" } : undefined}
             onClick={() => { setShowAdd((v) => !v); setLinkMsg(null); }}
           >
-            ➕ Protect a new senior ({seniors.length} of 3)
+            ➕ {es ? "Proteger a un nuevo adulto mayor" : "Protect a new senior"} ({seniors.length} {es ? "de" : "of"} 3)
           </button>
           {seniors.length >= 3 && (
             <p className="text-sm mt-2 text-center font-bold" style={{ color: "var(--color-muted-foreground)" }}>
@@ -546,7 +548,7 @@ function GuardianDashboard() {
           {showAdd && seniors.length < 3 && (
             <form onSubmit={addSenior} className="space-y-3 mt-3">
               <label className="block">
-                <span className="block font-bold mb-1">Senior's invite code</span>
+                <span className="block font-bold mb-1">{es ? "Código de invitación del adulto mayor" : "Senior's invite code"}</span>
                 <input
                   className="input-large invite-code uppercase tracking-widest"
                   required
@@ -556,7 +558,7 @@ function GuardianDashboard() {
                 />
               </label>
               <label className="block">
-                <span className="block font-bold mb-1">Your relationship (e.g. Daughter, Son, Friend)</span>
+                <span className="block font-bold mb-1">{es ? "Su relación (por ejemplo: hija, hijo, amigo)" : "Your relationship (e.g. Daughter, Son, Friend)"}</span>
                 <input
                   className="input-large"
                   required
@@ -565,9 +567,9 @@ function GuardianDashboard() {
                 />
               </label>
               <div className="flex gap-2">
-                <button type="button" className="btn-base btn-outline flex-1" onClick={() => setShowAdd(false)}>Cancel</button>
+                <button type="button" className="btn-base btn-outline flex-1" onClick={() => setShowAdd(false)}>{es ? "Cancelar" : "Cancel"}</button>
                 <button type="submit" className="btn-base btn-primary flex-1" disabled={linking}>
-                  {linking ? "Linking…" : "Add senior"}
+                  {linking ? (es ? "Vinculando…" : "Linking…") : (es ? "Agregar adulto mayor" : "Add senior")}
                 </button>
               </div>
             </form>
@@ -626,10 +628,10 @@ function GuardianDashboard() {
             onClick={(e) => e.stopPropagation()}
           >
             <p className="font-extrabold" style={{ fontSize: 20, color: "var(--color-destructive)" }}>
-              Stop protecting {confirmRemove.name}?
+              {es ? `¿Dejar de proteger a ${confirmRemove.name}?` : `Stop protecting ${confirmRemove.name}?`}
             </p>
             <p className="mt-2 text-base">
-              Are you sure you want to stop protecting {confirmRemove.name}? This cannot be undone.
+              {es ? `¿Está seguro de que desea dejar de proteger a ${confirmRemove.name}?` : `Are you sure you want to stop protecting ${confirmRemove.name}?`}
             </p>
             <div className="flex gap-2 mt-4">
               <button
@@ -638,7 +640,7 @@ function GuardianDashboard() {
                 disabled={removing}
                 onClick={() => setConfirmRemove(null)}
               >
-                Cancel
+                {es ? "Cancelar" : "Cancel"}
               </button>
               <button
                 type="button"
@@ -647,7 +649,7 @@ function GuardianDashboard() {
                 style={{ background: "var(--color-destructive)", borderColor: "var(--color-destructive)" }}
                 onClick={removeSenior}
               >
-                {removing ? "Removing…" : "Yes, remove"}
+                {removing ? (es ? "Quitando…" : "Removing…") : (es ? "Quitar" : "Remove")}
               </button>
             </div>
           </div>

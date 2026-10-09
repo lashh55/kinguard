@@ -7,10 +7,8 @@ import { ScreenShell } from "@/components/ScreenShell";
 import { Copy, Check } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
-import { ScoreCard } from "@/components/ScoreCard";
-import { BadgeGrid } from "@/components/BadgeGrid";
+import { useSignOutConfirm } from "@/components/SignOutConfirm";
 import { normalizeStats } from "@/lib/badges";
-import { LearningTree, LearningTreeWithTooltip } from "@/components/LearningTree";
 import { useI18n, LanguageToggle } from "@/lib/i18n";
 import { track } from "@/lib/analytics";
 import { generatePassphrase } from "@/lib/passphrase";
@@ -84,7 +82,8 @@ function actionLabel(a: ActivityRow, t: (s: string) => string): string {
 
 function ProfileScreen() {
   const { user, profile, loading, signOut, refreshProfile } = useAuth();
-  const { t } = useI18n();
+  const { t, lang } = useI18n();
+  const { ask: askSignOut, dialog: signOutDialog } = useSignOutConfirm();
   const navigate = useNavigate();
   const [guardians, setGuardians] = useState<GuardianRow[]>([]);
   const [activity, setActivity] = useState<ActivityRow[]>([]);
@@ -438,6 +437,7 @@ function ProfileScreen() {
         <button className="btn-base btn-outline w-full" onClick={() => askSignOut()}>
           {t("Sign Out")}
         </button>
+        {signOutDialog}
 
         <div className="card-soft" style={{ border: "3px solid #E74C3C", background: "color-mix(in oklab, #E74C3C 6%, #fff)" }}>
           <p className="font-extrabold uppercase tracking-wider mb-2" style={{ color: "#a02c20", fontSize: 14 }}>
