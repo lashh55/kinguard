@@ -393,7 +393,7 @@ function GuardianDashboard() {
       .on("postgres_changes", { event: "INSERT", schema: "public", table: "sos_events" }, (p) => {
         const e = p.new as SosEvent;
         setSosEvents((prev) => [e, ...prev.filter((x) => x.id !== e.id)].slice(0, 10));
-        notifyGuardianSOS(e.senior_first_name || "Your loved one");
+        notifyGuardianSOS(e.senior_first_name || (lang === "es" ? "Su ser querido" : "Your loved one"), lang);
       })
       .on("postgres_changes", { event: "UPDATE", schema: "public", table: "sos_events" }, (p) => {
         const e = p.new as SosEvent;
