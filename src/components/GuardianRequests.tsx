@@ -62,6 +62,48 @@ export function GuardianRequests({ onChange }: { onChange?: () => void }) {
 
 type Notice = { id: string; new_guardian_name: string; senior_name: string; created_at: string };
 
+/** Senior-side: "X is now your guardian. Don't know this person? Remove them." */
+export function SeniorGuardianNotice() {
+  const { lang } = useI18n();
+  const es = lang === "es";
+  const [items, setItems] = useState<Notice[]>([]);
+  useEffect(() => {
+    (async () => {
+      const { data: u } = await supabase.auth.getUser();
+      const uid = u.user?.id;
+      if (!uid) return;
+      const { data } = await supabase.from("guardian_notices").select("id,new_guardian_name,senior_name,created_at")
+        .eq("guardian_id", uid).eq("senior_id", uid)
+        .is("read_at", null).order("created_at", { ascending: false }).limit(10);
+      setItems((data as Notice[]) ?? []);
+    })();
+  }, []);
+  const dismiss = async (id: string) => {
+    setItems((p) => p.filter((x) => x.id !== id));
+    await supabase.from("guardian_notices").update({ read_at: new Date().toISOString() }).eq("id", id);
+  };
+  if (!items.length) return null;
+  return (
+    <section className="px-5 mb-3 space-y-2">
+      {items.map((n) => (
+        <div key={n.id} className="card-soft" style={{ border: "3px solid var(--color-rose)" }}>
+          <p className="font-bold">
+            🔔 {es
+              ? `${n.new_guardian_name} ahora es su guardián. ¿No conoce a esta persona? Quítela.`
+              : `${n.new_guardian_name} is now your guardian. Don't know this person? Remove them.`}
+          </p>
+          <div className="flex gap-3 mt-2 items-center">
+            <a href="/profile" className="btn-base btn-outline text-sm">
+              {es ? "Ver mis guardianes" : "View my guardians"}
+            </a>
+            <button className="text-sm underline" onClick={() => dismiss(n.id)}>{es ? "Entendido" : "OK"}</button>
+          </div>
+        </div>
+      ))}
+    </section>
+  );
+}
+
 /** Guardian-side: "X was added as a guardian for Y" notices. */
 export function GuardianNotices() {
   const { lang } = useI18n();

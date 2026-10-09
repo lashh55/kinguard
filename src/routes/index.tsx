@@ -455,8 +455,8 @@ function LinkedView({ onContinue }: { onContinue: () => void }) {
 
   return (
     <div className="card-soft text-center space-y-4" aria-busy={busy}>
-      <h2>{t("Request sent! ⏳")}</h2>
-      <p>{t("Your loved one must approve you in KinGuard. Once they do, you will see their alerts in your dashboard.")}</p>
+      <h2>{t("You're linked! 💙")}</h2>
+      <p>{t("You are now protecting your loved one. Their alerts will appear in your dashboard.")}</p>
       <button className="btn-base btn-primary w-full" onClick={handleContinue} disabled={busy}>
         {busy ? (
           <span className="inline-flex items-center justify-center gap-2">
