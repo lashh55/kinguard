@@ -30,7 +30,7 @@ export function NameFields({
         <span className="block font-bold mb-1">{es ? "Nombre" : "First name"}</span>
         <input
           className="input-large" required maxLength={30} autoComplete="given-name"
-          placeholder={es ? "María José" : "Mary"}
+          placeholder={es ? "María" : "Mary"}
           value={first} onChange={(e) => onFirst(cleanFirstName(e.target.value))}
         />
       </label>
