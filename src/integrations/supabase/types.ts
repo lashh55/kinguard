@@ -429,6 +429,7 @@ export type Database = {
       }
       admin_log_view: { Args: { _path: string }; Returns: undefined }
       delete_my_account: { Args: never; Returns: undefined }
+      find_user_id_by_email: { Args: { _email: string }; Returns: string }
       gen_invite_code: { Args: never; Returns: string }
       get_guardian_activity_feed: {
         Args: never

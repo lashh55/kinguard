@@ -6,6 +6,10 @@ const DICT: Record<string, string> = {
   "Create yours above with the \"Create my code word\" button.": "Cree la suya arriba con el botón \"Crear mi palabra clave\".",
   "📋 Copy email address": "📋 Copiar dirección de correo",
   "Create my code word": "Crear mi palabra clave",
+  "Just forward it to KinGuard's secure scan address below. No copying or pasting needed. KinGuard will check it and show the result to you and your guardians in the app.":
+    "Solo reenvíelo a la dirección segura de KinGuard que aparece abajo. No necesita copiar ni pegar nada. KinGuard lo revisará y le mostrará el resultado a usted y a sus guardianes en la aplicación.",
+  "Forward from the email address you used to sign up for KinGuard.":
+    "Reenvíe el mensaje desde el correo electrónico que usó para registrarse en KinGuard.",
   // Onboarding / Welcome
   "Protecting the people you love": "Protegiendo a las personas que amas",
   "I want to be protected": "Quiero estar protegido/a",
