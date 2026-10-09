@@ -97,9 +97,11 @@ export const Route = createFileRoute("/api/public/inbound-email")({
             return new Response("ok", { status: 200 });
           }
 
-          // Resolve senior by email
-          const { data: userList, error: userErr } =
-            await supabaseAdmin.auth.admin.listUsers({ page: 1, perPage: 200 });
+          // Resolve account by email (direct, case-insensitive lookup)
+          const { data: matchedId, error: userErr } = await supabaseAdmin.rpc(
+            "find_user_id_by_email" as never,
+            { _email: senderEmail } as never,
+          );
           if (userErr) {
             await writeLog({
               status: "user_lookup_failed",
@@ -112,9 +114,7 @@ export const Route = createFileRoute("/api/public/inbound-email")({
             });
             return new Response("ok", { status: 200 });
           }
-          const matchedUser = userList?.users?.find(
-            (u) => (u.email ?? "").toLowerCase() === senderEmail,
-          );
+          const matchedUser = matchedId ? { id: matchedId as unknown as string } : null;
           if (!matchedUser) {
             await writeLog({
               status: "sender_not_registered",

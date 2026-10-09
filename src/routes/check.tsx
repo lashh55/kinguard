@@ -89,7 +89,10 @@ function CheckScreen() {
         <div className="card-soft" style={{ background: "var(--color-sky)" }}>
           <p className="font-extrabold" style={{ fontSize: 20 }}>{t("📧 Got a suspicious email?")}</p>
           <p className="mt-2" style={{ fontSize: 18 }}>
-            {t("Just forward it to KinGuard's secure scan address below. No copying or pasting needed. KinGuard will check it and alert you and your guardians right away.")}
+            {t("Just forward it to KinGuard's secure scan address below. No copying or pasting needed. KinGuard will check it and show the result to you and your guardians in the app.")}
+          </p>
+          <p className="mt-2 font-bold" style={{ fontSize: 18 }}>
+            {t("Forward from the email address you used to sign up for KinGuard.")}
           </p>
           <div
             className="mt-3 rounded-xl px-4 py-3 text-center break-all"
