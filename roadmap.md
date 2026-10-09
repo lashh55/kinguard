@@ -6,3 +6,5 @@
 - [x] Replace duplicate senior notices with one calm notice opening a full result before marking read.
 - [x] Add per-alert guardian view receipts and optional replies with secure access and live senior updates.
 - [x] Verify Ava opens full scan, Lisa's quick/custom replies read back live on Ava's screen, and Spanish results/status; no page errors.
+- [ ] Replace senior stat icons with compressed uploaded images and make all three destinations tappable.
+- [ ] Verify tile destinations and Spanish labels with a signed-in senior.
