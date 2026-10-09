@@ -12,6 +12,7 @@ import { normalizeStats } from "@/lib/badges";
 import { useI18n, LanguageToggle } from "@/lib/i18n";
 import { track } from "@/lib/analytics";
 import { generatePassphrase } from "@/lib/passphrase";
+import { NameFields, formatName, isValidName } from "@/components/NameFields";
 import {
   setFamilyCodeWord,
   revealFamilyCodeWord,
@@ -93,6 +94,32 @@ function ProfileScreen() {
   const [confirmNewCode, setConfirmNewCode] = useState(false);
   const [regenerating, setRegenerating] = useState(false);
   const [copiedCode, setCopiedCode] = useState(false);
+  const [editingName, setEditingName] = useState(false);
+  const [editFirst, setEditFirst] = useState("");
+  const [editInitial, setEditInitial] = useState("");
+  const [savingName, setSavingName] = useState(false);
+  const startEditName = () => {
+    const parts = (profile?.full_name || "").trim().split(/\s+/);
+    const last = parts.length > 1 ? parts[parts.length - 1] : "";
+    setEditFirst(parts.length > 1 ? parts.slice(0, -1).join(" ") : parts[0] || "");
+    setEditInitial((last.match(/\p{L}/u)?.[0] || "").toUpperCase());
+    setEditingName(true);
+  };
+  const saveName = async () => {
+    if (!profile || !isValidName(editFirst, editInitial)) {
+      toast.error(t("Please enter your first name and the first letter of your last name."));
+      return;
+    }
+    setSavingName(true);
+    const full = formatName(editFirst, editInitial);
+    const { error } = await supabase.from("profiles").update({ full_name: full }).eq("id", profile.id);
+    if (!error) await supabase.auth.updateUser({ data: { full_name: full } });
+    setSavingName(false);
+    if (error) { toast.error(error.message); return; }
+    await refreshProfile();
+    setEditingName(false);
+    toast.success(t("Name updated."));
+  };
   const [confirmRemoveGuardian, setConfirmRemoveGuardian] = useState<GuardianRow | null>(null);
   const [removingGuardian, setRemovingGuardian] = useState(false);
 
@@ -212,7 +239,20 @@ function ProfileScreen() {
       </header>
       <section className="px-5 space-y-4">
         <div className="card-soft">
-          <p><span className="font-bold">{t("Name:")}</span> {profile.full_name}</p>
+          {editingName ? (
+            <div className="space-y-3 mb-3">
+              <NameFields first={editFirst} initial={editInitial} onFirst={setEditFirst} onInitial={setEditInitial} />
+              <div className="flex gap-2">
+                <button type="button" className="btn-base btn-primary flex-1" disabled={savingName} onClick={saveName}>{t("Save")}</button>
+                <button type="button" className="btn-base btn-outline flex-1" onClick={() => setEditingName(false)}>{t("Cancel")}</button>
+              </div>
+            </div>
+          ) : (
+            <p className="flex items-center gap-3 flex-wrap">
+              <span><span className="font-bold">{t("Name:")}</span> {profile.full_name}</span>
+              <button type="button" className="text-sm underline font-bold" onClick={startEditName}>{t("Edit name")}</button>
+            </p>
+          )}
           <p className="mt-1"><span className="font-bold">{t("Role:")}</span> {isSenior ? t("Protected Senior") : t("Guardian")}</p>
           {isSenior && profile.invite_code && (
             <div className="mt-3">
@@ -384,7 +424,7 @@ function ProfileScreen() {
                   <div className="flex gap-3 mt-4">
                     <button
                       type="button"
-                      className="btn-secondary flex-1"
+                      className="btn-big btn-primary flex-1" style={{ background: "transparent", border: "2px solid var(--color-tan)" }}
                       disabled={removingGuardian}
                       onClick={() => setConfirmRemoveGuardian(null)}
                     >

@@ -37,7 +37,7 @@ function PrivacyPage() {
           <div className="rounded-2xl p-4" style={{ background: "color-mix(in oklab, #2ECC71 18%, #fff)" }}>
             <p className="font-extrabold mb-2" style={{ color: "#1f7a45" }}>What We DO Collect</p>
             <ul className="list-disc pl-5 space-y-1">
-              <li>Full name</li>
+              <li>First name and last initial</li>
               <li>Email address</li>
               <li>Encrypted password</li>
               <li>Role (Senior or Guardian)</li>

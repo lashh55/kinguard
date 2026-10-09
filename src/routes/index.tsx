@@ -1,3 +1,4 @@
+import { NameFields, formatName, isValidName } from "@/components/NameFields";
 import { pageHead } from "@/lib/pageHead";
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
@@ -137,7 +138,9 @@ function SeniorForm({ onCreated, onBack, initialMode = "signup" }: { onCreated: 
   const { refreshProfile } = useAuth();
   const { t } = useI18n();
   const [mode, setMode] = useState<"signup" | "signin">(initialMode);
-  const [name, setName] = useState("");
+  const [firstName, setFirstName] = useState("");
+  const [initial, setInitial] = useState("");
+  const name = formatName(firstName, initial);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [generated, setGenerated] = useState(false);
@@ -167,6 +170,7 @@ function SeniorForm({ onCreated, onBack, initialMode = "signup" }: { onCreated: 
         if (error) throw error;
         return;
       }
+      if (!isValidName(firstName, initial)) throw new Error(t("Please enter your first name and the first letter of your last name."));
       const redirectUrl = `${window.location.origin}/dashboard`;
       const { data, error } = await supabase.auth.signUp({
         email, password,
@@ -211,9 +215,7 @@ function SeniorForm({ onCreated, onBack, initialMode = "signup" }: { onCreated: 
         {isSignIn ? t("Sign In") : t("Create account")}
       </h2>
       {mode === "signup" && (
-        <FormRow label={t("Full name")}>
-          <input className="input-large" required value={name} onChange={(e) => setName(e.target.value)} />
-        </FormRow>
+        <NameFields first={firstName} initial={initial} onFirst={setFirstName} onInitial={setInitial} />
       )}
       <FormRow label={t("Email address")}>
         <input className="input-large" type="email" required value={email} onChange={(e) => setEmail(e.target.value)} />
@@ -297,7 +299,9 @@ function GuardianForm({ onLinked, onBack }: { onLinked: () => void; onBack: () =
   const { refreshProfile } = useAuth();
   const { t } = useI18n();
   const [mode, setMode] = useState<"signup" | "signin">("signup");
-  const [name, setName] = useState("");
+  const [firstName, setFirstName] = useState("");
+  const [initial, setInitial] = useState("");
+  const name = formatName(firstName, initial);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [rel, setRel] = useState("");
@@ -316,6 +320,7 @@ function GuardianForm({ onLinked, onBack }: { onLinked: () => void; onBack: () =
         if (error) throw error;
         return; // signed in — the page redirects to the dashboard automatically
       } else {
+        if (!isValidName(firstName, initial)) throw new Error(t("Please enter your first name and the first letter of your last name."));
         const redirectUrl = `${window.location.origin}/dashboard`;
         const { data, error } = await supabase.auth.signUp({
           email, password,
@@ -350,9 +355,7 @@ function GuardianForm({ onLinked, onBack }: { onLinked: () => void; onBack: () =
         {isSignIn ? t("Sign In") : t("Create account")}
       </h2>
       {mode === "signup" && (
-        <FormRow label={t("Full name")}>
-          <input className="input-large" required value={name} onChange={(e) => setName(e.target.value)} />
-        </FormRow>
+        <NameFields first={firstName} initial={initial} onFirst={setFirstName} onInitial={setInitial} />
       )}
       <FormRow label={t("Email address")}>
         <input className="input-large" type="email" required value={email} onChange={(e) => setEmail(e.target.value)} />
