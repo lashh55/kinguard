@@ -623,19 +623,19 @@ function GuardianDashboard() {
           <button
             type="button"
             className="btn-base btn-primary w-full"
-            disabled={seniors.length + pendingCount >= 3}
-            aria-disabled={seniors.length + pendingCount >= 3}
-            style={seniors.length + pendingCount >= 3 ? { opacity: 0.5, cursor: "not-allowed", filter: "grayscale(1)" } : undefined}
+            disabled={seniors.length >= 3}
+            aria-disabled={seniors.length >= 3}
+            style={seniors.length >= 3 ? { opacity: 0.5, cursor: "not-allowed", filter: "grayscale(1)" } : undefined}
             onClick={() => { setShowAdd((v) => !v); setLinkMsg(null); }}
           >
-            ➕ {es ? "Proteger a un nuevo adulto mayor" : "Protect a new senior"} ({seniors.length + pendingCount} {es ? "de" : "of"} 3)
+            ➕ {es ? "Proteger a un nuevo adulto mayor" : "Protect a new senior"} ({seniors.length} {es ? "de" : "of"} 3)
           </button>
-          {seniors.length + pendingCount >= 3 && (
+          {seniors.length >= 3 && (
             <p className="text-sm mt-2 text-center font-bold" style={{ color: "var(--color-muted-foreground)" }}>
               You are protecting the maximum of 3 seniors.
             </p>
           )}
-          {showAdd && seniors.length + pendingCount < 3 && (
+          {showAdd && seniors.length < 3 && (
             <form onSubmit={addSenior} className="space-y-3 mt-3">
               <label className="block">
                 <span className="block font-bold mb-1">{es ? "Código de invitación del adulto mayor" : "Senior's invite code"}</span>
