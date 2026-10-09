@@ -416,13 +416,6 @@ function GuardianDashboard() {
   const [confirmRemove, setConfirmRemove] = useState<{ id: string; name: string } | null>(null);
   const [removing, setRemoving] = useState(false);
   const [removeMsg, setRemoveMsg] = useState<string | null>(null);
-  const [pendingCount, setPendingCount] = useState(0);
-  useEffect(() => {
-    if (!profile) return;
-    supabase.from("guardian_relationships").select("id", { count: "exact", head: true })
-      .eq("guardian_id", profile.id).eq("status", "pending")
-      .then(({ count }) => setPendingCount(count ?? 0));
-  }, [profile, reload]);
 
   const addSenior = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -576,13 +569,6 @@ function GuardianDashboard() {
         <p className="mt-1" style={{ color: "var(--color-muted-foreground)" }}>
           You're protecting {seniors.length} {seniors.length === 1 ? "loved one" : "loved ones"}.
         </p>
-        {pendingCount > 0 && (
-          <p className="mt-1 font-bold" style={{ color: "var(--color-rose)" }}>
-            {es
-              ? `⏳ Esperando aprobación: ${pendingCount}. Su ser querido debe aprobarle en KinGuard.`
-              : `⏳ Waiting for approval: ${pendingCount}. Your loved one must approve you in KinGuard.`}
-          </p>
-        )}
       </header>
       <GuardianNotices />
 
