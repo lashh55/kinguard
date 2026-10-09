@@ -1,5 +1,5 @@
 import { pageHead } from "@/lib/pageHead";
-import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
+import { createFileRoute, Link, useNavigate, useLocation } from "@tanstack/react-router";
 import { useEffect, useMemo, useState } from "react";
 import { ScreenShell } from "@/components/ScreenShell";
 import { useAuth } from "@/lib/auth";
@@ -72,13 +72,21 @@ function LearnScreen() {
   const { current, enqueue, dismiss } = useBadgeQueue();
   const notifyGuardians = useNotifyGuardiansOfBadge();
   const { t } = useI18n();
+  const hash = useLocation({ select: (location) => location.hash });
+  useEffect(() => {
+    if (hash !== "knowledge-tree" || !profile) return;
+    const frame = requestAnimationFrame(() => {
+      document.getElementById("knowledge-tree")?.scrollIntoView({ behavior: "instant", block: "start" });
+    });
+    return () => cancelAnimationFrame(frame);
+  }, [hash, profile?.id]);
   return (
     <ScreenShell>
       <header className="px-5 pt-6 pb-3"><h1>🎓 {t("Learn")}</h1></header>
       <Slides />
       <Cards />
       {profile && (
-        <section className="px-5 mt-6">
+        <section id="knowledge-tree" className="px-5 mt-6">
           <h2 className="mb-2">{t("Knowledge Tree 🌳")}</h2>
           <ScoreCard
             stats={profile.challenge_stats}
