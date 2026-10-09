@@ -5,7 +5,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { AdminShell, AdminTable } from "@/components/AdminShell";
 import { logAdminView } from "@/lib/admin";
 
-export const Route = createFileRoute("/_admin/admin/sos")({ head: () => pageHead("Admin SOS log", "Review KinGuard emergency help requests."), component: SosPage });
+export const Route = createFileRoute("/_admin/admin/sos")({ head: () => pageHead("Admin SOS log", "Review KinGuard help requests."), component: SosPage });
 
 type Row = { id: string; senior_id: string; senior_name: string | null; created_at: string };
 

@@ -25,10 +25,13 @@ export function notifyGuardianScam(a: ScamAlertInput) {
   toast(msg, { duration: 4500, style: { whiteSpace: "pre-line" } });
 }
 
-export function notifyGuardianSOS(seniorName: string) {
-  const msg =
-    `🆘 SOS Alert\n` +
-    `${seniorName} has pressed the emergency help button and needs assistance.\n` +
-    `Reach out to them right away.`;
+export function notifyGuardianSOS(seniorName: string, lang: "en" | "es" = "en") {
+  const msg = lang === "es"
+    ? `🆘 Alerta de ayuda\n` +
+      `${seniorName} ha presionado el botón de ayuda y necesita asistencia.\n` +
+      `Comuníquese con esta persona de inmediato.`
+    : `🆘 Help Alert\n` +
+      `${seniorName} has pressed the help button and needs assistance.\n` +
+      `Reach out to them right away.`;
   toast(msg, { duration: 5000, style: { whiteSpace: "pre-line" } });
 }

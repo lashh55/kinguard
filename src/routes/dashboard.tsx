@@ -175,16 +175,11 @@ function SeniorDashboard() {
     setInboxOpen(true);
   };
 
-  const flagged = alerts.filter((a) => a.status === "flagged");
-  const status: "safe" | "warn" | "danger" =
-    flagged.some((a) => a.scam_score >= 71) ? "danger" :
-    flagged.length > 0 ? "warn" : "safe";
-
-  const statusText = status === "safe" ? t("You're protected today") : status === "warn" ? `${flagged.length} ${t("flagged")}` : t("Action needed");
-  const statusColor = status === "safe" ? "var(--color-safe)" : status === "warn" ? "var(--color-warn)" : "var(--color-danger)";
+  const statusText = unreadCount > 0 ? t("Action needed: review your new scam alert") : t("All clear");
+  const statusColor = unreadCount > 0 ? "var(--color-danger)" : "var(--color-safe)";
 
   const tip = TIPS[new Date().getDay() % TIPS.length];
-  const blocked = alerts.filter((a) => a.status === "blocked").length;
+  const totalAlerts = alerts.length;
   const checked = alerts.length;
 
   const stats = normalizeStats(profile.challenge_stats);
@@ -231,10 +226,15 @@ function SeniorDashboard() {
       )}
 
       <section className="px-5">
-        <div className="card-soft text-center" style={{ background: "#fff" }}>
+        <button
+          type="button"
+          onClick={unreadCount > 0 ? markAllSeenAndOpen : undefined}
+          className="card-soft text-center w-full"
+          style={{ background: "#fff", cursor: unreadCount > 0 ? "pointer" : "default" }}
+        >
           <img src={logo} alt="KinGuard" style={{ width: 120, height: "auto" }} className="mx-auto" />
           <p className="font-extrabold mt-3" style={{ fontSize: 22, color: statusColor }}>{statusText}</p>
-        </div>
+        </button>
       </section>
 
       <section className="px-5 mt-4">
@@ -246,7 +246,7 @@ function SeniorDashboard() {
       </section>
 
       <section className="px-5 mt-4 grid grid-cols-3 gap-2">
-        <Stat icon="🔒" label={t("Blocked")} value={blocked} />
+        <Stat icon="🚨" label={t("Alerts")} value={totalAlerts} />
         <Stat icon="📧" label={t("Checked")} value={checked} />
         <Link to="/learn" className="card-soft text-center block" style={{ padding: 12, textDecoration: "none", color: "inherit" }}>
           <div style={{ height: 60 }}>
@@ -298,6 +298,9 @@ function SeniorDashboard() {
         }}>
           🆘 {t("I Need Help")}
         </button>
+        <p className="text-center" style={{ fontSize: 13, color: "var(--color-muted-foreground)" }}>
+          {t("In an emergency, call 911. KinGuard alerts your family. It is not an emergency service.")}
+        </p>
         {lastSos && (
           <p className="text-center font-bold" role="status" style={{ fontSize: 17 }}>
             {lastSos.acknowledged_at
@@ -390,7 +393,7 @@ function GuardianDashboard() {
       .on("postgres_changes", { event: "INSERT", schema: "public", table: "sos_events" }, (p) => {
         const e = p.new as SosEvent;
         setSosEvents((prev) => [e, ...prev.filter((x) => x.id !== e.id)].slice(0, 10));
-        notifyGuardianSOS(e.senior_first_name || "Your loved one");
+        notifyGuardianSOS(e.senior_first_name || (lang === "es" ? "Su ser querido" : "Your loved one"), lang);
       })
       .on("postgres_changes", { event: "UPDATE", schema: "public", table: "sos_events" }, (p) => {
         const e = p.new as SosEvent;
