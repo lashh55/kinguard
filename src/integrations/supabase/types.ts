@@ -353,18 +353,30 @@ export type Database = {
       }
       sos_events: {
         Row: {
+          acknowledged_at: string | null
+          acknowledged_by: string | null
+          acknowledged_by_name: string | null
           created_at: string
           id: string
+          senior_first_name: string | null
           senior_id: string
         }
         Insert: {
+          acknowledged_at?: string | null
+          acknowledged_by?: string | null
+          acknowledged_by_name?: string | null
           created_at?: string
           id?: string
+          senior_first_name?: string | null
           senior_id: string
         }
         Update: {
+          acknowledged_at?: string | null
+          acknowledged_by?: string | null
+          acknowledged_by_name?: string | null
           created_at?: string
           id?: string
+          senior_first_name?: string | null
           senior_id?: string
         }
         Relationships: []
@@ -374,6 +386,7 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      acknowledge_sos: { Args: { _id: string }; Returns: undefined }
       admin_get_stats: { Args: never; Returns: Json }
       admin_list_audit: {
         Args: never
