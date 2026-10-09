@@ -199,26 +199,24 @@ function Videos() {
       <p className="mt-1" style={{ color: "var(--color-muted-foreground)" }}>
         {es ? "Videos cortos de la Comisión Federal de Comercio (FTC) sobre cómo detectar estafas comunes." : "Short videos from the Federal Trade Commission (FTC) on how to spot common scams."}
       </p>
-      <div className="mt-3 grid grid-cols-1 sm:grid-cols-2 gap-3">
+      <div className="mt-4 grid grid-cols-1 sm:grid-cols-2 gap-5 sm:gap-6">
         {VIDEOS.map((v) => (
-          <div key={v.url}>
-            <div className="rounded-2xl overflow-hidden h-full flex flex-col" style={{ background: "var(--color-tan)" }}>
-              <div className="flex items-center justify-center" style={{ height: 90 }}>
-                <span style={{ fontSize: 40 }} aria-hidden="true">▶️</span>
-              </div>
-              <div className="p-3 bg-white flex-1 flex flex-col">
-                <p className="font-bold" style={{ fontSize: 17 }}>{es ? v.es : v.en}</p>
-                <p className="text-xs mt-1 font-bold" style={{ color: "var(--color-muted-foreground)" }}>1 min</p>
-                <p className="text-sm mt-2 flex-1">{es ? v.dEs : v.dEn}</p>
-                <a href={v.url} target="_blank" rel="noopener noreferrer" className="btn-base btn-primary w-full mt-3">
-                  {es ? "Ver en FTC.gov" : "Watch on FTC.gov"}
-                </a>
-                {es && <p className="text-xs mt-1 text-center" style={{ color: "var(--color-muted-foreground)" }}>Video en inglés</p>}
-              </div>
+          <div key={v.url} className="rounded-2xl overflow-hidden h-full flex flex-col" style={{ background: "var(--color-tan)" }}>
+            <div className="flex items-center justify-center" style={{ height: 90 }}>
+              <span style={{ fontSize: 40 }} aria-hidden="true">▶️</span>
             </div>
-            <p className="text-xs mt-1 px-1" style={{ color: "var(--color-muted-foreground)" }}>
-              {es ? "Video: Comisión Federal de Comercio" : "Video: Federal Trade Commission"}
-            </p>
+            <div className="p-3 bg-white flex-1 flex flex-col">
+              <p className="font-bold" style={{ fontSize: 17 }}>{es ? v.es : v.en}</p>
+              <p className="text-xs mt-1 font-bold" style={{ color: "var(--color-muted-foreground)" }}>1 min</p>
+              <p className="text-sm mt-2 flex-1">{es ? v.dEs : v.dEn}</p>
+              <a href={v.url} target="_blank" rel="noopener noreferrer" className="btn-base btn-primary w-full mt-4">
+                {es ? "Ver en FTC.gov" : "Watch on FTC.gov"}
+              </a>
+              {es && <p className="text-xs mt-2 text-center" style={{ color: "var(--color-muted-foreground)" }}>Video en inglés</p>}
+              <p className="text-xs mt-3 pt-2 text-center" style={{ color: "var(--color-muted-foreground)", borderTop: "1px solid var(--color-border)" }}>
+                {es ? "Video: Comisión Federal de Comercio" : "Video: Federal Trade Commission"}
+              </p>
+            </div>
           </div>
         ))}
       </div>
