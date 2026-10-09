@@ -9,7 +9,10 @@ import { notifyGuardianSOS, notifyGuardianScam } from "@/lib/guardianAlerts";
 import { normalizeStats } from "@/lib/badges";
 import { Button } from "@/components/ui/button";
 import { ScamAlertResult, GuardianScamCard, GuardianScanStatus, useScanReceipts } from "@/components/ScamAlertResult";
-import { LearningTree } from "@/components/LearningTree";
+import alertsIcon from "@/assets/senior-alerts.webp.asset.json";
+import checkedIcon from "@/assets/senior-checked.webp.asset.json";
+import knowledgeTreeIcon from "@/assets/senior-knowledge-tree.webp.asset.json";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
 import { useI18n } from "@/lib/i18n";
 import { SsnDisclaimer } from "@/components/SsnDisclaimer";
 import { track } from "@/lib/analytics";
@@ -97,6 +100,8 @@ function SeniorDashboard() {
   const [selectedAlert, setSelectedAlert] = useState<Alert | null>(null);
   const receipts = useScanReceipts(profile?.id);
   const [inboxOpen, setInboxOpen] = useState(false);
+  const [checkedOpen, setCheckedOpen] = useState(false);
+  const inboxRef = useRef<HTMLElement>(null);
   const [lastSos, setLastSos] = useState<SosEvent | null>(null);
 
   useEffect(() => {
@@ -230,6 +235,17 @@ function SeniorDashboard() {
       )}
       {selectedAlert && <ScamAlertResult key={selectedAlert.id} alert={selectedAlert}
         receipts={receipts.filter((r) => r.alert_id === selectedAlert.id)} onClose={() => setSelectedAlert(null)} onViewed={markViewed} />}
+      <Dialog open={checkedOpen} onOpenChange={setCheckedOpen}>
+        <DialogContent className="max-h-[80dvh] overflow-y-auto">
+          <DialogHeader>
+            <DialogTitle>{lang === "es" ? "Mensajes revisados" : "Checked messages"}</DialogTitle>
+            <DialogDescription className="sr-only">{lang === "es" ? "Resultados de sus mensajes revisados" : "Your checked message results"}</DialogDescription>
+          </DialogHeader>
+          {alerts.length === 0 ? <p>{lang === "es" ? "Aún no ha revisado mensajes." : "No messages checked yet."}</p> : (
+            <ul className="space-y-2">{alerts.map((a) => <AlertCard key={a.id} a={a} onOpen={() => { setCheckedOpen(false); openAlert(a); }} />)}</ul>
+          )}
+        </DialogContent>
+      </Dialog>
 
       <section className="px-5 mt-4">
         <div className="card-soft text-center" style={{ background: "var(--color-cream)" }}>
@@ -240,17 +256,20 @@ function SeniorDashboard() {
       </section>
 
       <section className="px-5 mt-4 grid grid-cols-3 gap-2">
-        <Stat icon="🚨" label={t("Alerts")} value={totalAlerts} />
-        <Stat icon="📧" label={t("Checked")} value={checked} />
-        <Link to="/learn" className="card-soft text-center block" style={{ padding: 12, textDecoration: "none", color: "inherit" }}>
-          <div style={{ height: 60 }}>
-            <LearningTree stats={stats} size={60} />
-          </div>
-          <div className="text-xs mt-1" style={{ color: "var(--color-muted-foreground)" }}>{t("Knowledge Tree")}</div>
-        </Link>
+        <Stat icon={alertsIcon.url} label={t("Alerts")} value={totalAlerts} onClick={() => {
+          setInboxOpen(true);
+          requestAnimationFrame(() => inboxRef.current?.scrollIntoView({ behavior: "instant", block: "start" }));
+        }} />
+        <Stat icon={checkedIcon.url} label={lang === "es" ? "Revisados" : t("Checked")} value={checked} onClick={() => setCheckedOpen(true)} />
+        <Button asChild variant="outline" className="h-auto min-w-0 flex-col justify-start gap-0 whitespace-normal rounded-lg bg-card p-3 text-foreground shadow-sm">
+          <Link to="/learn" hash="knowledge-tree">
+            <img src={knowledgeTreeIcon.url} alt="" width={48} height={48} className="size-12 shrink-0 object-contain" />
+            <span className="mt-1 block text-xs text-muted-foreground">{t("Knowledge Tree")}</span>
+          </Link>
+        </Button>
       </section>
 
-      <section className="px-5 mt-5">
+      <section ref={inboxRef} id="scam-alerts-inbox" className="px-5 mt-5">
         <div className="flex items-center justify-between mb-2">
           <h2>📬 {t("Scam Alerts Inbox")}</h2>
           {alerts.length > 0 && (
@@ -833,13 +852,13 @@ function channelIcon(channel: string) {
   return channel === "ssn_request" ? "🛡️" : (channel === "email" || channel === "email_forward") ? "📧" : channel === "sms" ? "📱" : channel === "call" ? "📞" : "🔍";
 }
 
-function Stat({ icon, label, value }: { icon: string; label: string; value: React.ReactNode }) {
+function Stat({ icon, label, value, onClick }: { icon: string; label: string; value: React.ReactNode; onClick: () => void }) {
   return (
-    <div className="card-soft text-center" style={{ padding: 12 }}>
-      <div style={{ fontSize: 24 }}>{icon}</div>
-      <div className="font-extrabold" style={{ fontSize: 22 }}>{value}</div>
-      <div className="text-xs" style={{ color: "var(--color-muted-foreground)" }}>{label}</div>
-    </div>
+    <Button variant="outline" onClick={onClick} className="h-auto min-w-0 flex-col justify-start gap-0 whitespace-normal rounded-lg bg-card p-3 text-foreground shadow-sm">
+      <img src={icon} alt="" width={48} height={48} className="size-12 shrink-0 object-contain" />
+      <span className="block text-[22px] font-extrabold">{value}</span>
+      <span className="block text-xs text-muted-foreground">{label}</span>
+    </Button>
   );
 }
 

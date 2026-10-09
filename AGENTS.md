@@ -1,4 +1,5 @@
 - Mount shared site navigation and back-to-top controls inside the root auth/i18n providers; one shared implementation keeps every page consistent.
+- Senior stat tiles reuse the existing scam results for inbox/history; Learn's knowledge-tree anchor scrolls after profile hydration so direct links bypass lessons reliably.
 - Render scam results and guardian replies through shared scam-alert components; mark senior alerts read only after rendering the result and saving senior_viewed_at successfully.
 - Persist guardian scam receipts through the self-scoped record_scam_alert_view RPC with profile/alert cascading references; this prevents forged names, cross-family access, and orphaned replies.
 - Keep page-specific bottom navigation in ScreenShell and mark it for scroll-control clearance; this preserves app navigation without overlapping floating controls.
