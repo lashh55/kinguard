@@ -1,5 +1,5 @@
 import { NeverNotice } from "@/components/NeverNotice";
-import { GuardianRequests, GuardianNotices } from "@/components/GuardianRequests";
+import { GuardianRequests, GuardianNotices, SeniorGuardianNotice } from "@/components/GuardianRequests";
 import { pageHead } from "@/lib/pageHead";
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
@@ -208,6 +208,7 @@ function SeniorDashboard() {
         <h1>Hello, {profile.full_name.split(" ")[0]} 👋</h1>
       </header>
       <GuardianRequests onChange={() => supabase.rpc("get_my_guardians").then(({ data }) => setGuardianCount((data ?? []).length))} />
+      <SeniorGuardianNotice />
       <section className="px-5 mb-3"><NeverNotice /></section>
 
       {unreadCount > 0 && (
@@ -436,7 +437,7 @@ function GuardianDashboard() {
     }
     try { (window as any).gtag?.("event", "guardian_linked"); } catch {}
     setNewCode(""); setNewLabel(""); setShowAdd(false);
-    setLinkMsg({ ok: true, text: es ? "Solicitud enviada. Aparecerá en su lista cuando su ser querido la apruebe." : "Request sent! They'll appear in your list once your loved one approves you." });
+    setLinkMsg({ ok: true, text: es ? "¡Vinculado! Ahora está protegiendo a su ser querido." : "Linked! You are now protecting your loved one." });
     setReload((r) => r + 1);
   };
 
