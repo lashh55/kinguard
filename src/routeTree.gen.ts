@@ -9,6 +9,7 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as TermsRouteImport } from './routes/terms'
 import { Route as SsnRouteImport } from './routes/ssn'
 import { Route as SitemapDotxmlRouteImport } from './routes/sitemap[.]xml'
 import { Route as ScamsRouteImport } from './routes/scams'
@@ -30,6 +31,11 @@ import { Route as AdminAdminMessagesRouteImport } from './routes/_admin/admin.me
 import { Route as AdminAdminGuardiansRouteImport } from './routes/_admin/admin.guardians'
 import { Route as AdminAdminAuditRouteImport } from './routes/_admin/admin.audit'
 
+const TermsRoute = TermsRouteImport.update({
+  id: '/terms',
+  path: '/terms',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const SsnRoute = SsnRouteImport.update({
   id: '/ssn',
   path: '/ssn',
@@ -142,6 +148,7 @@ export interface FileRoutesByFullPath {
   '/scams': typeof ScamsRouteWithChildren
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/ssn': typeof SsnRoute
+  '/terms': typeof TermsRoute
   '/scams/$slug': typeof ScamsSlugRoute
   '/admin/audit': typeof AdminAdminAuditRoute
   '/admin/guardians': typeof AdminAdminGuardiansRoute
@@ -163,6 +170,7 @@ export interface FileRoutesByTo {
   '/scams': typeof ScamsRouteWithChildren
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/ssn': typeof SsnRoute
+  '/terms': typeof TermsRoute
   '/scams/$slug': typeof ScamsSlugRoute
   '/admin/audit': typeof AdminAdminAuditRoute
   '/admin/guardians': typeof AdminAdminGuardiansRoute
@@ -186,6 +194,7 @@ export interface FileRoutesById {
   '/scams': typeof ScamsRouteWithChildren
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/ssn': typeof SsnRoute
+  '/terms': typeof TermsRoute
   '/scams/$slug': typeof ScamsSlugRoute
   '/_admin/admin/audit': typeof AdminAdminAuditRoute
   '/_admin/admin/guardians': typeof AdminAdminGuardiansRoute
@@ -209,6 +218,7 @@ export interface FileRouteTypes {
     | '/scams'
     | '/sitemap.xml'
     | '/ssn'
+    | '/terms'
     | '/scams/$slug'
     | '/admin/audit'
     | '/admin/guardians'
@@ -230,6 +240,7 @@ export interface FileRouteTypes {
     | '/scams'
     | '/sitemap.xml'
     | '/ssn'
+    | '/terms'
     | '/scams/$slug'
     | '/admin/audit'
     | '/admin/guardians'
@@ -252,6 +263,7 @@ export interface FileRouteTypes {
     | '/scams'
     | '/sitemap.xml'
     | '/ssn'
+    | '/terms'
     | '/scams/$slug'
     | '/_admin/admin/audit'
     | '/_admin/admin/guardians'
@@ -275,11 +287,19 @@ export interface RootRouteChildren {
   ScamsRoute: typeof ScamsRouteWithChildren
   SitemapDotxmlRoute: typeof SitemapDotxmlRoute
   SsnRoute: typeof SsnRoute
+  TermsRoute: typeof TermsRoute
   ApiPublicInboundEmailRoute: typeof ApiPublicInboundEmailRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/terms': {
+      id: '/terms'
+      path: '/terms'
+      fullPath: '/terms'
+      preLoaderRoute: typeof TermsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/ssn': {
       id: '/ssn'
       path: '/ssn'
@@ -466,6 +486,7 @@ const rootRouteChildren: RootRouteChildren = {
   ScamsRoute: ScamsRouteWithChildren,
   SitemapDotxmlRoute: SitemapDotxmlRoute,
   SsnRoute: SsnRoute,
+  TermsRoute: TermsRoute,
   ApiPublicInboundEmailRoute: ApiPublicInboundEmailRoute,
 }
 export const routeTree = rootRouteImport
