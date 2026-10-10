@@ -16,17 +16,24 @@ export const Route = createFileRoute("/ssn")({
   component: SsnShield,
 });
 
+import employerIcon from "@/assets/kinguard-check-employer.webp.asset.json";
+import bankIcon from "@/assets/kinguard-check-bank.webp.asset.json";
+import irsIcon from "@/assets/kinguard-check-irs-ssa.webp.asset.json";
+import websiteIcon from "@/assets/kinguard-check-website.webp.asset.json";
+import phoneIcon from "@/assets/kinguard-check-phone-call.webp.asset.json";
+import unsureIcon from "@/assets/kinguard-check-not-sure.webp.asset.json";
+
 type Asker = "employer" | "bank" | "irs" | "website" | "phone" | "email" | "unsure";
 type Direction = "self" | "them";
 
-const ASKERS: { id: Asker; label: string; icon: string }[] = [
-  { id: "employer", label: "My Employer or HR", icon: "👔" },
-  { id: "bank", label: "My Bank or Credit Union", icon: "🏦" },
-  { id: "irs", label: "The IRS or Social Security Office", icon: "🏛️" },
-  { id: "website", label: "A Website I Found Online", icon: "🌐" },
-  { id: "phone", label: "Someone Who Called Me", icon: "📞" },
+const ASKERS: { id: Asker; label: string; icon?: string; img?: { url: string } }[] = [
+  { id: "employer", label: "My Employer or HR", img: employerIcon },
+  { id: "bank", label: "My Bank or Credit Union", img: bankIcon },
+  { id: "irs", label: "The IRS or Social Security Office", img: irsIcon },
+  { id: "website", label: "A Website I Found Online", img: websiteIcon },
+  { id: "phone", label: "Someone Who Called Me", img: phoneIcon },
   { id: "email", label: "An Email or Text Message", icon: "📧" },
-  { id: "unsure", label: "I'm Not Sure", icon: "❓" },
+  { id: "unsure", label: "I'm Not Sure", img: unsureIcon },
 ];
 
 type Verdict = { level: "safe" | "warn" | "danger"; title: string; body: string };
@@ -63,7 +70,7 @@ const IRS_STEPS = [
 ];
 
 const BUREAUS = [
-  { id: "equifax", name: "Equifax", url: "https://www.equifax.com/personal/credit-report-services/credit-freeze/", phone: "1-800-349-9960", icon: "🟥" },
+  { id: "equifax", name: "Equifax", url: "https://www.equifax.com/personal/credit-report-services/credit-freeze/", phone: "1-888-298-0045", icon: "🟥" },
   { id: "experian", name: "Experian", url: "https://www.experian.com/freeze/center.html", phone: "1-888-397-3742", icon: "🟦" },
   { id: "transunion", name: "TransUnion", url: "https://www.transunion.com/credit-freeze", phone: "1-888-909-8872", icon: "🟩" },
 ];
@@ -129,7 +136,10 @@ function SsnShield() {
               <p className="font-bold">{t("Who is asking for your SSN?")}</p>
               {ASKERS.map((a) => (
                 <button key={a.id} className="btn-base btn-sky w-full justify-start text-left" onClick={() => { track("ssn_check_started", { asker: a.id }); setAsker(a.id); }}>
-                  <span className="mr-2">{a.icon}</span> {t(a.label)}
+                  {a.img
+                    ? <img src={a.img.url} alt="" width={40} height={40} className="mr-2 h-10 w-10 shrink-0 object-contain" />
+                    : <span className="mr-2">{a.icon}</span>}
+                  {t(a.label)}
                 </button>
               ))}
             </div>
