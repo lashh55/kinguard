@@ -1,5 +1,3 @@
-import type { SupabaseClient } from "@supabase/supabase-js";
-import type { Database } from "@/integrations/supabase/types";
 import { supabase } from "@/integrations/supabase/client";
 
 export type SosEvent = {
@@ -19,9 +17,7 @@ export type SosEvent = {
   request_count?: number;
   latest_requested_at?: string | null;
 };
-type SosDatabase = Database & { public: { Functions: { request_sos: { Args: Record<string, never>; Returns: SosEvent } } } };
-const sosClient = supabase as unknown as SupabaseClient<SosDatabase>;
-export const requestHelp = () => sosClient.rpc("request_sos");
+export const requestHelp = () => supabase.rpc("request_sos");
 export const SOS_COLS = "id,senior_id,senior_first_name,created_at,acknowledged_at,acknowledged_by_name,claimed_by,claimed_by_name,claimed_at,helper_names,urgent,unreached_by_name,last_alerted_at,request_count,latest_requested_at";
 export const REALERT_MS = 10 * 60 * 1000;
 export const sosOverdue = (e: SosEvent, now: number) =>
