@@ -5,7 +5,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { AdminShell, AdminTable } from "@/components/AdminShell";
 import { logAdminView } from "@/lib/admin";
 
-export const Route = createFileRoute("/_admin/admin/sos")({ head: () => pageHead("Admin SOS log", "Review KinGuard help requests."), component: SosPage });
+export const Route = createFileRoute("/_admin/admin/sos")({ head: () => pageHead("Admin help requests", "Review KinGuard help requests."), component: SosPage });
 
 type Row = { id: string; senior_id: string; senior_name: string | null; created_at: string };
 
@@ -16,7 +16,7 @@ function SosPage() {
     supabase.rpc("admin_list_sos").then(({ data }) => setRows((data as Row[]) ?? []));
   }, []);
   return (
-    <AdminShell title={`SOS events (${rows.length})`}>
+    <AdminShell title={`Help requests (${rows.length})`}>
       <AdminTable rows={rows} columns={[
         { key: "when", label: "When", render: (r) => new Date(r.created_at).toLocaleString() },
         { key: "who", label: "Senior", render: (r) => r.senior_name ?? "—" },
