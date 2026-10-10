@@ -289,7 +289,7 @@ function SeniorDashboard() {
       <section className="px-5 mt-5 space-y-3">
         <Link to="/check" className="btn-base btn-primary w-full">🔍 {t("Check a Suspicious Message")}</Link>
         <Button asChild className="btn-base btn-primary w-full h-auto whitespace-normal"><Link to="/ssn"><KinGuardShield /> {t("Protect My SSN")}</Link></Button>
-        <Button className="btn-base btn-danger w-full h-auto whitespace-normal" disabled={sendingHelp} onClick={async () => {
+        <Button variant="destructive" className="w-full h-auto min-h-14 rounded-2xl py-3.5 px-5 text-xl font-bold whitespace-normal bg-destructive text-destructive-foreground" disabled={sendingHelp} onClick={async () => {
           if (guardianCount === 0) {
             toast(t("Please add a guardian before using SOS Alert."));
             return;
