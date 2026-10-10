@@ -76,7 +76,7 @@ const DICT: Record<string, string> = {
   "Messages": "Mensajes",
   "Audit": "Auditoría",
   "Home": "Inicio",
-  "Check": "Verificar",
+  "Check": "Revisar",
   "Learn": "Aprender",
   "Profile": "Perfil",
 
