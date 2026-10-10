@@ -15,3 +15,5 @@
 - [x] Verify both navigation bars render the new icons at 28x28 in English and Spanish with no page errors.
 - [x] Put uploaded shield badge artwork on the Protect My SSN button at 32x32 in full color and match its label to the other buttons; put uploaded question artwork on the This Week's Question card at 32x32.
 - [x] Verify Ava's dashboard shows both new icons at 32x32 with no page errors and the SSN button label matches Check a Suspicious Message in English and Spanish.
+- [x] Swap only the zero-streak card's ending emoji from flexed arm to sparkles in English and Spanish, keeping wording, size and position.
+- [x] Verify Ava's dashboard streak card shows sparkles in both languages with no page errors.
