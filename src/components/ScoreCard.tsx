@@ -1,6 +1,7 @@
 import { ReactNode } from "react";
 import { ChallengeStats, currentLevelBadge, nextLevelBadge, normalizeStats } from "@/lib/badges";
 import { useI18n } from "@/lib/i18n";
+import { BrandIcon } from "@/components/KinGuardIcon";
 
 export function ScoreCard({ stats: raw, compact, tree }: { stats: unknown; compact?: boolean; tree?: ReactNode }) {
   const { t, lang } = useI18n();
@@ -30,7 +31,7 @@ export function ScoreCard({ stats: raw, compact, tree }: { stats: unknown; compa
             color: "#fff",
           }}
         >
-          {current?.icon ?? "🌱"}
+          <BrandIcon icon={current?.icon ?? "🌱"} />
         </div>
         <div className="flex-1 min-w-0">
           <p className="font-bold" style={{ fontSize: 14, color: "var(--color-muted-foreground)" }}>{t("Current badge")}</p>
@@ -63,7 +64,7 @@ export function ScoreCard({ stats: raw, compact, tree }: { stats: unknown; compa
             />
           </div>
           <p className="text-sm mt-2 text-center font-bold">
-            {(() => { const n = Math.max(0, progressTarget - stats.total_correct); return lang === "es" ? `${n} ${n === 1 ? "respuesta correcta más" : "respuestas correctas más"} para llegar a ${next.name}` : `${n} more correct ${n === 1 ? "answer" : "answers"} to reach ${next.name}`; })()} {next.icon}
+            {(() => { const n = Math.max(0, progressTarget - stats.total_correct); return lang === "es" ? `${n} ${n === 1 ? "respuesta correcta más" : "respuestas correctas más"} para llegar a ${next.name}` : `${n} more correct ${n === 1 ? "answer" : "answers"} to reach ${next.name}`; })()} <BrandIcon icon={next.icon} />
           </p>
         </div>
       )}

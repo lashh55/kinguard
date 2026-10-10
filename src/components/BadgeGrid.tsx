@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { ALL_BADGES, BadgeDef, ChallengeStats, normalizeStats } from "@/lib/badges";
 import { useI18n } from "@/lib/i18n";
+import { BrandIcon } from "@/components/KinGuardIcon";
 
 export function BadgeGrid({ stats: raw }: { stats: unknown }) {
   const { t } = useI18n();
@@ -25,7 +26,7 @@ export function BadgeGrid({ stats: raw }: { stats: unknown }) {
                 border: isEarned ? "none" : "2px dashed var(--color-border)",
               }}
             >
-              <div style={{ fontSize: 36 }}>{isEarned ? b.icon : "🔒"}</div>
+              <div style={{ fontSize: 36 }}><BrandIcon icon={isEarned ? b.icon : "🔒"} /></div>
               <p className="text-xs font-bold mt-1">{b.name}</p>
             </button>
           );
@@ -48,7 +49,7 @@ export function BadgeGrid({ stats: raw }: { stats: unknown }) {
                 opacity: earned.has(selected.id) ? 1 : 0.7,
               }}
             >
-              {earned.has(selected.id) ? selected.icon : "🔒"}
+              <BrandIcon icon={earned.has(selected.id) ? selected.icon : "🔒"} />
             </div>
             <h2 className="mt-3">{selected.name}</h2>
             <p className="mt-2">{selected.description}</p>

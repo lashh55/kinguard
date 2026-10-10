@@ -27,11 +27,7 @@ export function notifyGuardianScam(a: ScamAlertInput) {
 
 export function notifyGuardianSOS(seniorName: string, lang: "en" | "es" = "en") {
   const msg = lang === "es"
-    ? `🆘 Alerta de ayuda\n` +
-      `${seniorName} ha presionado el botón de ayuda y necesita asistencia.\n` +
-      `Comuníquese con esta persona de inmediato.`
-    : `🆘 Help Alert\n` +
-      `${seniorName} has pressed the help button and needs assistance.\n` +
-      `Reach out to them right away.`;
+    ? `${seniorName} pidió ayuda — por favor comuníquese con esta persona ahora.`
+    : `${seniorName} asked for help — please contact them now.`;
   toast(msg, { duration: 5000, style: { whiteSpace: "pre-line" } });
 }

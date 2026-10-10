@@ -9,6 +9,7 @@ import { useI18n } from "@/lib/i18n";
 import { normalizeStats } from "@/lib/badges";
 import { SsnDisclaimer } from "@/components/SsnDisclaimer";
 import { track } from "@/lib/analytics";
+import { KinGuardShield } from "@/components/KinGuardIcon";
 
 export const Route = createFileRoute("/ssn")({
   head: () => pageHead("SSN Shield", "Assess requests for Social Security information without sharing your number."),
@@ -97,7 +98,7 @@ function SsnShield() {
           const updated = { ...stats, badges_earned: [...stats.badges_earned, "ssn_hero"] };
           await supabase.from("profiles").update({ challenge_stats: updated as any }).eq("id", profile.id);
           track("badge_earned", { badge_id: "ssn_hero", badge_name: "SSN Hero" });
-          toast(t("🛡️ You earned the SSN Hero badge!"));
+          toast(<><KinGuardShield /> {t("🛡️ You earned the SSN Hero badge!").replace(/🛡️?\s*/u, "")}</>);
         }
       }
       refreshProfile?.();
@@ -113,7 +114,7 @@ function SsnShield() {
         <SsnDisclaimer />
       </section>
       <header className="px-5 pt-4 pb-3">
-        <h1 style={{ color: "var(--color-rose)" }}>{t("🛡️ SSN Shield")}</h1>
+        <h1 style={{ color: "var(--color-rose)" }}><KinGuardShield /> {t("🛡️ SSN Shield").replace(/🛡️?\s*/u, "")}</h1>
         <p className="mt-1">{t("You have the power to protect yourself. We'll show you how.")}</p>
       </header>
 
@@ -296,7 +297,7 @@ function SsnShield() {
 
           {freezeDone === 3 && (
             <div className="rounded-2xl p-4 mt-4 text-white" style={{ background: "#2ECC71" }}>
-              <p className="font-extrabold" style={{ fontSize: 20 }}>{t("🛡️ Excellent!")}</p>
+              <p className="font-extrabold" style={{ fontSize: 20 }}><KinGuardShield /> {t("🛡️ Excellent!").replace(/🛡️?\s*/u, "")}</p>
               <p className="mt-1">{t("All three credit bureaus are frozen. Your credit is now protected even if someone has your Social Security Number.")}</p>
             </div>
           )}

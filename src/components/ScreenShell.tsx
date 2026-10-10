@@ -3,6 +3,7 @@ import { ReactNode } from "react";
 import { useAuth } from "@/lib/auth";
 import { PhotoPanel } from "@/components/PhotoPanel";
 import { useI18n } from "@/lib/i18n";
+import { BrandIcon } from "@/components/KinGuardIcon";
 
 export function ScreenShell({ children, withPhotoPanel = false }: { children: ReactNode; withPhotoPanel?: boolean }) {
   const { profile } = useAuth();
@@ -53,7 +54,7 @@ function NavItem({ to, icon, label }: { to: string; icon: string; label: string 
         className="text-2xl"
         style={{ filter: active ? "none" : "grayscale(0.2)", color: active ? "var(--color-tan)" : "var(--color-brown)" }}
       >
-        {icon}
+        <BrandIcon icon={icon} />
       </span>
       <span
         className="text-xs font-bold mt-1"
