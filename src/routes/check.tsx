@@ -28,7 +28,7 @@ type Result = {
 
 function CheckScreen() {
   const { profile } = useAuth();
-  const { t } = useI18n();
+  const { t, lang } = useI18n();
   const navigate = useNavigate();
   const [content, setContent] = useState("");
   const [busy, setBusy] = useState(false);
