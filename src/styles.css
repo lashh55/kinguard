@@ -46,7 +46,7 @@
   --radius: 1rem;
 
   /* Brand palette */
-  --sky: oklch(0.86 0.04 230);        /* #ACD0DC Soft Sky Blue */
+  --sky: #ACD0DC;                    /* Exact uploaded KinGuard background */
   --cream: oklch(0.96 0.07 95);       /* #F6EFC1 Warm Cream */
   --tan: oklch(0.83 0.09 85);         /* #DFC18F Golden Tan */
   --rose: oklch(0.62 0.07 25);        /* #B27F7C Dusty Rose */
@@ -147,6 +147,7 @@
 }
 
 @layer utilities {
+  .kinguard-inline-icon { display: inline-block; width: 1.3em; height: 1.3em; object-fit: contain; flex-shrink: 0; vertical-align: middle; }
   html { scroll-padding-top: 160px; }
   .site-navigation nav { max-height: calc(100dvh - 100px); overscroll-behavior: contain; }
   .site-back-to-top svg { width: 26px; height: 26px; }

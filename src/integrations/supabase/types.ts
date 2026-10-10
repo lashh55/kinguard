@@ -451,6 +451,8 @@ export type Database = {
           helper_names: string[]
           id: string
           last_alerted_at: string
+          latest_requested_at: string | null
+          request_count: number
           senior_first_name: string | null
           senior_id: string
           unreached_by_name: string | null
@@ -467,6 +469,8 @@ export type Database = {
           helper_names?: string[]
           id?: string
           last_alerted_at?: string
+          latest_requested_at?: string | null
+          request_count?: number
           senior_first_name?: string | null
           senior_id: string
           unreached_by_name?: string | null
@@ -483,6 +487,8 @@ export type Database = {
           helper_names?: string[]
           id?: string
           last_alerted_at?: string
+          latest_requested_at?: string | null
+          request_count?: number
           senior_first_name?: string | null
           senior_id?: string
           unreached_by_name?: string | null
@@ -605,6 +611,33 @@ export type Database = {
       record_scam_alert_view: {
         Args: { _alert_id: string; _message?: string; _reply_key?: string }
         Returns: undefined
+      }
+      request_sos: {
+        Args: never
+        Returns: {
+          acknowledged_at: string | null
+          acknowledged_by: string | null
+          acknowledged_by_name: string | null
+          claimed_at: string | null
+          claimed_by: string | null
+          claimed_by_name: string | null
+          created_at: string
+          helper_names: string[]
+          id: string
+          last_alerted_at: string
+          latest_requested_at: string | null
+          request_count: number
+          senior_first_name: string | null
+          senior_id: string
+          unreached_by_name: string | null
+          urgent: boolean
+        }
+        SetofOptions: {
+          from: "*"
+          to: "sos_events"
+          isOneToOne: true
+          isSetofReturn: false
+        }
       }
       resolve_sos: { Args: { _id: string; _ok: boolean }; Returns: undefined }
       respond_guardian_request: {
