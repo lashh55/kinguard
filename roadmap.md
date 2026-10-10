@@ -17,3 +17,5 @@
 - [x] Verify Ava's dashboard shows both new icons at 32x32 with no page errors and the SSN button label matches Check a Suspicious Message in English and Spanish.
 - [x] Swap only the zero-streak card's ending emoji from flexed arm to sparkles in English and Spanish, keeping wording, size and position.
 - [x] Verify Ava's dashboard streak card shows sparkles in both languages with no page errors.
+- [x] Put uploaded tip artwork on the Today's scam tip card at 36x36 in place of the lightbulb and enlarge its heading and tip text 1.5x, keeping the soft blue card and tip wording.
+- [x] Verify Ava's tip card renders the icon at 36x36 with 27px text in English and Spanish, soft blue background unchanged, no page errors.

@@ -18,6 +18,7 @@ import helpIcon from "@/assets/kinguard-help-people.webp.asset.json";
 import { KinGuardShield } from "@/components/KinGuardIcon";
 import shieldBadge from "@/assets/kinguard-shield-badge.webp.asset.json";
 import questionIcon from "@/assets/kinguard-question-icon.webp.asset.json";
+import tipIcon from "@/assets/kinguard-tip-icon.webp.asset.json";
 import { requestHelp, SOS_COLS, REALERT_MS, sosOverdue, fmtTime, helpRequestText, type SosEvent } from "@/lib/sos";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
 import { useI18n } from "@/lib/i18n";
@@ -366,8 +367,8 @@ function SeniorDashboard() {
 
       <section className="px-5 mt-5">
         <div className="card-soft" style={{ background: "var(--color-sky)" }}>
-          <p className="font-bold mb-1">{t("💡 Today's scam tip")}</p>
-          <p>{tip}</p>
+          <p className="font-bold mb-1 flex items-center gap-2" style={{ fontSize: "1.5em" }}><img src={tipIcon.url} alt="" width={36} height={36} className="kinguard-tip-icon" /> {t("Today's scam tip")}</p>
+          <p style={{ fontSize: "1.5em" }}>{tip}</p>
         </div>
       </section>
     </ScreenShell>
