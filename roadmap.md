@@ -8,3 +8,6 @@
 - [x] Verify Ava opens full scan, Lisa's quick/custom replies read back live on Ava's screen, and Spanish results/status; no page errors.
 - [x] Replace senior stat icons with compressed uploaded images and make all three destinations tappable.
 - [x] Verify tile destinations and Spanish labels with Ava signed in; checked message opens full result, Knowledge Tree scrolls past lessons, all icons render at 48×48 with no page errors.
+- [ ] Update All clear artwork, shield/inbox/help icons, greeting and bilingual help copy.
+- [ ] Consolidate repeated help requests, stop reminders when claimed, and close the two specified test alerts.
+- [ ] Verify senior-to-guardian help flow and artwork in both languages.
