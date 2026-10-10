@@ -13,3 +13,5 @@
 - [x] Verify Ava-to-Lisa combined help requests, live claim status, Spanish copy, unreachable reopening and single OK closure; verify artwork and reminder rules with no page errors.
 - [x] Add uploaded Home, Check and Learn artwork to the app navigation tabs at 28x28 above real text labels; Spanish tab labels Inicio, Revisar, Aprender.
 - [x] Verify both navigation bars render the new icons at 28x28 in English and Spanish with no page errors.
+- [x] Put uploaded shield badge artwork on the Protect My SSN button at 32x32 in full color and match its label to the other buttons; put uploaded question artwork on the This Week's Question card at 32x32.
+- [x] Verify Ava's dashboard shows both new icons at 32x32 with no page errors and the SSN button label matches Check a Suspicious Message in English and Spanish.
