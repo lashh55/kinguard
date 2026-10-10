@@ -12,6 +12,7 @@ import { LearningTree, LearningTreeWithTooltip } from "@/components/LearningTree
 import { useI18n } from "@/lib/i18n";
 import { BadgeGrid } from "@/components/BadgeGrid";
 import { track } from "@/lib/analytics";
+import { BrandIcon } from "@/components/KinGuardIcon";
 import slide1 from "@/assets/slide-1.png";
 import slide2 from "@/assets/slide-2.png";
 import slide3 from "@/assets/slide-3.png";
@@ -210,7 +211,7 @@ function Cards() {
         {SCAM_CARDS.map((c) => (
           <details key={c.id} className="card-soft" style={{ borderTop: `6px solid ${c.accent}` }} onToggle={(e) => { if ((e.target as HTMLDetailsElement).open) handleOpen(c.id); }}>
             <summary className="font-extrabold cursor-pointer" style={{ fontSize: 19 }}>
-              {c.icon} {t(c.title)}
+              <BrandIcon icon={c.icon} /> {t(c.title)}
             </summary>
             <div className="mt-3 space-y-3">
               <div>

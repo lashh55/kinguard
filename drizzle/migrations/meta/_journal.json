@@ -50,6 +50,13 @@
       "when": 1791588316111,
       "tag": "0006_scam_alert_receipts_and_replies",
       "breakpoints": true
+    },
+    {
+      "idx": 7,
+      "version": "7",
+      "when": 1791592436646,
+      "tag": "0007_consolidate_help_requests",
+      "breakpoints": true
     }
   ]
 }

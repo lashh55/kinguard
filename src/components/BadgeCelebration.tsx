@@ -2,6 +2,7 @@ import { useMemo, useState } from "react";
 import { BadgeDef } from "@/lib/badges";
 import { toast } from "sonner";
 import { track } from "@/lib/analytics";
+import { BrandIcon } from "@/components/KinGuardIcon";
 
 const CONFETTI_COLORS = ["#ACD0DC", "#F6EFC1", "#DFC18F", "#B27F7C", "#2ECC71", "#F39C12"];
 
@@ -29,7 +30,7 @@ export function BadgeCelebration({
   );
 
   const share = async () => {
-    const text = `I just earned the ${badge.name} badge on KinGuard! I'm learning to stay safe from scams. 🛡️`;
+    const text = `I just earned the ${badge.name} badge on KinGuard! I'm learning to stay safe from scams.`;
     try {
       await navigator.clipboard.writeText(text);
       toast("✅ Copied! Share with friends and family.");
@@ -89,7 +90,7 @@ export function BadgeCelebration({
             fontSize: 80,
           }}
         >
-          {badge.icon}
+          <BrandIcon icon={badge.icon} />
         </div>
         <h2 className="mt-4">🎉 Congratulations {name.split(" ")[0]}!</h2>
         <p className="mt-2" style={{ fontSize: 18 }}>

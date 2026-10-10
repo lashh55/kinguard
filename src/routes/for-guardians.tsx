@@ -1,6 +1,7 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { MarketingShell } from "@/components/MarketingShell";
 import { ScamVignette } from "@/components/ScamVignette";
+import { BrandIcon } from "@/components/KinGuardIcon";
 
 
 export const Route = createFileRoute("/for-guardians")({
@@ -81,7 +82,7 @@ function ForGuardians() {
 function Feature({ emoji, title, children }: { emoji: string; title: string; children: React.ReactNode }) {
   return (
     <div className="card-soft">
-      <div className="text-3xl">{emoji}</div>
+      <div className="text-3xl"><BrandIcon icon={emoji} /></div>
       <h3 className="mt-2 font-extrabold">{title}</h3>
       <p className="mt-1 text-sm">{children}</p>
     </div>

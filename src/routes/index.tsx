@@ -12,6 +12,7 @@ import { track } from "@/lib/analytics";
 import { PasswordInput } from "@/components/PasswordInput";
 import { PasswordStrengthMeter } from "@/components/PasswordStrengthMeter";
 import { generatePassphrase } from "@/lib/passphrase";
+import { BrandIcon, KinGuardShield } from "@/components/KinGuardIcon";
 
 export const Route = createFileRoute("/")({
   head: () => pageHead("Protecting the people you love", "Start your KinGuard protection or sign in to check suspicious messages and connect with guardians."),
@@ -91,7 +92,7 @@ function FeatureIcons() {
               border: "2px solid color-mix(in oklab, var(--color-rose) 18%, transparent)",
             }}
           >
-            <div className="text-4xl" aria-hidden>{it.icon}</div>
+            <div className="text-4xl" aria-hidden><BrandIcon icon={it.icon} /></div>
             <p className="mt-2 font-bold" style={{ color: "var(--color-brown)", fontSize: 15 }}>
               {it.label}
             </p>
@@ -108,7 +109,7 @@ function RoleStep({ onPick, onSignIn, onSignUp }: { onPick: (s: Step) => void; o
   return (
     <div className="space-y-4">
       <button className="btn-base btn-sky w-full" onClick={onSignUp}>
-        {t("🛡️ I want to be protected")}
+        <KinGuardShield /> {t("I want to be protected")}
       </button>
       <button className="btn-base btn-primary w-full" onClick={() => onPick("guardian")}>
         {t("💙 I want to protect someone")}
