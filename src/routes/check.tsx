@@ -9,6 +9,8 @@ import { analyzeScam } from "@/lib/scam.functions";
 import { notifyGuardianScam } from "@/lib/guardianAlerts";
 import { useI18n } from "@/lib/i18n";
 import { track } from "@/lib/analytics";
+import copyEmailIcon from "@/assets/kinguard-check-copy-email.webp.asset.json";
+import checkNowIcon from "@/assets/kinguard-nav-check.webp.asset.json";
 
 export const Route = createFileRoute("/check")({
   head: () => pageHead("Check a suspicious message", "Check suspicious texts and emails with KinGuard and review scam risk and safety recommendations."),
@@ -106,7 +108,7 @@ function CheckScreen() {
             className="btn-base w-full mt-3 font-extrabold"
             style={{ background: "#DFC18F", color: "#3D2B2B" }}
           >
-            {copied ? t("✅ Copied!") : t("📋 Copy email address")}
+            {copied ? t("✅ Copied!") : <><img src={copyEmailIcon.url} alt="" width={40} height={40} className="h-10 w-10 shrink-0 object-contain" /> {t("Copy email address")}</>}
           </button>
           <p className="mt-3" style={{ fontSize: 16 }}>
             {t("Open the suspicious email, tap Forward, and send it to this address. That is all you need to do.")}
@@ -137,7 +139,7 @@ function CheckScreen() {
           disabled={busy || !content.trim()}
           style={content.trim() ? { background: "#DFC18F", color: "#3D2B2B" } : undefined}
         >
-          {busy ? t("KinGuard is analyzing this for you…") : t("🔍 Check This Now")}
+          {busy ? t("KinGuard is analyzing this for you…") : <><img src={checkNowIcon.url} alt="" width={40} height={40} className="h-10 w-10 shrink-0 object-contain" /> {t("Check This Now")}</>}
         </button>
         {err && <p className="font-bold" style={{ color: "var(--color-danger)" }}>{err}</p>}
       </form>

@@ -4,7 +4,7 @@ export type Lang = "en" | "es";
 
 const DICT: Record<string, string> = {
   "Create yours above with the \"Create my code word\" button.": "Cree la suya arriba con el botón \"Crear mi palabra clave\".",
-  "📋 Copy email address": "📋 Copiar dirección de correo",
+  "Copy email address": "Copiar dirección de correo",
   "Create my code word": "Crear mi palabra clave",
   "Just forward it to KinGuard's secure scan address below. No copying or pasting needed. KinGuard will check it and show the result to you and your guardians in the app.":
     "Solo reenvíelo a la dirección segura de KinGuard que aparece abajo. No necesita copiar ni pegar nada. KinGuard lo revisará y le mostrará el resultado a usted y a sus guardianes en la aplicación.",
@@ -129,7 +129,7 @@ const DICT: Record<string, string> = {
   "Not Sure": "No estoy seguro/a",
   "Please select what type of message this is before checking": "Por favor selecciona qué tipo de mensaje es antes de verificar",
   "KinGuard is analyzing this for you…": "KinGuard está analizando esto para ti…",
-  "🔍 Check This Now": "🔍 Verificar ahora",
+  "Check This Now": "Verificar ahora",
   "Could not analyze. Please try again.": "No se pudo analizar. Por favor inténtalo de nuevo.",
   "🚨 SSN ALERT": "🚨 ALERTA DE NÚMERO DE SEGURO SOCIAL",
   "This message is asking for your Social Security Number. Do NOT share it until you use our SSN Shield checker.": "Este mensaje está pidiendo tu Número de Seguro Social. NO lo compartas hasta usar nuestro verificador SSN Shield.",
