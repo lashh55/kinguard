@@ -150,6 +150,7 @@
   .kinguard-inline-icon { display: inline-block; width: 1.3em; height: 1.3em; object-fit: contain; flex-shrink: 0; vertical-align: middle; }
   .kinguard-nav-icon { display: block; width: 28px; height: 28px; object-fit: contain; }
   .kinguard-badge-icon { display: block; width: 32px; height: 32px; min-width: 32px; min-height: 32px; object-fit: contain; flex-shrink: 0; opacity: 1; filter: none; }
+  .kinguard-tip-icon { display: block; width: 36px; height: 36px; min-width: 36px; min-height: 36px; object-fit: contain; flex-shrink: 0; opacity: 1; filter: none; }
   html { scroll-padding-top: 160px; }
   .site-navigation nav { max-height: calc(100dvh - 100px); overscroll-behavior: contain; }
   .site-back-to-top svg { width: 26px; height: 26px; }

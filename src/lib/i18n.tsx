@@ -101,7 +101,7 @@ const DICT: Record<string, string> = {
   "🧠 This Week's Question": "🧠 Pregunta de esta semana",
   "This Week's Question": "Pregunta de esta semana",
   "See All Questions": "Ver todas las preguntas",
-  "💡 Today's scam tip": "💡 Consejo del día sobre estafas",
+  "Today's scam tip": "Consejo del día sobre estafas",
   "You are protecting": "Estás protegiendo a",
   "No one linked yet": "Aún no hay nadie vinculado",
   "Ask your loved one for their 6-letter invite code, then sign in again to link.": "Pide a tu ser querido su código de invitación de 6 letras, luego inicia sesión de nuevo para vincular.",
