@@ -12,6 +12,11 @@ import { ScamAlertResult, GuardianScamCard, GuardianScanStatus, useScanReceipts 
 import alertsIcon from "@/assets/senior-alerts.webp.asset.json";
 import checkedIcon from "@/assets/senior-checked.webp.asset.json";
 import knowledgeTreeIcon from "@/assets/senior-knowledge-tree.webp.asset.json";
+import allClearLogo from "@/assets/kinguard-all-clear.webp.asset.json";
+import inboxIcon from "@/assets/kinguard-inbox.webp.asset.json";
+import helpIcon from "@/assets/kinguard-help-people.webp.asset.json";
+import { KinGuardShield } from "@/components/KinGuardIcon";
+import { requestHelp, SOS_COLS, REALERT_MS, sosOverdue, fmtTime, helpRequestText, type SosEvent } from "@/lib/sos";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
 import { useI18n } from "@/lib/i18n";
 import { SsnDisclaimer } from "@/components/SsnDisclaimer";
@@ -67,29 +72,6 @@ function Dashboard() {
   return profile.role === "guardian" ? <GuardianDashboard /> : <SeniorDashboard />;
 }
 
-type SosEvent = {
-  id: string;
-  senior_id: string;
-  senior_first_name?: string | null;
-  created_at: string;
-  acknowledged_at: string | null;
-  acknowledged_by_name: string | null;
-  claimed_by?: string | null;
-  claimed_by_name?: string | null;
-  claimed_at?: string | null;
-  helper_names?: string[] | null;
-  urgent?: boolean | null;
-  unreached_by_name?: string | null;
-  last_alerted_at?: string | null;
-};
-const SOS_COLS = "id,senior_id,senior_first_name,created_at,acknowledged_at,acknowledged_by_name,claimed_by,claimed_by_name,claimed_at,helper_names,urgent,unreached_by_name,last_alerted_at";
-const REALERT_MS = 10 * 60 * 1000;
-const sosOverdue = (e: SosEvent, now: number) =>
-  !e.acknowledged_at && !e.claimed_by && now - new Date(e.last_alerted_at || e.created_at).getTime() >= REALERT_MS;
-
-const fmtTime = (iso: string) =>
-  new Date(iso).toLocaleTimeString([], { hour: "numeric", minute: "2-digit" });
-
 function SeniorDashboard() {
   const { user, profile } = useAuth();
   const { t, lang } = useI18n();
@@ -103,6 +85,7 @@ function SeniorDashboard() {
   const [checkedOpen, setCheckedOpen] = useState(false);
   const inboxRef = useRef<HTMLElement>(null);
   const [lastSos, setLastSos] = useState<SosEvent | null>(null);
+  const [sendingHelp, setSendingHelp] = useState(false);
 
   useEffect(() => {
     if (!profile) return;
@@ -211,7 +194,7 @@ function SeniorDashboard() {
         <SsnDisclaimer />
       </section>
       <header className="px-5 pt-4 pb-4">
-        <h1>Hello, {profile.full_name.split(" ")[0]} 👋</h1>
+        <h1>{lang === "es" ? "Hola" : "Hello"}, {profile.full_name.split(" ")[0]}</h1>
       </header>
       <GuardianRequests onChange={() => supabase.rpc("get_my_guardians").then(({ data }) => setGuardianCount((data ?? []).length))} />
       <SeniorGuardianNotice />
@@ -220,9 +203,17 @@ function SeniorDashboard() {
         <section className="px-5 mb-3">
           <Button variant="secondary" onClick={() => { const a = unreadAlerts[0]; if (a) openAlert(a); }}
             className="w-full h-auto min-h-20 whitespace-normal rounded-lg p-4 text-left justify-start text-lg font-bold">
-            <span aria-hidden="true" className="text-3xl">🛡️</span>
+            <KinGuardShield className="text-3xl" />
             <span>{lang === "es" ? "KinGuard detectó una posible estafa. Usted está a salvo. Toque para ver qué era." : "KinGuard caught a possible scam. You're safe. Tap to see what it was."}</span>
           </Button>
+        </section>
+      )}
+      {unreadCount === 0 && (
+        <section className="px-5 mb-3">
+          <div className="overflow-hidden rounded-lg bg-secondary text-center pt-4" data-all-clear>
+            <h2 className="font-extrabold">{t("All clear")}</h2>
+            <img src={allClearLogo.url} alt="KinGuard — Protecting the people you love" width={370} height={456} className="block w-full max-h-80 object-contain" />
+          </div>
         </section>
       )}
       {latestReceiptAlert && (
@@ -271,7 +262,7 @@ function SeniorDashboard() {
 
       <section ref={inboxRef} id="scam-alerts-inbox" className="px-5 mt-5">
         <div className="flex items-center justify-between mb-2">
-          <h2>📬 {t("Scam Alerts Inbox")}</h2>
+          <h2 className="flex items-center gap-2"><img src={inboxIcon.url} alt="" width={32} height={32} className="kinguard-inline-icon" /> {lang === "es" ? "Bandeja de alertas de estafas" : "Scam Alerts Inbox"}</h2>
           {alerts.length > 0 && (
             <button
               onClick={() => setInboxOpen((v) => !v)}
@@ -297,20 +288,23 @@ function SeniorDashboard() {
 
       <section className="px-5 mt-5 space-y-3">
         <Link to="/check" className="btn-base btn-primary w-full">🔍 {t("Check a Suspicious Message")}</Link>
-        <Link to="/ssn" className="btn-base btn-primary w-full">🛡️ {t("Protect My SSN")}</Link>
-        <button className="btn-base btn-danger w-full" onClick={async () => {
+        <Button asChild className="btn-base btn-primary w-full h-auto whitespace-normal"><Link to="/ssn"><KinGuardShield /> {t("Protect My SSN")}</Link></Button>
+        <Button className="btn-base btn-danger w-full h-auto whitespace-normal" disabled={sendingHelp} onClick={async () => {
           if (guardianCount === 0) {
             toast(t("Please add a guardian before using SOS Alert."));
             return;
           }
-          const { data, error } = await supabase.from("sos_events").insert({ senior_id: profile.id }).select(SOS_COLS).single();
-          if (error) { toast.error(error.message); return; }
-          track("help_requested");
-          setLastSos(data as any);
-          toast(lang === "es" ? "Su alerta fue enviada. Sus guardianes la verán en KinGuard." : "Your alert was sent. Your guardians will see it in KinGuard.", { duration: 8000 });
+          setSendingHelp(true);
+          try {
+            const { data, error } = await requestHelp();
+            if (error) { toast.error(error.message); return; }
+            track("help_requested");
+            setLastSos(data);
+            toast(lang === "es" ? "Su alerta fue enviada. Sus guardianes la verán en KinGuard." : "Your alert was sent. Your guardians will see it in KinGuard.", { duration: 8000 });
+          } finally { setSendingHelp(false); }
         }}>
-          🆘 {t("I Need Help")}
-        </button>
+          <img src={helpIcon.url} alt="" width={28} height={28} className="kinguard-inline-icon" /> {lang === "es" ? "Necesito ayuda" : "I Need Help"}
+        </Button>
         <p className="text-center" style={{ fontSize: 13, color: "var(--color-muted-foreground)" }}>
           {t("In an emergency, call 911. KinGuard alerts your family. It is not an emergency service.")}
         </p>
@@ -406,6 +400,7 @@ function GuardianDashboard() {
       .order("created_at", { ascending: false }).limit(10)
       .then(({ data }) => setSosEvents((data as SosEvent[]) ?? []));
     load();
+    const poll = setInterval(load, 15000);
     const ch = supabase.channel(`sos_guardian_${profile.id}`)
       .on("postgres_changes", { event: "INSERT", schema: "public", table: "sos_events" }, (p) => {
         const e = p.new as SosEvent;
@@ -419,14 +414,15 @@ function GuardianDashboard() {
           if (!e.acknowledged_at && e.urgent && !e.claimed_by && x.claimed_by) {
             const n = e.senior_first_name || (es ? "Su ser querido" : "Your loved one");
             toast.error(es
-              ? `🚨 URGENTE: ${e.unreached_by_name || "Un guardián"} no pudo comunicarse con ${n}. Por favor comuníquese ahora.`
-              : `🚨 URGENT: ${e.unreached_by_name || "A guardian"} couldn't reach ${n}. Please contact them now.`, { duration: 15000 });
+              ? `Recordatorio: ${e.unreached_by_name || "Un guardián"} no pudo comunicarse con ${n}. Por favor comuníquese ahora.`
+              : `Reminder: ${e.unreached_by_name || "A guardian"} couldn't reach ${n}. Please contact them now.`, { id: `sos-reminder-${e.id}`, duration: 15000 });
           }
+          if (e.claimed_by || e.acknowledged_at) toast.dismiss(`sos-reminder-${e.id}`);
           return { ...x, ...e };
         }));
       })
       .subscribe();
-    return () => { supabase.removeChannel(ch); };
+    return () => { clearInterval(poll); supabase.removeChannel(ch); };
   }, [profile]);
 
   // Re-alert every guardian when nobody has responded for 10 minutes
@@ -445,8 +441,8 @@ function GuardianDashboard() {
       realerted.current.add(key);
       const n = e.senior_first_name || (es ? "Su ser querido" : "Your loved one");
       toast.error(es
-        ? `🚨 URGENTE: Nadie ha respondido a la alerta de ${n}. Por favor comuníquese ahora.`
-        : `🚨 URGENT: No one has responded to ${n}'s alert yet. Please contact them now.`, { duration: 15000 });
+        ? `Recordatorio: Nadie ha respondido a la alerta de ${n}. Por favor comuníquese ahora.`
+        : `Reminder: No one has responded to ${n}'s alert yet. Please contact them now.`, { id: `sos-reminder-${e.id}`, duration: 15000 });
     }
   }, [sosEvents, nowTick, es]);
   const [reload, setReload] = useState(0);
@@ -585,16 +581,15 @@ function GuardianDashboard() {
   const claimSos = async (e: SosEvent) => {
     const { error } = await supabase.rpc("claim_sos", { _id: e.id });
     if (error) { toast.error(error.message); return; }
-    const now = new Date().toISOString();
-    setSosEvents((prev) => prev.map((x) => x.id !== e.id ? x : x.claimed_by
-      ? { ...x, helper_names: Array.from(new Set([...(x.helper_names ?? []), me])) }
-      : { ...x, claimed_by: profile.id, claimed_by_name: me, claimed_at: now, urgent: false }));
+    toast.dismiss(`sos-reminder-${e.id}`);
+    const { data } = await supabase.from("sos_events").select(SOS_COLS).eq("id", e.id).single();
+    if (data) setSosEvents((prev) => prev.map((x) => x.id === e.id ? data as SosEvent : x));
   };
   const resolveSos = async (e: SosEvent, ok: boolean) => {
     const { error } = await supabase.rpc("resolve_sos", { _id: e.id, _ok: ok });
     if (error) { toast.error(error.message); return; }
     const now = new Date().toISOString();
-    setSosEvents((prev) => prev.map((x) => x.id !== e.id ? x : ok
+    setSosEvents((prev) => prev.map((x) => (ok ? x.senior_id !== e.senior_id || !!x.acknowledged_at : x.id !== e.id) ? x : ok
       ? { ...x, acknowledged_at: now, acknowledged_by_name: me }
       : { ...x, claimed_by: null, claimed_by_name: null, claimed_at: null, helper_names: [], urgent: true, unreached_by_name: me, last_alerted_at: now }));
   };
@@ -728,20 +723,18 @@ function GuardianDashboard() {
                     </p>
                   )}
                   <p className="font-extrabold" style={{ fontSize: 18 }}>
-                    {es
-                      ? `🚨 ${name} presionó el botón de alerta — por favor comuníquese con esta persona ahora.`
-                      : `🚨 ${name} pressed the alert button — please contact them now.`}
+                    🚨 {helpRequestText(e, name, es)}
                   </p>
                   <p className="text-sm mt-1">{es ? "Enviada a las" : "Sent at"} {fmtTime(e.created_at)} · {timeAgo(e.created_at)}</p>
                   {open && e.claimed_by && (
                     <p className="mt-2 font-bold" role="status" style={{ fontSize: 16 }}>
                       📞 {mine
-                        ? (es ? `Usted se está comunicando con ${name} — desde las ${fmtTime(e.claimed_at!)}` : `You are contacting ${name} — started at ${fmtTime(e.claimed_at!)}`)
-                        : (es ? `${e.claimed_by_name} se está comunicando con ${name} — desde las ${fmtTime(e.claimed_at!)}` : `${e.claimed_by_name} is contacting ${name} — started at ${fmtTime(e.claimed_at!)}`)}
+                        ? (es ? `Usted se está comunicando con ${name} — desde las ${fmtTime(e.claimed_at || e.created_at)}` : `You are contacting ${name} — started at ${fmtTime(e.claimed_at || e.created_at)}`)
+                        : (es ? `${e.claimed_by_name} se está comunicando con ${name} — desde las ${fmtTime(e.claimed_at || e.created_at)}` : `${e.claimed_by_name} is contacting ${name} — started at ${fmtTime(e.claimed_at || e.created_at)}`)}
                     </p>
                   )}
                   {open && (e.helper_names?.length ?? 0) > 0 && (
-                    <p className="text-sm mt-1">🤝 {es ? "También ayudan:" : "Also helping:"} {e.helper_names!.join(", ")}</p>
+                    <p className="text-sm mt-1">🤝 {es ? "También ayudan:" : "Also helping:"} {e.helper_names?.join(", ")}</p>
                   )}
                   {open ? (
                     mine ? (
@@ -768,7 +761,7 @@ function GuardianDashboard() {
                     )
                   ) : (
                     <p className="text-sm mt-2 font-bold">
-                      ✅ {es ? `${e.acknowledged_by_name || "Un guardián"} confirmó que ${name} está bien — a las` : `${e.acknowledged_by_name || "A guardian"} marked ${name} as OK at`} {fmtTime(e.acknowledged_at!)}
+                      ✅ {es ? `${e.acknowledged_by_name || "Un guardián"} confirmó que ${name} está bien — a las` : `${e.acknowledged_by_name || "A guardian"} marked ${name} as OK at`} {fmtTime(e.acknowledged_at || e.created_at)}
                     </p>
                   )}
                 </li>
@@ -849,7 +842,7 @@ function MiniStat({ label, value }: { label: string; value: React.ReactNode }) {
 }
 
 function channelIcon(channel: string) {
-  return channel === "ssn_request" ? "🛡️" : (channel === "email" || channel === "email_forward") ? "📧" : channel === "sms" ? "📱" : channel === "call" ? "📞" : "🔍";
+  return channel === "ssn_request" ? <KinGuardShield /> : (channel === "email" || channel === "email_forward") ? "📧" : channel === "sms" ? "📱" : channel === "call" ? "📞" : "🔍";
 }
 
 function Stat({ icon, label, value, onClick }: { icon: string; label: string; value: React.ReactNode; onClick: () => void }) {
@@ -866,7 +859,7 @@ function AlertCard({ a, unread, onOpen }: { a: Alert; unread?: boolean; onOpen: 
   const { lang } = useI18n();
   return <li>
     <Button variant="outline" onClick={onOpen} className={`w-full h-auto whitespace-normal text-left justify-start p-4 text-base rounded-lg ${unread ? "border-2 border-sky bg-secondary" : "bg-card"}`}>
-      <span aria-hidden="true" className="text-2xl">🛡️</span>
+      <KinGuardShield className="text-2xl" />
       <span className="min-w-0 flex-1">
         <span className="block font-bold break-words">{a.scam_type || (lang === "es" ? "Mensaje sospechoso" : "Suspicious message")}</span>
         <span className="block text-sm">{lang === "es" ? "Riesgo:" : "Risk:"} {a.scam_score}/100</span>
