@@ -16,6 +16,8 @@ import allClearLogo from "@/assets/kinguard-all-clear.webp.asset.json";
 import inboxIcon from "@/assets/kinguard-inbox.webp.asset.json";
 import helpIcon from "@/assets/kinguard-help-people.webp.asset.json";
 import { KinGuardShield } from "@/components/KinGuardIcon";
+import shieldBadge from "@/assets/kinguard-shield-badge.webp.asset.json";
+import questionIcon from "@/assets/kinguard-question-icon.webp.asset.json";
 import { requestHelp, SOS_COLS, REALERT_MS, sosOverdue, fmtTime, helpRequestText, type SosEvent } from "@/lib/sos";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
 import { useI18n } from "@/lib/i18n";
@@ -288,7 +290,7 @@ function SeniorDashboard() {
 
       <section className="px-5 mt-5 space-y-3">
         <Link to="/check" className="btn-base btn-primary w-full">🔍 {t("Check a Suspicious Message")}</Link>
-        <Button asChild className="btn-base btn-primary w-full h-auto whitespace-normal"><Link to="/ssn"><KinGuardShield /> {t("Protect My SSN")}</Link></Button>
+        <Link to="/ssn" className="btn-base btn-primary w-full h-auto whitespace-normal"><img src={shieldBadge.url} alt="" width={32} height={32} className="kinguard-badge-icon" /> {t("Protect My SSN")}</Link>
         <Button variant="destructive" className="w-full h-auto min-h-14 rounded-2xl py-3.5 px-5 text-xl font-bold whitespace-normal bg-destructive text-destructive-foreground" disabled={sendingHelp} onClick={async () => {
           if (guardianCount === 0) {
             toast(t("Please add a guardian before using SOS Alert."));
@@ -331,7 +333,7 @@ function SeniorDashboard() {
       {question && (
         <section className="px-5 mt-5">
           <div className="card-soft" style={{ background: "var(--color-cream)" }}>
-            <p className="font-bold mb-1">{t("🧠 This Week's Question")}</p>
+            <p className="font-bold mb-1 flex items-center gap-2"><img src={questionIcon.url} alt="" width={32} height={32} className="kinguard-badge-icon" /> {t("This Week's Question")}</p>
             <p className="font-bold" style={{ fontSize: 18 }}>{question.question_text}</p>
             <div className="mt-3 space-y-2">
               {(["a","b","c","d"] as const).map((l) => {
