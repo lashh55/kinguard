@@ -28,7 +28,7 @@ type Result = {
 
 function CheckScreen() {
   const { profile } = useAuth();
-  const { t } = useI18n();
+  const { t, lang } = useI18n();
   const navigate = useNavigate();
   const [content, setContent] = useState("");
   const [busy, setBusy] = useState(false);
@@ -61,6 +61,7 @@ function CheckScreen() {
         });
       }
     } catch (e: any) {
+      if (String(e?.message).includes("DAILY_LIMIT")) { setErr(lang === "es" ? "Llegó al límite de hoy. Intente de nuevo mañana." : "You've reached today's limit. Try again tomorrow."); return; }
       setErr(e?.message || "Could not analyze. Please try again.");
     } finally { setBusy(false); }
   };
