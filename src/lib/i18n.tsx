@@ -97,7 +97,7 @@ const DICT: Record<string, string> = {
   "Check a Suspicious Message": "Verificar un Mensaje Sospechoso",
   "Protect My SSN": "Proteger mi Número de Seguro Social",
   "I Need Help": "Necesito ayuda",
-  "Start a new streak this week! You've got this 💪": "¡Comienza una nueva racha esta semana! ¡Tú puedes! 💪",
+  "Start a new streak this week! You've got this ✨": "¡Comienza una nueva racha esta semana! ¡Tú puedes! ✨",
   "🧠 This Week's Question": "🧠 Pregunta de esta semana",
   "This Week's Question": "Pregunta de esta semana",
   "See All Questions": "Ver todas las preguntas",

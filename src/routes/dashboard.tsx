@@ -244,7 +244,7 @@ function SeniorDashboard() {
         <div className="card-soft text-center" style={{ background: "var(--color-cream)" }}>
           {streak > 0
             ? <p className="font-bold" style={{ fontSize: 18 }}>🔥 {streak}{lang === "es" ? "-semanas de racha! ¡Sigue así!" : "-week streak! Keep it up!"}</p>
-            : <p className="font-bold" style={{ fontSize: 18 }}>{t("Start a new streak this week! You've got this 💪")}</p>}
+            : <p className="font-bold" style={{ fontSize: 18 }}>{t("Start a new streak this week! You've got this ✨")}</p>}
         </div>
       </section>
 
