@@ -38,6 +38,29 @@ export type Database = {
         }
         Relationships: []
       }
+      admin_test_accounts: {
+        Row: {
+          created_at: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "admin_test_accounts_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: true
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       admin_users: {
         Row: {
           created_at: string
@@ -555,7 +578,12 @@ export type Database = {
           senior_name: string
         }[]
       }
+      admin_list_test_accounts: { Args: never; Returns: string[] }
       admin_log_view: { Args: { _path: string }; Returns: undefined }
+      admin_set_test_account: {
+        Args: { _is_test: boolean; _user_id: string }
+        Returns: undefined
+      }
       claim_sos: { Args: { _id: string }; Returns: undefined }
       delete_my_account: { Args: never; Returns: undefined }
       find_user_id_by_email: { Args: { _email: string }; Returns: string }
