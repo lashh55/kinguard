@@ -11,3 +11,5 @@
 - [x] Update All clear artwork, shield/inbox/help icons, greeting and bilingual help copy.
 - [x] Consolidate repeated help requests, stop reminders when claimed, and close the two specified test alerts.
 - [x] Verify Ava-to-Lisa combined help requests, live claim status, Spanish copy, unreachable reopening and single OK closure; verify artwork and reminder rules with no page errors.
+- [x] Add uploaded Home, Check and Learn artwork to the app navigation tabs at 28x28 above real text labels; Spanish tab labels Inicio, Revisar, Aprender.
+- [x] Verify both navigation bars render the new icons at 28x28 in English and Spanish with no page errors.

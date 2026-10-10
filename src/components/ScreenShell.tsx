@@ -4,6 +4,11 @@ import { useAuth } from "@/lib/auth";
 import { PhotoPanel } from "@/components/PhotoPanel";
 import { useI18n } from "@/lib/i18n";
 import { BrandIcon } from "@/components/KinGuardIcon";
+import homeIcon from "@/assets/kinguard-nav-home.webp.asset.json";
+import checkIcon from "@/assets/kinguard-nav-check.webp.asset.json";
+import learnIcon from "@/assets/kinguard-nav-learn.webp.asset.json";
+
+type NavImage = { url: string };
 
 export function ScreenShell({ children, withPhotoPanel = false }: { children: ReactNode; withPhotoPanel?: boolean }) {
   const { profile } = useAuth();
@@ -23,15 +28,15 @@ export function ScreenShell({ children, withPhotoPanel = false }: { children: Re
         <div className="max-w-xl mx-auto flex items-stretch justify-around">
           {isGuardian ? (
             <>
-              <NavItem to="/dashboard" icon="🏠" label={t("Home")} />
+              <NavItem to="/dashboard" icon="🏠" image={homeIcon} label={t("Home")} />
               <NavItem to="/profile" icon="👤" label={t("Profile")} />
             </>
           ) : (
             <>
-              <NavItem to="/dashboard" icon="🏠" label={t("Home")} />
-              <NavItem to="/check" icon="🔍" label={t("Check")} />
+              <NavItem to="/dashboard" icon="🏠" image={homeIcon} label={t("Home")} />
+              <NavItem to="/check" icon="🔍" image={checkIcon} label={t("Check")} />
               <NavItem to="/ssn" icon="🛡️" label="SSN" />
-              <NavItem to="/learn" icon="🎓" label={t("Learn")} />
+              <NavItem to="/learn" icon="🎓" image={learnIcon} label={t("Learn")} />
               <NavItem to="/profile" icon="👤" label={t("Profile")} />
             </>
           )}
@@ -41,7 +46,7 @@ export function ScreenShell({ children, withPhotoPanel = false }: { children: Re
   );
 }
 
-function NavItem({ to, icon, label }: { to: string; icon: string; label: string }) {
+function NavItem({ to, icon, label, image }: { to: string; icon: string; label: string; image?: NavImage }) {
   const path = useRouterState({ select: (s) => s.location.pathname });
   const active = path === to;
   return (
@@ -51,10 +56,25 @@ function NavItem({ to, icon, label }: { to: string; icon: string; label: string 
       style={{ minHeight: 64 }}
     >
       <span
-        className="text-2xl"
-        style={{ filter: active ? "none" : "grayscale(0.2)", color: active ? "var(--color-tan)" : "var(--color-brown)" }}
+        className="text-2xl flex items-center justify-center"
+        style={{
+          minHeight: 30,
+          filter: active ? "none" : "grayscale(0.2)",
+          color: active ? "var(--color-tan)" : "var(--color-brown)",
+        }}
       >
-        <BrandIcon icon={icon} />
+        {image ? (
+          <img
+            src={image.url}
+            alt=""
+            aria-hidden="true"
+            width={28}
+            height={28}
+            className="kinguard-nav-icon"
+          />
+        ) : (
+          <BrandIcon icon={icon} />
+        )}
       </span>
       <span
         className="text-xs font-bold mt-1"
