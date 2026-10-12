@@ -4,8 +4,8 @@ import { useEffect, useState } from "react";
 import { useServerFn } from "@tanstack/react-start";
 import { useAuth } from "@/lib/auth";
 import { ScreenShell } from "@/components/ScreenShell";
-import { Copy, Check, UserMinus, UserX, TriangleAlert } from "lucide-react";
-import { ShieldLockIcon, GlowIcon } from "@/components/ShieldLockIcon";
+import { Copy, Check } from "lucide-react";
+import { ShieldLockIcon, GlowIcon, DangerTriangleIcon, PersonBadgeIcon } from "@/components/ShieldLockIcon";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 import { useSignOutConfirm } from "@/components/SignOutConfirm";
@@ -394,7 +394,7 @@ function ProfileScreen() {
                           style={{ background: "#D0473F", color: "#fff", minHeight: 64, borderRadius: 24, fontSize: 22, fontWeight: 800 }}
                           onClick={() => setConfirmRemoveGuardian(g)}
                         >
-                          <UserMinus size={24} color="#fff" /> {lang === "es" ? "Eliminar tutor" : "Remove Guardian"}
+                          <PersonBadgeIcon size={36} mark="minus" /> {lang === "es" ? "Eliminar tutor" : "Remove Guardian"}
                         </button>
                       </li>
                     );
@@ -492,7 +492,7 @@ function ProfileScreen() {
 
         <div style={{ background: "#FFF5F5", border: "3px solid #E53E3E", borderRadius: 24, padding: 20 }}>
           <div className="flex items-start gap-3 mb-3">
-            <GlowIcon color="#E53E3E" size={40}><TriangleAlert size={40} color="#C53030" strokeWidth={2.5} /></GlowIcon>
+            <DangerTriangleIcon size={64} />
             <div>
               <p className="font-extrabold uppercase" style={{ color: "#9B1C1C", fontSize: 26, lineHeight: 1.15 }}>
                 {t("DANGER ZONE")}
@@ -507,7 +507,7 @@ function ProfileScreen() {
             style={{ background: "#D9393E", color: "#fff", fontWeight: 800, fontSize: 24, minHeight: 68, borderRadius: 24 }}
             onClick={() => { setConfirmDelete(true); setDeleteText(""); }}
           >
-            <UserX size={26} color="#fff" /> {t("Delete My Account")}
+            <PersonBadgeIcon size={36} mark="x" /> {t("Delete My Account")}
           </button>
         </div>
 
