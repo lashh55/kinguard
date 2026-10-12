@@ -1,3 +1,5 @@
+import { useId } from "react";
+
 export function ShieldLockIcon({ size = 24, className = "" }: { size?: number; className?: string }) {
   return (
     <svg width={size} height={size} viewBox="0 0 64 64" aria-hidden="true" className={`shrink-0 ${className}`}>
@@ -30,5 +32,56 @@ export function GlowIcon({ color, size, children }: { color: string; size: numbe
       <GlowLines color={color} size={size} />
       {children}
     </div>
+  );
+}
+
+/** Solid red warning triangle with a white exclamation mark and four short alert lines. */
+export function DangerTriangleIcon({ size = 64, className = "" }: { size?: number; className?: string }) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 64 64" aria-hidden="true" className={`shrink-0 ${className}`}>
+      <g stroke="#D9393E" strokeWidth="3.4" strokeLinecap="round">
+        <line x1="25" y1="9" x2="21.5" y2="3" />
+        <line x1="39" y1="9" x2="42.5" y2="3" />
+        <line x1="12" y1="27" x2="5.5" y2="23.5" />
+        <line x1="52" y1="27" x2="58.5" y2="23.5" />
+      </g>
+      <path d="M32 14 L54 50 L10 50 Z" fill="#D9393E" stroke="#D9393E" strokeWidth="6" strokeLinejoin="round" />
+      <rect x="29.3" y="24" width="5.4" height="13.5" rx="2.7" fill="#fff" />
+      <circle cx="32" cy="43.5" r="3" fill="#fff" />
+    </svg>
+  );
+}
+
+/** Solid white person silhouette with a round white badge holding a red cross or minus. */
+export function PersonBadgeIcon({
+  size = 36,
+  mark = "x",
+  className = "",
+}: {
+  size?: number;
+  mark?: "x" | "minus";
+  className?: string;
+}) {
+  const raw = useId();
+  const id = `kg-person-${mark}-${raw.replace(/[^a-zA-Z0-9]/g, "")}`;
+  return (
+    <svg width={size} height={size} viewBox="0 0 48 48" aria-hidden="true" className={`shrink-0 ${className}`}>
+      <defs>
+        <mask id={id} maskUnits="userSpaceOnUse" x="0" y="0" width="48" height="48">
+          <rect width="48" height="48" fill="#fff" />
+          <circle cx="35" cy="35" r="12.6" fill="#000" />
+        </mask>
+      </defs>
+      <g mask={`url(#${id})`} fill="#fff">
+        <circle cx="19" cy="14" r="8.6" />
+        <path d="M4 42 C4 31 10.5 24.6 19 24.6 C27.5 24.6 34 31 34 42 Z" />
+      </g>
+      <circle cx="35" cy="35" r="11" fill="#fff" />
+      {mark === "x" ? (
+        <path d="M30.9 30.9 L39.1 39.1 M39.1 30.9 L30.9 39.1" stroke="#D9393E" strokeWidth="3.4" strokeLinecap="round" />
+      ) : (
+        <path d="M30.5 35 H39.5" stroke="#D9393E" strokeWidth="3.4" strokeLinecap="round" />
+      )}
+    </svg>
   );
 }
