@@ -282,6 +282,7 @@ const DICT: Record<string, string> = {
   "Never": "Nunca",
   "🗑️ Remove Guardian": "🗑️ Eliminar Guardián",
   "You've reached the maximum of 5 guardians. Remove one before adding another.": "Has alcanzado el máximo de 5 guardianes. Elimina uno antes de agregar otro.",
+  "You're protecting 2 seniors, the most allowed.": "Usted está protegiendo a 2 adultos mayores, el máximo permitido.",
   "Could not remove. Try again.": "No se pudo eliminar. Inténtalo de nuevo.",
   "✅ Guardian removed": "✅ Guardián eliminado",
   "Remove guardian?": "¿Eliminar guardián?",

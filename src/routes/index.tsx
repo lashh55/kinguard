@@ -343,7 +343,10 @@ function GuardianForm({ onLinked, onBack }: { onLinked: () => void; onBack: () =
       track("guardian_linked");
       onLinked();
     } catch (e: any) {
-      setErr(e?.message || "Something went wrong");
+      const raw: string = e?.message || "Something went wrong";
+      setErr(raw.includes("KINGUARD_GUARDIAN_LIMIT")
+        ? t("You're protecting 2 seniors, the most allowed.")
+        : raw);
     } finally { setBusy(false); }
   };
 
