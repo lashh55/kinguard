@@ -154,6 +154,9 @@
   html { scroll-padding-top: 160px; }
   .site-navigation nav { max-height: calc(100dvh - 100px); overscroll-behavior: contain; }
   .site-back-to-top svg { width: 26px; height: 26px; }
+  .kg-accordion summary::-webkit-details-marker { display: none; }
+  .kg-accordion-arrow { transition: transform 0.15s ease; }
+  .kg-accordion[open] .kg-accordion-arrow { transform: rotate(90deg); }
   .invite-code {
     font-variant-numeric: slashed-zero;
     font-feature-settings: "zero";

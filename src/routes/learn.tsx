@@ -5,10 +5,17 @@ import { ScreenShell } from "@/components/ScreenShell";
 import { useAuth } from "@/lib/auth";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
-import { ScoreCard } from "@/components/ScoreCard";
+import { LearnScoreCard } from "@/components/LearnScoreCard";
 import { BadgeCelebration, useBadgeQueue, useNotifyGuardiansOfBadge } from "@/components/BadgeCelebration";
 import { applyAnswer, applyPerfectWeek, normalizeStats } from "@/lib/badges";
-import { LearningTree, LearningTreeWithTooltip } from "@/components/LearningTree";
+import { CalendarSproutIcon, ClapperIcon, GradCapIcon, LaptopBlueIcon, GrandparentsIcon, MedicalFormIcon, CoupleHeartIcon, SproutSoilIcon } from "@/components/LearnIcons";
+
+const STYLED_CARDS: Record<string, { Icon: (p: { size?: number }) => React.ReactElement; border: string; es: string }> = {
+  tech: { Icon: LaptopBlueIcon, border: "#B3CFDA", es: "Estafas de soporte técnico" },
+  grand: { Icon: GrandparentsIcon, border: "#B3CFDA", es: "Estafas a abuelos" },
+  med: { Icon: MedicalFormIcon, border: "#B3CFDA", es: "Estafas de Medicare / salud" },
+  rom: { Icon: CoupleHeartIcon, border: "#A97570", es: "Estafas románticas" },
+};
 import { useI18n } from "@/lib/i18n";
 import { BadgeGrid } from "@/components/BadgeGrid";
 import { track } from "@/lib/analytics";
@@ -72,7 +79,7 @@ function LearnScreen() {
   const { profile, refreshProfile } = useAuth();
   const { current, enqueue, dismiss } = useBadgeQueue();
   const notifyGuardians = useNotifyGuardiansOfBadge();
-  const { t } = useI18n();
+  const { t, lang } = useI18n();
   const hash = useLocation({ select: (location) => location.hash });
   useEffect(() => {
     if (hash !== "knowledge-tree" || !profile) return;
@@ -88,16 +95,10 @@ function LearnScreen() {
       <Cards />
       {profile && (
         <section id="knowledge-tree" className="px-5 mt-6">
-          <h2 className="mb-2">{t("Knowledge Tree 🌳")}</h2>
-          <ScoreCard
-            stats={profile.challenge_stats}
-            tree={
-              <LearningTree
-                stats={normalizeStats(profile.challenge_stats)}
-                size={48}
-              />
-            }
-          />
+          <h2 className="mb-3 flex items-center gap-2" style={{ fontSize: 36, color: "#0F3D2A", lineHeight: 1.1 }}>
+            {lang === "es" ? "Árbol del Conocimiento" : "Knowledge Tree"} <SproutSoilIcon size={44} />
+          </h2>
+          <LearnScoreCard stats={profile.challenge_stats} />
           <h2 className="mb-2 mt-6">{t("My Badges 🏅")}</h2>
           <BadgeGrid stats={profile.challenge_stats} />
         </section>
@@ -183,7 +184,7 @@ function Slides() {
 function Cards() {
   const navigate = useNavigate();
   const { profile, refreshProfile } = useAuth();
-  const { t } = useI18n();
+  const { t, lang } = useI18n();
   const [opened, setOpened] = useState<Set<string>>(new Set());
 
   const handleOpen = async (id: string) => {
@@ -208,7 +209,23 @@ function Cards() {
       <h2>{t("Know Your Scams")}</h2>
       <p className="mt-1" style={{ color: "var(--color-muted-foreground)" }}>{t("Tap any card to learn more")}</p>
       <div className="mt-3 space-y-3">
-        {SCAM_CARDS.map((c) => (
+        {SCAM_CARDS.map((c) => {
+          const Styled = STYLED_CARDS[c.id];
+          if (Styled) return (
+            <details key={c.id} className="kg-accordion" style={{ background: "#fff", borderRadius: 28, boxShadow: "0 6px 20px -12px rgba(61,43,43,0.25)", borderTop: `6px solid ${Styled.border}`, overflow: "hidden" }} onToggle={(e) => { if ((e.target as HTMLDetailsElement).open) handleOpen(c.id); }}>
+              <summary className="cursor-pointer flex items-center gap-3 px-5" style={{ minHeight: 72, listStyle: "none" }}>
+                <svg className="kg-accordion-arrow shrink-0" width="18" height="18" viewBox="0 0 18 18" aria-hidden="true"><path d="M4 2 L15 9 L4 16 Z" fill="#3D2B2B" /></svg>
+                <Styled.Icon size={40} />
+                <span className="font-extrabold" style={{ fontSize: 26, color: "#1E1A1A", lineHeight: 1.2 }}>{lang === "es" ? Styled.es : c.title}</span>
+              </summary>
+              <div className="px-5 pb-5 space-y-3">
+                <div><p className="font-bold">{t("What it looks like:")}</p><p>"{c.look}"</p></div>
+                <div><p className="font-bold">{t("Red flags:")}</p><ul className="list-disc pl-5">{c.flags.map((f) => <li key={f}>{f}</li>)}</ul></div>
+                <div><p className="font-bold">{t("What to do:")}</p><p>{c.doIt}</p></div>
+              </div>
+            </details>
+          );
+          return (
           <details key={c.id} className="card-soft" style={{ borderTop: `6px solid ${c.accent}` }} onToggle={(e) => { if ((e.target as HTMLDetailsElement).open) handleOpen(c.id); }}>
             <summary className="font-extrabold cursor-pointer" style={{ fontSize: 19 }}>
               <BrandIcon icon={c.icon} /> {t(c.title)}
@@ -231,21 +248,49 @@ function Cards() {
               )}
             </div>
           </details>
-        ))}
+          );
+        })}
       </div>
     </section>
   );
 }
 
+function ChallengeHeader() {
+  const { lang } = useI18n();
+  const es = lang === "es";
+  return (
+    <>
+      <div className="flex items-center gap-3 flex-wrap">
+        <h2 style={{ fontSize: 32, color: "#0F4A2E", lineHeight: 1.15 }}>{es ? "El reto de esta semana" : "This Week's Challenge"}</h2>
+        <span className="rounded-full flex items-center justify-center shrink-0" style={{ width: 56, height: 56, background: "#FBF1DC", border: "3px solid #D4AE6A" }}>
+          <CalendarSproutIcon size={34} />
+        </span>
+      </div>
+      <p className="mt-1" style={{ fontSize: 18, color: "#55565E" }}>
+        {es ? "Ponga a prueba lo que sabe. Preguntas nuevas cada semana." : "Test what you know. New questions every week."}
+      </p>
+    </>
+  );
+}
+
 function Videos() {
-  const { t, lang } = useI18n();
+  const { lang } = useI18n();
   const es = lang === "es";
   return (
     <section className="px-5 mt-6 mb-4">
-      <h2>{t("Watch & Learn 🎥")}</h2>
-      <p className="mt-1" style={{ color: "var(--color-muted-foreground)" }}>
-        {es ? "Videos cortos de la Comisión Federal de Comercio (FTC) sobre cómo detectar estafas comunes." : "Short videos from the Federal Trade Commission (FTC) on how to spot common scams."}
-      </p>
+      <div className="flex items-center gap-4" style={{ background: "#FDF8EC", border: "1px solid #F0DDB0", borderRadius: 32, padding: 20, boxShadow: "0 8px 24px -14px rgba(61,43,43,0.25)" }}>
+        <span className="rounded-full flex items-center justify-center shrink-0" style={{ width: 96, height: 96, background: "#FBF1DC", border: "4px solid #C9A23F" }}>
+          <ClapperIcon size={62} />
+        </span>
+        <div className="min-w-0">
+          <h2 className="flex items-center gap-2 flex-wrap" style={{ fontSize: 36, color: "#0F3D22", lineHeight: 1.1 }}>
+            {es ? "Mire y aprenda" : "Watch & Learn"} <GradCapIcon size={38} />
+          </h2>
+          <p className="mt-2" style={{ fontSize: 20, color: "#33343A" }}>
+            {es ? "Toque el botón de reproducir para ver videos cortos. Aprenda y fortalezca su conocimiento sobre estafas." : "Tap the play button to watch short videos. Learn and build your scam awareness."}
+          </p>
+        </div>
+      </div>
       <div className="mt-4 grid grid-cols-1 sm:grid-cols-2 gap-5 sm:gap-6">
         {VIDEOS.map((v) => (
           <div key={v.url} className="rounded-2xl overflow-hidden h-full flex flex-col" style={{ background: "var(--color-tan)" }}>
@@ -298,7 +343,7 @@ function Quiz({ onBadges }: { onBadges: (b: ReturnType<typeof applyAnswer>["newB
   if (questions.length === 0) {
     return (
       <section className="px-5 mt-6">
-        <h2>{t("This Week's Challenge 🧠")}</h2>
+        <ChallengeHeader />
         <p className="mt-1" style={{ color: "var(--color-muted-foreground)" }}>{t("Loading questions…")}</p>
       </section>
     );
@@ -341,8 +386,7 @@ function Quiz({ onBadges }: { onBadges: (b: ReturnType<typeof applyAnswer>["newB
 
   return (
     <section className="px-5 mt-6">
-      <h2>{t("This Week's Challenge 🧠")}</h2>
-      <p className="mt-1" style={{ color: "var(--color-muted-foreground)" }}>{t("Test what you know. Questions change every two weeks.")}</p>
+      <ChallengeHeader />
       <div className="card-soft mt-3" style={{ background: "var(--color-cream)" }}>
         <p className="text-sm font-bold mb-2">{t("Question")} {idx + 1} {t("of")} {questions.length}</p>
         <p className="font-bold" style={{ fontSize: 20 }}>{q.question_text}</p>
