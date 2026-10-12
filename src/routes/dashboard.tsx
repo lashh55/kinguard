@@ -466,7 +466,11 @@ function GuardianDashboard() {
     const { error } = await supabase.rpc("link_guardian_by_code", { _code: code, _label: newLabel.trim() || "Family" });
     setLinking(false);
     if (error) {
-      setLinkMsg({ ok: false, text: error.message.includes("Invalid") ? "That code didn't match anyone. Please check it and try again." : error.message });
+      if (error.message.includes("KINGUARD_GUARDIAN_LIMIT")) {
+        setLinkMsg({ ok: false, text: es ? "Usted está protegiendo a 2 adultos mayores, el máximo permitido." : "You're protecting 2 seniors, the most allowed." });
+      } else {
+        setLinkMsg({ ok: false, text: error.message.includes("Invalid") ? "That code didn't match anyone. Please check it and try again." : error.message });
+      }
       return;
     }
     try { (window as any).gtag?.("event", "guardian_linked"); } catch {}
