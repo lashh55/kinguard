@@ -658,19 +658,25 @@ function GuardianDashboard() {
           <button
             type="button"
             className="btn-base btn-primary w-full"
-            disabled={seniors.length >= 3}
-            aria-disabled={seniors.length >= 3}
-            style={seniors.length >= 3 ? { opacity: 0.5, cursor: "not-allowed", filter: "grayscale(1)" } : undefined}
+            disabled={seniors.length >= 2}
+            aria-disabled={seniors.length >= 2}
+            style={seniors.length >= 2 ? { opacity: 0.5, cursor: "not-allowed", filter: "grayscale(1)" } : undefined}
             onClick={() => { setShowAdd((v) => !v); setLinkMsg(null); }}
           >
-            ➕ {es ? "Proteger a un nuevo adulto mayor" : "Protect a new senior"} ({seniors.length} {es ? "de" : "of"} 3)
+            ➕ {es ? "Proteger a un nuevo adulto mayor" : "Protect a new senior"}
+            {seniors.length < 2 && (() => {
+              const left = 2 - seniors.length;
+              return es
+                ? ` (${left === 1 ? "queda 1 espacio" : `quedan ${left} espacios`})`
+                : ` (${left} ${left === 1 ? "spot" : "spots"} left)`;
+            })()}
           </button>
-          {seniors.length >= 3 && (
+          {seniors.length >= 2 && (
             <p className="text-sm mt-2 text-center font-bold" style={{ color: "var(--color-muted-foreground)" }}>
-              You are protecting the maximum of 3 seniors.
+              {es ? "Usted está protegiendo a 2 adultos mayores, el máximo permitido." : "You're protecting 2 seniors, the most allowed."}
             </p>
           )}
-          {showAdd && seniors.length < 3 && (
+          {showAdd && seniors.length < 2 && (
             <form onSubmit={addSenior} className="space-y-3 mt-3">
               <label className="block">
                 <span className="block font-bold mb-1">{es ? "Código de invitación del adulto mayor" : "Senior's invite code"}</span>

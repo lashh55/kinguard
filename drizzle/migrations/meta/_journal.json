@@ -64,6 +64,13 @@
       "when": 1791597007601,
       "tag": "0008_admin_test_accounts",
       "breakpoints": true
+    },
+    {
+      "idx": 9,
+      "version": "7",
+      "when": 1791835020436,
+      "tag": "0009_guardian_max_two_seniors",
+      "breakpoints": true
     }
   ]
 }
