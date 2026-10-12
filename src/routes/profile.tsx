@@ -4,7 +4,8 @@ import { useEffect, useState } from "react";
 import { useServerFn } from "@tanstack/react-start";
 import { useAuth } from "@/lib/auth";
 import { ScreenShell } from "@/components/ScreenShell";
-import { Copy, Check } from "lucide-react";
+import { Copy, Check, UserMinus, UserX, TriangleAlert } from "lucide-react";
+import { ShieldLockIcon, GlowIcon } from "@/components/ShieldLockIcon";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 import { useSignOutConfirm } from "@/components/SignOutConfirm";
@@ -342,8 +343,15 @@ function ProfileScreen() {
                 className="rounded-xl p-3 mb-3"
                 style={{ background: "var(--color-cream)", border: "2px solid var(--color-rose)" }}
               >
-                <p className="font-bold" style={{ fontSize: 15 }}>
-                  🔑 {t("Share your family code word with your trusted guardians by phone or in person — never by text or email. If someone cannot say your code word, do not share personal information with them.")}
+                <p className="flex items-start gap-2" style={{ fontSize: 18, fontWeight: 400 }}>
+                  <ShieldLockIcon size={24} className="mt-0.5" />
+                  <span>
+                    {lang === "es" ? (
+                      <>Comparta su palabra clave familiar con sus guardianes de confianza por teléfono o en persona — <strong style={{ fontWeight: 800 }}>nunca por mensaje de texto ni por correo electrónico</strong>. Si alguien no puede decir su palabra clave, no le dé información personal.</>
+                    ) : (
+                      <>Share your family code word with your trusted guardians by phone or in person — <strong style={{ fontWeight: 800 }}>never by text or email</strong>. If someone cannot say your code word, do not share personal information with them.</>
+                    )}
+                  </span>
                 </p>
               </div>
               {guardians.length === 0 ? (
@@ -383,10 +391,10 @@ function ProfileScreen() {
                         </div>
                         <button
                           className="btn-base w-full mt-3"
-                          style={{ background: "#E74C3C", color: "#fff", minHeight: 44 }}
+                          style={{ background: "#D0473F", color: "#fff", minHeight: 64, borderRadius: 24, fontSize: 22, fontWeight: 800 }}
                           onClick={() => setConfirmRemoveGuardian(g)}
                         >
-                          {t("🗑️ Remove Guardian")}
+                          <UserMinus size={24} color="#fff" /> {lang === "es" ? "Eliminar tutor" : "Remove Guardian"}
                         </button>
                       </li>
                     );
@@ -473,26 +481,33 @@ function ProfileScreen() {
           </>
         )}
 
-        <Link to="/privacy" className="btn-base btn-outline w-full">{t("🔒 Privacy & Safety")}</Link>
+        <Link to="/privacy" className="btn-base w-full" style={{ background: "#fff", border: "1.5px solid #D9C7A3", borderRadius: 24, minHeight: 64, color: "#2B1810", fontSize: 22, fontWeight: 600, boxShadow: "0 2px 8px -4px rgba(43,24,16,0.18)" }}>
+          <ShieldLockIcon size={28} /> {t("Privacy & Safety")}
+        </Link>
 
         <button className="btn-base btn-outline w-full" onClick={() => askSignOut()}>
           {t("Sign Out")}
         </button>
         {signOutDialog}
 
-        <div className="card-soft" style={{ border: "3px solid #E74C3C", background: "color-mix(in oklab, #E74C3C 6%, #fff)" }}>
-          <p className="font-extrabold uppercase tracking-wider mb-2" style={{ color: "#a02c20", fontSize: 14 }}>
-            ⚠️ {t("Danger Zone")}
-          </p>
-          <p className="text-sm mb-3" style={{ color: "var(--color-muted-foreground)" }}>
-            {t("Permanently delete your account and all your data. This cannot be undone.")}
-          </p>
+        <div style={{ background: "#FFF5F5", border: "3px solid #E53E3E", borderRadius: 24, padding: 20 }}>
+          <div className="flex items-start gap-3 mb-3">
+            <GlowIcon color="#E53E3E" size={40}><TriangleAlert size={40} color="#C53030" strokeWidth={2.5} /></GlowIcon>
+            <div>
+              <p className="font-extrabold uppercase" style={{ color: "#9B1C1C", fontSize: 26, lineHeight: 1.15 }}>
+                {t("DANGER ZONE")}
+              </p>
+              <p style={{ fontSize: 18, color: "#2B1810" }}>
+                {t("Permanently delete your account and all your data. This cannot be undone.")}
+              </p>
+            </div>
+          </div>
           <button
             className="btn-base w-full"
-            style={{ background: "#E74C3C", color: "#fff" }}
+            style={{ background: "#D9393E", color: "#fff", fontWeight: 800, fontSize: 24, minHeight: 68, borderRadius: 24 }}
             onClick={() => { setConfirmDelete(true); setDeleteText(""); }}
           >
-            {t("🗑️ Delete My Account")}
+            <UserX size={26} color="#fff" /> {t("Delete My Account")}
           </button>
         </div>
 
@@ -621,14 +636,19 @@ function FamilyCodeCard() {
   };
 
   return (
-    <div className="card-soft" style={{ borderTop: "6px solid var(--color-rose)" }}>
-      <h2 className="mb-1">🔑 {t("Family Safety Code")}</h2>
-      <p className="text-sm mb-3" style={{ color: "var(--color-muted-foreground)" }}>
-        {t("When someone calls claiming to be family or an official, ask them to say your code word. If they cannot, treat that call with caution.")}
-      </p>
+    <div style={{ background: "#fff", borderRadius: 24, borderTop: "4px solid #A0674B", boxShadow: "0 6px 20px -10px rgba(43,24,16,0.25)", padding: 20 }}>
+      <div className="flex items-start gap-3 mb-3">
+        <GlowIcon color="#E0A63A" size={64}><ShieldLockIcon size={64} /></GlowIcon>
+        <div>
+          <h2 className="mb-1" style={{ fontFamily: "var(--font-display)", fontWeight: 800, color: "#2B1810", fontSize: 28, lineHeight: 1.15 }}>{t("Family Safety Code")}</h2>
+          <p style={{ fontSize: 18, color: "#2B1810" }}>
+            {t("When someone calls claiming to be family or an official, ask them for your code word. If they cannot, treat the call with caution.")}
+          </p>
+        </div>
+      </div>
 
       {!hasCode && !editing && (
-        <button className="btn-base btn-primary w-full" onClick={() => { setDraft(generatePassphrase()); setEditing(true); }}>
+        <button className="btn-base w-full" style={{ background: "#D9BD82", color: "#2B1810", fontWeight: 800, borderRadius: 20, minHeight: 64 }} onClick={() => { setDraft(generatePassphrase()); setEditing(true); }}>
           {t("Create my code word")}
         </button>
       )}
