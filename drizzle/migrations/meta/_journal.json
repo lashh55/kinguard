@@ -71,6 +71,13 @@
       "when": 1791835020436,
       "tag": "0009_guardian_max_two_seniors",
       "breakpoints": true
+    },
+    {
+      "idx": 10,
+      "version": "7",
+      "when": 1791841779636,
+      "tag": "0010_guardian_limit_marker_message",
+      "breakpoints": true
     }
   ]
 }
