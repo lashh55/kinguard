@@ -248,7 +248,8 @@ function Cards() {
               )}
             </div>
           </details>
-        ))}
+          );
+        })}
       </div>
     </section>
   );
