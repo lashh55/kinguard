@@ -32,3 +32,5 @@
 - [x] Verify the two-question form in English and Spanish, the both-questions prompt, the thank-you message and the admin list note with no page errors.
 - [x] Rewrite the sponsored plan card intro to the family-cost wording in English and Spanish, keeping the button and form unchanged.
 - [x] Verify the new card wording reads fully and its button stays tappable on a phone screen with no page errors.
+- [x] Change only the Protect a new senior label to "Who is this person to you? (e.g. Mother, Father, Daughter, Friend)" with Spanish "¿Quién es esta persona para usted? (ej. Madre, Padre, Hija, Amigo/a)", keeping a free-text box.
+- [x] Verify both labels render on the opened form in English and Spanish, typed text is displayed exactly as typed, and no page errors.
