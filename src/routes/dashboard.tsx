@@ -693,7 +693,7 @@ function GuardianDashboard() {
                 />
               </label>
               <label className="block">
-                <span className="block font-bold mb-1">{es ? "Su relación (por ejemplo: hija, hijo, amigo)" : "Your relationship (e.g. Daughter, Son, Friend)"}</span>
+                <span className="block font-bold mb-1">{es ? "¿Quién es esta persona para usted? (ej. Madre, Padre, Hija, Amigo/a)" : "Who is this person to you? (e.g. Mother, Father, Daughter, Friend)"}</span>
                 <input
                   className="input-large"
                   required
