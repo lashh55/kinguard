@@ -28,3 +28,5 @@
 - [x] Verify both new icons load, centre and stay unobstructed in English and Spanish on desktop and phone width with no page errors.
 - [x] Replace the IRS Identity Protection PIN heading emoji with icon-irs-ip-pin.png at 52px (44px below 480px) on the heading line, with a bold serif dark-brown heading and Spanish "PIN de protección de identidad del IRS".
 - [x] Verify the new IRS icon loads, centres on the heading line and keeps the counter, gold border and section below unchanged in English and Spanish on desktop and phone width with no page errors.
+- [x] Cut the sponsored plan request form to two questions, removing the living-situation question and retiring its stored value.
+- [x] Verify the two-question form in English and Spanish, the both-questions prompt, the thank-you message and the admin list note with no page errors.
