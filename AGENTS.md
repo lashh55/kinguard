@@ -10,3 +10,4 @@
 - Use pageHead for simple content-route metadata and custom heads for scam guides; each page needs distinct sharing metadata.
 - Guardian links start as "pending" and become active only via the senior-called respond_guardian_request RPC; is_guardian_of only trusts active rows, so unapproved guardians see nothing.
 - Account-safety icons (warning triangle, remove/delete person marks) are custom filled inline SVGs exported from the shared icon module, not emoji or generic icon-library glyphs; keep them there so every page that needs one reuses the same drawing.
+- Knowledge Tree level artwork resolves through the single name-to-asset config in src/lib/badgeArtwork.ts; keep scoring and bonus badges separate so replacing an image never changes earned progress.

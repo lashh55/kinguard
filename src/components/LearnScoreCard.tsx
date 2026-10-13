@@ -1,6 +1,7 @@
 import { ChallengeStats, currentLevelBadge, nextLevelBadge, normalizeStats } from "@/lib/badges";
 import { useI18n } from "@/lib/i18n";
 import { BadgeIcon, CalendarSproutIcon, CheckRingIcon, SproutSoilIcon, TargetIcon } from "@/components/LearnIcons";
+import { levelBadgeName, type ArtworkLevelName } from "@/lib/badgeArtwork";
 
 const GREEN = "#0F3D2A";
 
@@ -24,7 +25,7 @@ export function LearnScoreCard({ stats: raw }: { stats: unknown }) {
         <div className="flex-1 min-w-0">
           <p style={{ fontSize: 18, color: "#6B6B70" }}>{t("Current badge")}</p>
           <p className="font-extrabold" style={{ fontSize: 32, lineHeight: 1.1, color: GREEN }}>
-            {current?.name ?? t("Just getting started")}
+            {levelBadgeName((current?.name ?? "Just getting started") as ArtworkLevelName, lang)}
           </p>
         </div>
       </div>
@@ -36,19 +37,20 @@ export function LearnScoreCard({ stats: raw }: { stats: unknown }) {
       <p className="text-center mt-4" style={{ fontSize: 18, color: "#55565E" }}>
         {t("Best streak:")} <span className="font-bold" style={{ color: GREEN }}>{stats.best_streak_weeks} {t("weeks")}</span>
       </p>
-      {next && (
         <div className="mt-4">
           <div className="h-4 w-full rounded-full overflow-hidden" style={{ background: "rgba(61,43,43,0.1)" }}>
             <div className="h-full transition-all" style={{ width: `${pct}%`, background: "#2E7D46" }} />
           </div>
           <p className="mt-3 text-center font-bold flex items-center justify-center gap-2" style={{ fontSize: 18, color: GREEN }}>
-            {es
-              ? `${n} ${n === 1 ? "respuesta correcta más" : "respuestas correctas más"} para llegar a ${next.name}`
-              : `${n} more correct ${n === 1 ? "answer" : "answers"} to reach ${next.name}`}
+            {next ? (es
+              ? `${n} ${n === 1 ? "respuesta correcta más" : "respuestas correctas más"} para llegar a ${levelBadgeName(next.name as ArtworkLevelName, lang)}`
+              : `${n} more correct ${n === 1 ? "answer" : "answers"} to reach ${next.name}`)
+              : es
+                ? "¡Ha hecho crecer un Árbol del conocimiento completo! Siga practicando para mantenerse alerta."
+                : "You've grown a full Knowledge Tree! Keep practicing to stay sharp."}
             <SproutSoilIcon size={32} />
           </p>
         </div>
-      )}
     </div>
   );
 }

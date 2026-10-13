@@ -147,6 +147,14 @@
 }
 
 @layer utilities {
+  .kg-level-badge { width: 120px; height: 120px; }
+  .kg-badge-up { animation: kg-badge-up 0.6s ease-out both; }
+  @media (max-width: 479px) {
+    .kg-level-badge { width: 100px; height: 100px; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .kg-badge-up { animation: none; }
+  }
   .kinguard-inline-icon { display: inline-block; width: 1.3em; height: 1.3em; object-fit: contain; flex-shrink: 0; vertical-align: middle; }
   .kinguard-nav-icon { display: block; width: 28px; height: 28px; object-fit: contain; }
   .kinguard-badge-icon { display: block; width: 32px; height: 32px; min-width: 32px; min-height: 32px; object-fit: contain; flex-shrink: 0; opacity: 1; filter: none; }
@@ -161,4 +169,9 @@
     font-variant-numeric: slashed-zero;
     font-feature-settings: "zero";
   }
+}
+
+@keyframes kg-badge-up {
+  from { transform: scale(0.8); opacity: 0; }
+  to { transform: scale(1); opacity: 1; }
 }

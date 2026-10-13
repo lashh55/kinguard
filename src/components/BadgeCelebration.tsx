@@ -3,6 +3,9 @@ import { BadgeDef } from "@/lib/badges";
 import { toast } from "sonner";
 import { track } from "@/lib/analytics";
 import { BrandIcon } from "@/components/KinGuardIcon";
+import { BadgeIcon } from "@/components/LearnIcons";
+import { useI18n } from "@/lib/i18n";
+import { levelBadgeName, type ArtworkLevelName } from "@/lib/badgeArtwork";
 
 const CONFETTI_COLORS = ["#ACD0DC", "#F6EFC1", "#DFC18F", "#B27F7C", "#2ECC71", "#F39C12"];
 
@@ -15,6 +18,7 @@ export function BadgeCelebration({
   name: string;
   onDismiss: () => void;
 }) {
+  const { lang } = useI18n();
   const pieces = useMemo(
     () =>
       Array.from({ length: 60 }).map((_, i) => ({
@@ -38,6 +42,29 @@ export function BadgeCelebration({
       toast(text);
     }
   };
+
+  // Level badges get a quiet celebration; bonus badges retain their existing display.
+  if (!badge.bonus) {
+    const label = levelBadgeName(badge.name as ArtworkLevelName, lang);
+    return (
+      <div className="fixed inset-0 z-50 flex items-center justify-center bg-brown/80 px-5" onClick={onDismiss}>
+        <div role="dialog" aria-modal="true" aria-labelledby="level-badge-message"
+          className="card-soft text-center max-w-sm relative w-full" onClick={(e) => e.stopPropagation()}>
+          <div key={badge.id} className="kg-badge-up flex justify-center">
+            <BadgeIcon level={badge.id} />
+          </div>
+          <p id="level-badge-message" className="mt-4 text-lg font-bold">
+            {lang === "es"
+              ? `¡Felicidades! Ganó la insignia ${label}. ¡Su Árbol del conocimiento está creciendo!`
+              : `Congratulations! You earned the ${label} badge. Your Knowledge Tree is growing!`}
+          </p>
+          <button className="btn-base btn-primary w-full mt-5" onClick={onDismiss}>
+            {lang === "es" ? "Continuar" : "Continue"}
+          </button>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div

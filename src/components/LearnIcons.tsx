@@ -1,3 +1,7 @@
+import { badgeById } from "@/lib/badges";
+import { LEVEL_BADGE_IMAGES, levelBadgeName, type ArtworkLevelName } from "@/lib/badgeArtwork";
+import { useI18n } from "@/lib/i18n";
+
 /** Filled, full-color inline SVG icons for the Learn page. Same drawing on every device. */
 type P = { size?: number; className?: string };
 const svg = (size: number, vb: string, className: string, children: React.ReactNode) => (
@@ -132,12 +136,15 @@ export function TargetIcon({ size = 44, className = "" }: P) {
   </>);
 }
 
-/** Current badge artwork. Level-specific images will be added later; every level uses the sprout for now. */
-export function BadgeIcon({ level: _level, size = 120 }: { level?: string | null; size?: number }) {
+/** Uploaded artwork includes its own ring; do not add a decorative container. */
+export function BadgeIcon({ level, size = 120 }: { level?: string | null; size?: number }) {
+  const { lang } = useI18n();
+  const name = (badgeById(level)?.name ?? "Just getting started") as ArtworkLevelName;
+  const artwork = LEVEL_BADGE_IMAGES[name] ?? LEVEL_BADGE_IMAGES["Just getting started"];
+  const label = levelBadgeName(name, lang);
   return (
-    <div className="rounded-full flex items-center justify-center shrink-0"
-      style={{ width: size, height: size, border: "4px solid #D4B57A", background: "radial-gradient(circle, #FFFBEF 40%, #F6E7C1 100%)" }}>
-      <SproutSoilIcon size={size * 0.72} />
-    </div>
+    <img src={artwork.url} width={size} height={size}
+      className="kg-level-badge block shrink-0 object-contain"
+      alt={lang === "es" ? `Insignia ${label}` : `${label} badge`} />
   );
 }
