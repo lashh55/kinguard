@@ -22,6 +22,7 @@ import irsIcon from "@/assets/kinguard-check-irs-ssa.webp.asset.json";
 import websiteIcon from "@/assets/kinguard-check-website.webp.asset.json";
 import phoneIcon from "@/assets/kinguard-check-phone-call.webp.asset.json";
 import unsureIcon from "@/assets/kinguard-check-not-sure.webp.asset.json";
+import freezeIcon from "@/assets/learn-icons/icon-freeze-credit.png.asset.json";
 
 type Asker = "employer" | "bank" | "irs" | "website" | "phone" | "email" | "unsure";
 type Direction = "self" | "them";
@@ -258,13 +259,20 @@ function SsnShield() {
       {/* Credit Freeze */}
       <section className="px-5 mt-4">
         <div className="card-soft" style={{ borderLeft: "6px solid var(--color-sky)" }}>
-          <div className="flex items-start justify-between gap-3">
-            <h2>{t("🧊 Freeze Your Credit")}</h2>
-            <span className="font-bold text-sm whitespace-nowrap" style={{ color: "var(--color-sky)" }}>
-              {freezeDone}/3
-            </span>
+          <div className="flex items-center gap-4">
+            <img src={freezeIcon.url} alt="" className="kg-learn-image kg-freeze-icon" />
+            <div className="min-w-0 flex-1">
+              <div className="flex items-start justify-between gap-3">
+                <h2 style={{ fontFamily: "var(--font-display)", fontWeight: 700, fontSize: 30, color: "#0F3D2A", lineHeight: 1.15 }}>
+                  {t("Freeze Your Credit")}
+                </h2>
+                <span className="font-bold text-sm whitespace-nowrap" style={{ color: "var(--color-sky)" }}>
+                  {freezeDone}/3
+                </span>
+              </div>
+              <p className="mt-1">{t("A credit freeze stops anyone from opening new accounts in your name. It's free, and you can unfreeze it anytime.")}</p>
+            </div>
           </div>
-          <p className="mt-1">{t("A credit freeze stops anyone from opening new accounts in your name. It's free, and you can unfreeze it anytime.")}</p>
 
           <div className="card-soft mt-3" style={{ background: "var(--color-cream)", boxShadow: "none" }}>
             <p className="font-bold">{t("💡 You must freeze at all 3 bureaus")}</p>
