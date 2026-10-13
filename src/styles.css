@@ -76,6 +76,8 @@
   --border: oklch(0.88 0.03 85);
   --input: oklch(0.88 0.03 85);
   --ring: var(--tan);
+  --learn-accordion-border: #B3CFDA;
+  --learn-romance-border: #A97570;
 }
 
 @layer base {
@@ -147,6 +149,15 @@
 }
 
 @layer utilities {
+  .kg-learn-image { display: block; object-fit: contain; flex-shrink: 0; background: none; border: none; border-radius: 0; filter: none; opacity: 1; }
+  .kg-learn-accordion-icon { width: 48px; height: 48px; }
+  .kg-learn-stat-icon { width: 56px; height: 56px; }
+  .kg-learn-watch-icon { width: 96px; height: 96px; }
+  @media (max-width: 479px) {
+    .kg-learn-accordion-icon { width: 40px; height: 40px; }
+    .kg-learn-stat-icon { width: 44px; height: 44px; }
+    .kg-learn-watch-icon { width: 72px; height: 72px; }
+  }
   .kg-level-badge { width: 120px; height: 120px; }
   .kg-badge-up { animation: kg-badge-up 0.6s ease-out both; }
   @media (max-width: 479px) {
