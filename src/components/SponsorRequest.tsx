@@ -11,7 +11,6 @@ export function SponsorRequestCard() {
   const es = lang === "es";
   const [open, setOpen] = useState(false);
   const [done, setDone] = useState(false);
-  const [alone, setAlone] = useState<Answer | null>(null);
   const [trusted, setTrusted] = useState<Answer | null>(null);
   const [heard, setHeard] = useState("");
   const [busy, setBusy] = useState(false);
@@ -25,13 +24,13 @@ export function SponsorRequestCard() {
 
   const submit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!user || !alone || !trusted || !heard.trim()) {
-      setErr(es ? "Por favor responda las tres preguntas." : "Please answer all three questions.");
+    if (!user || !trusted || !heard.trim()) {
+      setErr(es ? "Por favor responda las dos preguntas." : "Please answer both questions.");
       return;
     }
     setBusy(true); setErr(null);
     const { error } = await supabase.from("sponsor_requests").insert({
-      senior_id: user.id, lives_alone: alone, has_trusted_person: trusted, heard_about: heard.trim().slice(0, 300),
+      senior_id: user.id, has_trusted_person: trusted, heard_about: heard.trim().slice(0, 300),
     });
     setBusy(false);
     if (error && !/duplicate/i.test(error.message)) { setErr(es ? "Algo salió mal. Inténtelo de nuevo." : "Something went wrong. Please try again."); return; }
@@ -68,10 +67,6 @@ export function SponsorRequestCard() {
             </button>
           ) : (
             <form onSubmit={submit} className="space-y-4">
-              <div>
-                <p className="font-bold">{es ? "¿Vive solo/a?" : "Do you live alone?"}</p>
-                {choice(alone, setAlone, [["yes", es ? "Sí" : "Yes"], ["no", "No"]])}
-              </div>
               <div>
                 <p className="font-bold">{es
                   ? "¿Hay alguien de confianza que pueda ser su guardián, como un vecino, alguien de su iglesia o un amigo?"
