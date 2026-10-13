@@ -24,3 +24,5 @@
 - [x] Replace Learn drawings with all ten supplied images, reuse IRS artwork and match its accordion; verify English/Spanish image loading, sizes and expansion with no page errors.
 - [x] Add icon-tech-support-laptop.png and icon-grandparents.png to the Tech Support and Grandparent accordions at 48px (40px below 480px) with no container.
 - [x] Verify both new accordion icons load and render at 48px on desktop and 40px on phone width with no circle, border or background and no page errors.
+- [x] Replace the My Badges medal with icon-my-badges-tree.png at 44px (36px below 480px) and place icon-freeze-credit.png left of the Freeze Your Credit card at 96px (72px below 480px) with a bold serif deep-green heading.
+- [x] Verify both new icons load, centre and stay unobstructed in English and Spanish on desktop and phone width with no page errors.
