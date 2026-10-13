@@ -66,6 +66,9 @@ function Onboarding() {
               {t("Learn more about scams →")}
             </a>
           </div>
+          <p className="mt-8 text-center" style={{ fontSize: 16, color: "var(--color-brown)" }}>
+            {t("KinGuard's protection is free for every senior. Our new family features are coming soon, and seniors without family can ask about a free sponsored plan after signing up.")}
+          </p>
         </div>
 
       </div>
