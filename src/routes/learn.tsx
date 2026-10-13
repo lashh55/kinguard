@@ -15,12 +15,13 @@ import headingSprout from "@/assets/learn-icons/icon-sprout-heading.png.asset.js
 import medicareIcon from "@/assets/learn-icons/icon-medicare-health.png.asset.json";
 import romanceIcon from "@/assets/learn-icons/icon-romance-heart.png.asset.json";
 import irsIcon from "@/assets/kinguard-check-irs-ssa.webp.asset.json";
+import techIcon from "@/assets/learn-icons/icon-tech-support-laptop.png.asset.json";
+import grandIcon from "@/assets/learn-icons/icon-grandparents.png.asset.json";
 
 const STYLED_CARDS: Record<string, { image?: string; border: string; es: string }> = {
   irs: { image: irsIcon.url, border: "var(--learn-accordion-border)", es: "Estafas del IRS / gobierno" },
-  // Preserve icon slots until the two missing uploaded PNGs arrive; never draw substitutes.
-  tech: { border: "var(--learn-accordion-border)", es: "Estafas de soporte técnico" },
-  grand: { border: "var(--learn-accordion-border)", es: "Estafas a abuelos" },
+  tech: { image: techIcon.url, border: "var(--learn-accordion-border)", es: "Estafas de soporte técnico" },
+  grand: { image: grandIcon.url, border: "var(--learn-accordion-border)", es: "Estafas a abuelos" },
   med: { image: medicareIcon.url, border: "var(--learn-accordion-border)", es: "Estafas de Medicare / salud" },
   rom: { image: romanceIcon.url, border: "var(--learn-romance-border)", es: "Estafas románticas" },
 };
