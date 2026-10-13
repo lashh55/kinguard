@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { AdminShell, AdminTable } from "@/components/AdminShell";
 import { logAdminView, useTestAccounts } from "@/lib/admin";
+import { AdminAccountDetail } from "@/components/AdminAccountDetail";
 
 export const Route = createFileRoute("/_admin/admin/seniors")({ head: () => pageHead("Admin seniors", "Review KinGuard senior accounts and guardian connections."), component: SeniorsPage });
 
@@ -12,6 +13,7 @@ type Row = { id: string; full_name: string; invite_code: string | null; created_
 function SeniorsPage() {
   const [rows, setRows] = useState<Row[]>([]);
   const test = useTestAccounts();
+  const [openId, setOpenId] = useState<string | null>(null);
   useEffect(() => {
     logAdminView("/admin/seniors");
     supabase.rpc("admin_list_seniors").then(({ data }) => setRows((data as Row[]) ?? []));
@@ -19,12 +21,13 @@ function SeniorsPage() {
   return (
     <AdminShell title={`Seniors (${rows.length})`}>
       <AdminTable rows={rows} columns={[
-        { key: "name", label: "Name", render: (r) => r.full_name },
+        { key: "name", label: "Name", render: (r) => <button className="underline font-semibold text-left" onClick={() => setOpenId(r.id)}>{r.full_name}</button> },
         { key: "test", label: "Test account", render: (r) => <input type="checkbox" aria-label={`Test account: ${r.full_name}`} className="h-5 w-5" checked={test.ids.has(r.id)} onChange={(e) => test.toggle(r.id, e.target.checked)} /> },
         { key: "code", label: "Invite code", render: (r) => <span className="invite-code font-mono">{r.invite_code ?? "—"}</span> },
         { key: "guardians", label: "Guardians", render: (r) => r.guardian_count },
         { key: "created", label: "Joined", render: (r) => new Date(r.created_at).toLocaleDateString() },
       ]} />
+      {openId && <AdminAccountDetail userId={openId} onClose={() => setOpenId(null)} />}
     </AdminShell>
   );
 }
