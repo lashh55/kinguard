@@ -2,6 +2,7 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { MarketingShell } from "@/components/MarketingShell";
 import { ScamVignette } from "@/components/ScamVignette";
 import { BrandIcon } from "@/components/KinGuardIcon";
+import { useI18n } from "@/lib/i18n";
 
 
 export const Route = createFileRoute("/for-guardians")({
@@ -33,6 +34,7 @@ export const Route = createFileRoute("/for-guardians")({
 });
 
 function ForGuardians() {
+  const { t } = useI18n();
   return (
     <MarketingShell>
       <p className="text-sm font-bold uppercase tracking-wider" style={{ color: "var(--color-rose)" }}>For guardians</p>
@@ -67,6 +69,7 @@ function ForGuardians() {
         <Faq q="Does KinGuard listen to my parent's calls?" a="No. KinGuard only analyzes messages your parent chooses to paste into the app, or messages they forward for a check." />
         <Faq q="How many guardians can a senior have?" a="Up to five. Each guardian gets the same real-time alerts and activity feed." />
         <Faq q="Does KinGuard ask for a Social Security number?" a="Never. KinGuard does not collect, store, or transmit Social Security numbers. If you ever see a field asking for one, you're not on KinGuard." />
+        <Faq q={t("Can I use KinGuard if I don't have family?")} a={t("Yes. KinGuard is free for every senior. You can choose anyone you trust as your guardian, like a neighbor, church member, or friend. When our new family features launch, seniors without family can request a free sponsored plan from their Profile page.")} />
         <Faq q="What does it cost?" a="Free to get started. You can connect as a guardian in under two minutes." />
       </section>
 
