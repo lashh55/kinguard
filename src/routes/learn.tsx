@@ -17,6 +17,7 @@ import romanceIcon from "@/assets/learn-icons/icon-romance-heart.png.asset.json"
 import irsIcon from "@/assets/kinguard-check-irs-ssa.webp.asset.json";
 import techIcon from "@/assets/learn-icons/icon-tech-support-laptop.png.asset.json";
 import grandIcon from "@/assets/learn-icons/icon-grandparents.png.asset.json";
+import badgesTreeIcon from "@/assets/learn-icons/icon-my-badges-tree.png.asset.json";
 
 const STYLED_CARDS: Record<string, { image?: string; border: string; es: string }> = {
   irs: { image: irsIcon.url, border: "var(--learn-accordion-border)", es: "Estafas del IRS / gobierno" },
@@ -108,7 +109,7 @@ function LearnScreen() {
             {lang === "es" ? "Árbol del Conocimiento" : "Knowledge Tree"} <img src={headingSprout.url} alt="" className="kg-learn-image h-11 w-11" />
           </h2>
           <LearnScoreCard stats={profile.challenge_stats} />
-          <h2 className="mb-2 mt-6">{t("My Badges 🏅")}</h2>
+          <h2 className="mb-2 mt-6 flex items-center gap-2">{t("My Badges")} <img src={badgesTreeIcon.url} alt="" className="kg-learn-image kg-learn-badges-icon" /></h2>
           <BadgeGrid stats={profile.challenge_stats} />
         </section>
       )}
