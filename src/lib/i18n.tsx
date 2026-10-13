@@ -266,7 +266,7 @@ const DICT: Record<string, string> = {
   "Generate new code": "Generar nuevo código",
   "Generating…": "Generando…",
   "Generate a new invite code?": "¿Generar un nuevo código de invitación?",
-  "This will invalidate your current code. All existing guardians will need to re-enter your new code.": "Esto invalidará tu código actual. Todos los guardianes existentes deberán ingresar tu nuevo código.",
+  "Your old code will stop working. Guardians already linked to you stay linked. Only new guardians will need the new code.": "Su código anterior dejará de funcionar. Los guardianes que ya están vinculados con usted seguirán vinculados. Solo los nuevos guardianes necesitarán el nuevo código.",
   "Yes, generate new code": "Sí, generar nuevo código",
   "Your new invite code is ready. Share it with your guardians.": "Tu nuevo código de invitación está listo. Compártelo con tus guardianes.",
   "Could not generate a new code. Try again.": "No se pudo generar un nuevo código. Inténtalo de nuevo.",

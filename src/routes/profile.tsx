@@ -305,7 +305,7 @@ function ProfileScreen() {
               <div className="card-soft w-full max-w-md" style={{ background: "var(--color-card)" }}>
                 <h2 className="mb-2">⚠️ {t("Generate a new invite code?")}</h2>
                 <p className="mb-4">
-                  {t("This will invalidate your current code. All existing guardians will need to re-enter your new code.")}
+                  {t("Your old code will stop working. Guardians already linked to you stay linked. Only new guardians will need the new code.")}
                 </p>
                 <div className="flex gap-3">
                   <button type="button" className="btn-secondary flex-1" onClick={() => setConfirmNewCode(false)}>
