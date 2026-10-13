@@ -58,8 +58,8 @@ export function SponsorRequestCard() {
         <>
           <p className="font-bold" style={{ color: "var(--color-brown)", fontSize: 18 }}>
             {es
-              ? "¿No tiene a alguien que sea su guardián? Podría calificar para un plan patrocinado gratuito."
-              : "Don't have someone to be your guardian? You may qualify for a free sponsored plan."}
+              ? "¿No tiene familiares que le ayuden con el costo de KinGuard? Podría calificar para un plan patrocinado gratuito. Usted seguirá eligiendo a alguien de confianza, como un vecino, alguien de su iglesia o un amigo, como su guardián."
+              : "No family to help with the cost of KinGuard? You may qualify for a free sponsored plan. You'll still choose someone you trust, like a neighbor, church member, or friend, as your guardian."}
           </p>
           {!open ? (
             <button type="button" className="btn-base btn-sky w-full" onClick={() => setOpen(true)}>
