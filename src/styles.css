@@ -155,12 +155,14 @@
   .kg-learn-watch-icon { width: 96px; height: 96px; }
   .kg-learn-badges-icon { width: 44px; height: 44px; }
   .kg-freeze-icon { width: 96px; height: 96px; }
+  .kg-learn-irs-pin-icon { width: 52px; height: 52px; }
   @media (max-width: 479px) {
     .kg-learn-accordion-icon { width: 40px; height: 40px; }
     .kg-learn-stat-icon { width: 44px; height: 44px; }
     .kg-learn-watch-icon { width: 72px; height: 72px; }
     .kg-learn-badges-icon { width: 36px; height: 36px; }
     .kg-freeze-icon { width: 72px; height: 72px; }
+    .kg-learn-irs-pin-icon { width: 44px; height: 44px; }
   }
   .kg-level-badge { width: 120px; height: 120px; }
   .kg-badge-up { animation: kg-badge-up 0.6s ease-out both; }
