@@ -78,6 +78,13 @@
       "when": 1791841779636,
       "tag": "0010_guardian_limit_marker_message",
       "breakpoints": true
+    },
+    {
+      "idx": 11,
+      "version": "7",
+      "when": 1791908495331,
+      "tag": "0011_sponsor_requests",
+      "breakpoints": true
     }
   ]
 }

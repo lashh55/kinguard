@@ -519,6 +519,41 @@ export type Database = {
         }
         Relationships: []
       }
+      sponsor_requests: {
+        Row: {
+          created_at: string
+          has_trusted_person: string
+          heard_about: string
+          id: string
+          lives_alone: string
+          senior_id: string
+        }
+        Insert: {
+          created_at?: string
+          has_trusted_person: string
+          heard_about: string
+          id?: string
+          lives_alone: string
+          senior_id: string
+        }
+        Update: {
+          created_at?: string
+          has_trusted_person?: string
+          heard_about?: string
+          id?: string
+          lives_alone?: string
+          senior_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "sponsor_requests_senior_id_fkey"
+            columns: ["senior_id"]
+            isOneToOne: true
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
     }
     Views: {
       [_ in never]: never
@@ -576,6 +611,17 @@ export type Database = {
           id: string
           senior_id: string
           senior_name: string
+        }[]
+      }
+      admin_list_sponsor_requests: {
+        Args: never
+        Returns: {
+          created_at: string
+          full_name: string
+          has_trusted_person: string
+          heard_about: string
+          id: string
+          lives_alone: string
         }[]
       }
       admin_list_test_accounts: { Args: never; Returns: string[] }

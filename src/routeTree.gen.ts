@@ -25,6 +25,7 @@ import { Route as IndexRouteImport } from './routes/index'
 import { Route as ScamsSlugRouteImport } from './routes/scams.$slug'
 import { Route as AdminAdminIndexRouteImport } from './routes/_admin/admin.index'
 import { Route as ApiPublicInboundEmailRouteImport } from './routes/api/public/inbound-email'
+import { Route as AdminAdminSponsorsRouteImport } from './routes/_admin/admin.sponsors'
 import { Route as AdminAdminSosRouteImport } from './routes/_admin/admin.sos'
 import { Route as AdminAdminSeniorsRouteImport } from './routes/_admin/admin.seniors'
 import { Route as AdminAdminMessagesRouteImport } from './routes/_admin/admin.messages'
@@ -110,6 +111,11 @@ const ApiPublicInboundEmailRoute = ApiPublicInboundEmailRouteImport.update({
   path: '/api/public/inbound-email',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AdminAdminSponsorsRoute = AdminAdminSponsorsRouteImport.update({
+  id: '/admin/sponsors',
+  path: '/admin/sponsors',
+  getParentRoute: () => AdminRoute,
+} as any)
 const AdminAdminSosRoute = AdminAdminSosRouteImport.update({
   id: '/admin/sos',
   path: '/admin/sos',
@@ -155,6 +161,7 @@ export interface FileRoutesByFullPath {
   '/admin/messages': typeof AdminAdminMessagesRoute
   '/admin/seniors': typeof AdminAdminSeniorsRoute
   '/admin/sos': typeof AdminAdminSosRoute
+  '/admin/sponsors': typeof AdminAdminSponsorsRoute
   '/api/public/inbound-email': typeof ApiPublicInboundEmailRoute
   '/admin/': typeof AdminAdminIndexRoute
 }
@@ -177,6 +184,7 @@ export interface FileRoutesByTo {
   '/admin/messages': typeof AdminAdminMessagesRoute
   '/admin/seniors': typeof AdminAdminSeniorsRoute
   '/admin/sos': typeof AdminAdminSosRoute
+  '/admin/sponsors': typeof AdminAdminSponsorsRoute
   '/api/public/inbound-email': typeof ApiPublicInboundEmailRoute
   '/admin': typeof AdminAdminIndexRoute
 }
@@ -201,6 +209,7 @@ export interface FileRoutesById {
   '/_admin/admin/messages': typeof AdminAdminMessagesRoute
   '/_admin/admin/seniors': typeof AdminAdminSeniorsRoute
   '/_admin/admin/sos': typeof AdminAdminSosRoute
+  '/_admin/admin/sponsors': typeof AdminAdminSponsorsRoute
   '/api/public/inbound-email': typeof ApiPublicInboundEmailRoute
   '/_admin/admin/': typeof AdminAdminIndexRoute
 }
@@ -225,6 +234,7 @@ export interface FileRouteTypes {
     | '/admin/messages'
     | '/admin/seniors'
     | '/admin/sos'
+    | '/admin/sponsors'
     | '/api/public/inbound-email'
     | '/admin/'
   fileRoutesByTo: FileRoutesByTo
@@ -247,6 +257,7 @@ export interface FileRouteTypes {
     | '/admin/messages'
     | '/admin/seniors'
     | '/admin/sos'
+    | '/admin/sponsors'
     | '/api/public/inbound-email'
     | '/admin'
   id:
@@ -270,6 +281,7 @@ export interface FileRouteTypes {
     | '/_admin/admin/messages'
     | '/_admin/admin/seniors'
     | '/_admin/admin/sos'
+    | '/_admin/admin/sponsors'
     | '/api/public/inbound-email'
     | '/_admin/admin/'
   fileRoutesById: FileRoutesById
@@ -405,6 +417,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiPublicInboundEmailRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/_admin/admin/sponsors': {
+      id: '/_admin/admin/sponsors'
+      path: '/admin/sponsors'
+      fullPath: '/admin/sponsors'
+      preLoaderRoute: typeof AdminAdminSponsorsRouteImport
+      parentRoute: typeof AdminRoute
+    }
     '/_admin/admin/sos': {
       id: '/_admin/admin/sos'
       path: '/admin/sos'
@@ -449,6 +468,7 @@ interface AdminRouteChildren {
   AdminAdminMessagesRoute: typeof AdminAdminMessagesRoute
   AdminAdminSeniorsRoute: typeof AdminAdminSeniorsRoute
   AdminAdminSosRoute: typeof AdminAdminSosRoute
+  AdminAdminSponsorsRoute: typeof AdminAdminSponsorsRoute
   AdminAdminIndexRoute: typeof AdminAdminIndexRoute
 }
 
@@ -458,6 +478,7 @@ const AdminRouteChildren: AdminRouteChildren = {
   AdminAdminMessagesRoute: AdminAdminMessagesRoute,
   AdminAdminSeniorsRoute: AdminAdminSeniorsRoute,
   AdminAdminSosRoute: AdminAdminSosRoute,
+  AdminAdminSponsorsRoute: AdminAdminSponsorsRoute,
   AdminAdminIndexRoute: AdminAdminIndexRoute,
 }
 

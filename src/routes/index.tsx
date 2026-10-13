@@ -13,6 +13,7 @@ import { PasswordInput } from "@/components/PasswordInput";
 import { PasswordStrengthMeter } from "@/components/PasswordStrengthMeter";
 import { generatePassphrase } from "@/lib/passphrase";
 import { BrandIcon, KinGuardShield } from "@/components/KinGuardIcon";
+import { SponsorRequestCard } from "@/components/SponsorRequest";
 
 export const Route = createFileRoute("/")({
   head: () => pageHead("Protecting the people you love", "Start your KinGuard protection or sign in to check suspicious messages and connect with guardians."),
@@ -438,6 +439,7 @@ function InviteCodeView({ code, onContinue }: { code: string; onContinue: () => 
       <p className="text-sm" style={{ color: "var(--color-muted-foreground)" }}>
         {t("Multiple family members can use this same code.")}
       </p>
+      <SponsorRequestCard />
       <button className="btn-base btn-primary w-full" onClick={handleContinue} disabled={busy}>
         {busy ? (
           <span className="inline-flex items-center justify-center gap-2">
