@@ -7,7 +7,7 @@ import { logAdminView } from "@/lib/admin";
 
 export const Route = createFileRoute("/_admin/admin/sponsors")({ head: () => pageHead("Admin sponsor requests", "Review KinGuard sponsored plan requests."), component: SponsorsPage });
 
-type Row = { id: string; full_name: string; lives_alone: string; has_trusted_person: string; heard_about: string; created_at: string };
+type Row = { id: string; full_name: string; has_trusted_person: string; heard_about: string; created_at: string };
 const label = (v: string) => (v === "yes" ? "Yes" : v === "no" ? "No" : "Not sure");
 
 function SponsorsPage() {
@@ -18,10 +18,9 @@ function SponsorsPage() {
   }, []);
   return (
     <AdminShell title={`Sponsor requests (${rows.length})`}>
-      <p className="text-sm opacity-70 mb-3">Oldest first. Real accounts only — test accounts are excluded.</p>
+      <p className="text-sm opacity-70 mb-3">Oldest first — handled first come, first served. Real accounts only, test accounts are excluded.</p>
       <AdminTable rows={rows} empty="No sponsor requests yet." columns={[
         { key: "name", label: "Name", render: (r) => r.full_name },
-        { key: "alone", label: "Lives alone?", render: (r) => label(r.lives_alone) },
         { key: "trusted", label: "Someone trusted?", render: (r) => label(r.has_trusted_person) },
         { key: "heard", label: "Heard about KinGuard", render: (r) => r.heard_about },
         { key: "date", label: "Date", render: (r) => new Date(r.created_at).toLocaleDateString() },

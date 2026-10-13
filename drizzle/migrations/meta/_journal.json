@@ -85,6 +85,13 @@
       "when": 1791908495331,
       "tag": "0011_sponsor_requests",
       "breakpoints": true
+    },
+    {
+      "idx": 12,
+      "version": "7",
+      "when": 1791908679172,
+      "tag": "0012_sponsor_requests_drop_living_situation",
+      "breakpoints": true
     }
   ]
 }

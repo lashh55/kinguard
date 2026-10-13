@@ -533,7 +533,7 @@ export type Database = {
           has_trusted_person: string
           heard_about: string
           id?: string
-          lives_alone: string
+          lives_alone?: string
           senior_id: string
         }
         Update: {
