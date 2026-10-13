@@ -21,3 +21,4 @@
 - [x] Verify Ava's tip card renders the icon at 36x36 with 27px text in English and Spanish, soft blue background unchanged, no page errors.
 - [x] Apply the eight-level Knowledge Tree image mapping, animation and bilingual progress wording without changing bonus badges.
 - [x] Verify signed-in Learn artwork, every threshold and Legend-only completion wording in English and Spanish; verify gentle celebration and Continue dismissal in an isolated display without changing account progress.
+- [ ] Replace Learn drawings with supplied images and verify bilingual sizes; laptop and grandparents images await upload.
