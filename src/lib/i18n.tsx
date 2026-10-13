@@ -177,7 +177,7 @@ const DICT: Record<string, string> = {
   "🚨 DANGER": "🚨 PELIGRO",
   "🚨 KinGuard will NEVER ask for your Social Security Number.": "🚨 KinGuard NUNCA pedirá tu Número de Seguro Social.",
   "ssn_warning": "🚨 KinGuard NUNCA te pedirá tu Número de Seguro Social. No lo recopilamos, almacenamos ni transmitimos — jamás. Si ves un campo pidiendo tu Número de Seguro Social, NO estás en KinGuard. Sal de esa página de inmediato y repórtanos en safety@getkinguard.com.",
-  "📌 IRS Identity Protection PIN": "📌 PIN de Protección de Identidad del IRS",
+  "IRS Identity Protection PIN": "PIN de protección de identidad del IRS",
   "A free 6-digit PIN from the IRS that blocks scammers from filing a tax return in your name.": "Un PIN gratuito de 6 dígitos del IRS que evita que los estafadores presenten una declaración de impuestos a tu nombre.",
   "💡 Why this matters": "💡 Por qué esto importa",
   "Tax-return identity theft costs seniors billions every year. The IP PIN is the single best protection — and it's free.": "El robo de identidad en declaraciones de impuestos cuesta miles de millones cada año a las personas mayores. El PIN IP es la mejor protección — y es gratis.",

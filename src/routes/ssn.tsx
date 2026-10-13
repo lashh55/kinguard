@@ -23,6 +23,7 @@ import websiteIcon from "@/assets/kinguard-check-website.webp.asset.json";
 import phoneIcon from "@/assets/kinguard-check-phone-call.webp.asset.json";
 import unsureIcon from "@/assets/kinguard-check-not-sure.webp.asset.json";
 import freezeIcon from "@/assets/learn-icons/icon-freeze-credit.png.asset.json";
+import irsPinIcon from "@/assets/learn-icons/icon-irs-ip-pin.png.asset.json";
 
 type Asker = "employer" | "bank" | "irs" | "website" | "phone" | "email" | "unsure";
 type Direction = "self" | "them";
@@ -190,8 +191,13 @@ function SsnShield() {
       {/* IRS IP PIN */}
       <section className="px-5 mt-4">
         <div className="card-soft" style={{ borderLeft: "6px solid var(--color-tan)" }}>
-          <div className="flex items-start justify-between gap-3">
-            <h2>{t("📌 IRS Identity Protection PIN")}</h2>
+          <div className="flex items-center justify-between gap-3">
+            <div className="flex items-center gap-3 min-w-0">
+              <img src={irsPinIcon.url} alt="" className="kg-learn-image kg-learn-irs-pin-icon" />
+              <h2 style={{ fontFamily: "var(--font-display)", fontWeight: 700, fontSize: 30, color: "#2B1810", lineHeight: 1.15 }}>
+                {t("IRS Identity Protection PIN")}
+              </h2>
+            </div>
             <span className="font-bold text-sm whitespace-nowrap" style={{ color: "var(--color-tan)" }}>
               {irsDone}/{IRS_STEPS.length}
             </span>
