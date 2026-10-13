@@ -30,3 +30,5 @@
 - [x] Verify the new IRS icon loads, centres on the heading line and keeps the counter, gold border and section below unchanged in English and Spanish on desktop and phone width with no page errors.
 - [x] Cut the sponsored plan request form to two questions, removing the living-situation question and retiring its stored value.
 - [x] Verify the two-question form in English and Spanish, the both-questions prompt, the thank-you message and the admin list note with no page errors.
+- [x] Rewrite the sponsored plan card intro to the family-cost wording in English and Spanish, keeping the button and form unchanged.
+- [x] Verify the new card wording reads fully and its button stays tappable on a phone screen with no page errors.
