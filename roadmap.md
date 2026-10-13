@@ -19,3 +19,5 @@
 - [x] Verify Ava's dashboard streak card shows sparkles in both languages with no page errors.
 - [x] Put uploaded tip artwork on the Today's scam tip card at 36x36 in place of the lightbulb and enlarge its heading and tip text 1.5x, keeping the soft blue card and tip wording.
 - [x] Verify Ava's tip card renders the icon at 36x36 with 27px text in English and Spanish, soft blue background unchanged, no page errors.
+- [ ] Apply the eight-level Knowledge Tree image mapping, animation and bilingual progress wording without changing bonus badges.
+- [ ] Verify uploaded artwork, every threshold and Legend-only completion wording.
