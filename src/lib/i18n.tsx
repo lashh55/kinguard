@@ -259,7 +259,7 @@ const DICT: Record<string, string> = {
   "Copied!": "¡Copiado!",
   "Code copied!": "¡Código copiado!",
   "Could not copy. Please read the code aloud instead.": "No se pudo copiar. Lee el código en voz alta en su lugar.",
-  "Share this with up to 5 family members. Each can link to you with this same code.": "Comparte esto con hasta 5 familiares. Cada uno puede vincularse contigo con este mismo código.",
+  "Share this with up to 5 people you trust. Each can link to you with this same code.": "Compártalo con hasta 5 personas de confianza. Cada una puede vincularse con usted usando este mismo código.",
   "Generate new code": "Generar nuevo código",
   "Generating…": "Generando…",
   "Generate a new invite code?": "¿Generar un nuevo código de invitación?",

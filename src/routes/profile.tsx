@@ -288,7 +288,7 @@ function ProfileScreen() {
                 </p>
               )}
               <p className="text-sm mt-2" style={{ color: "var(--color-muted-foreground)" }}>
-                {t("Share this with up to 5 family members. Each can link to you with this same code.")}
+                {t("Share this with up to 5 people you trust. Each can link to you with this same code.")}
               </p>
               <button
                 type="button"
@@ -327,10 +327,6 @@ function ProfileScreen() {
 
         {isSenior && (
           <>
-            <FamilyCodeCard />
-
-            <FamilyCodeExplainer />
-
             <div className="card-soft">
               <h2 className="mb-2">
                 {t("My Guardians:")} {guardians.length}/5
@@ -411,6 +407,10 @@ function ProfileScreen() {
                 </p>
               )}
             </div>
+
+            <FamilyCodeCard />
+
+            <FamilyCodeExplainer />
 
             {confirmRemoveGuardian && (
               <div
