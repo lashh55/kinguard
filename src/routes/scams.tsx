@@ -1,11 +1,15 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { MarketingShell } from "@/components/MarketingShell";
+import iconGuideGrandparent from "@/assets/learn-icons/icon-guide-grandparent.png.asset.json";
+import iconGuideSocialSecurity from "@/assets/learn-icons/icon-guide-social-security.png.asset.json";
+import iconMedicareHealth from "@/assets/learn-icons/icon-medicare-health.png.asset.json";
+import iconIrsSsa from "@/assets/kinguard-check-irs-ssa.webp.asset.json";
 
 const SCAMS = [
-  { slug: "grandparent", emoji: "👵", title: "Grandparent scam", blurb: "A panicked call: \"Grandma, it's me — I'm in jail and need bail money.\" Here's how to spot it." },
-  { slug: "medicare", emoji: "🏥", title: "Medicare scam", blurb: "Calls offering free back braces, new cards, or threatening to cancel benefits. What's real and what isn't." },
-  { slug: "irs", emoji: "🧾", title: "IRS impersonation scam", blurb: "\"Pay now or be arrested.\" How real the IRS sounds — and what they will never do." },
-  { slug: "ssn", emoji: "🔢", title: "Social Security scam", blurb: "Your SSN has NOT been suspended. Here's the exact playbook scammers use." },
+  { slug: "grandparent", icon: iconGuideGrandparent, circled: false, title: "Grandparent scam", blurb: "A panicked call: \"Grandma, it's me — I'm in jail and need bail money.\" Here's how to spot it." },
+  { slug: "medicare", icon: iconMedicareHealth, circled: true, title: "Medicare scam", blurb: "Calls offering free back braces, new cards, or threatening to cancel benefits. What's real and what isn't." },
+  { slug: "irs", icon: iconIrsSsa, circled: true, title: "IRS impersonation scam", blurb: "\"Pay now or be arrested.\" How real the IRS sounds — and what they will never do." },
+  { slug: "ssn", icon: iconGuideSocialSecurity, circled: false, title: "Social Security scam", blurb: "Your SSN has NOT been suspended. Here's the exact playbook scammers use." },
 ];
 
 export const Route = createFileRoute("/scams")({
@@ -35,10 +39,20 @@ function ScamsHub() {
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-8">
         {SCAMS.map((s) => (
           <Link key={s.slug} to="/scams/$slug" params={{ slug: s.slug }} className="card-soft block hover:opacity-90 transition">
-            <div className="text-3xl mb-2">{s.emoji}</div>
-            <h2 style={{ fontSize: 22 }}>{s.title}</h2>
-            <p className="mt-2">{s.blurb}</p>
-            <span className="inline-block mt-3 font-bold underline">Read the guide →</span>
+            <div className="flex items-center gap-4">
+              {s.circled ? (
+                <span className="kg-guide-circle">
+                  <img src={s.icon.url} alt="" className="kg-guide-icon" />
+                </span>
+              ) : (
+                <img src={s.icon.url} alt="" className="kg-guide-icon-solo" />
+              )}
+              <div>
+                <h2 className="font-bold" style={{ fontFamily: "var(--font-display)", fontSize: 28, color: "#0F3D2A" }}>{s.title}</h2>
+                <p className="mt-2">{s.blurb}</p>
+                <span className="inline-block mt-3 font-bold underline" style={{ color: "#0F3D2A" }}>Read the guide →</span>
+              </div>
+            </div>
           </Link>
         ))}
       </div>
