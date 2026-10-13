@@ -624,6 +624,17 @@ export type Database = {
           lives_alone: string
         }[]
       }
+      admin_list_sponsor_requests_all: {
+        Args: never
+        Returns: {
+          created_at: string
+          full_name: string
+          has_trusted_person: string
+          heard_about: string
+          id: string
+          is_test: boolean
+        }[]
+      }
       admin_list_test_accounts: { Args: never; Returns: string[] }
       admin_log_view: { Args: { _path: string }; Returns: undefined }
       admin_set_test_account: {
