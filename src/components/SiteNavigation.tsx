@@ -35,6 +35,7 @@ export function SiteNavigation() {
       { to: "/admin/guardians", label: "Guardians" },
       { to: "/admin/messages", label: "Messages" },
       { to: "/admin/sos", label: "Help requests" },
+      { to: "/admin/sponsors", label: "Sponsor requests" },
       { to: "/admin/audit", label: "Audit" },
     ] : []),
   ];

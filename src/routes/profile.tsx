@@ -14,6 +14,7 @@ import { useI18n, LanguageToggle } from "@/lib/i18n";
 import { track } from "@/lib/analytics";
 import { generatePassphrase } from "@/lib/passphrase";
 import { NameFields, formatName, isValidName } from "@/components/NameFields";
+import { SponsorRequestCard } from "@/components/SponsorRequest";
 import {
   setFamilyCodeWord,
   revealFamilyCodeWord,
@@ -355,9 +356,12 @@ function ProfileScreen() {
                 </p>
               </div>
               {guardians.length === 0 ? (
-                <p style={{ color: "var(--color-muted-foreground)" }}>
-                  {t("No one is linked yet. Share your invite code above.")}
-                </p>
+                <div className="space-y-3">
+                  <p style={{ color: "var(--color-muted-foreground)" }}>
+                    {t("No one is linked yet. Share your invite code above.")}
+                  </p>
+                  <SponsorRequestCard />
+                </div>
               ) : (
                 <ul className="space-y-3">
                   {guardians.map((g) => {
