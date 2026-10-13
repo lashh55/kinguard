@@ -1,6 +1,10 @@
 import { ChallengeStats, currentLevelBadge, nextLevelBadge, normalizeStats } from "@/lib/badges";
 import { useI18n } from "@/lib/i18n";
-import { BadgeIcon, CalendarSproutIcon, CheckRingIcon, SproutSoilIcon, TargetIcon } from "@/components/LearnIcons";
+import { BadgeIcon } from "@/components/LearnIcons";
+import correctIcon from "@/assets/learn-icons/icon-stat-correct.png.asset.json";
+import calendarIcon from "@/assets/learn-icons/icon-stat-calendar.png.asset.json";
+import accuracyIcon from "@/assets/learn-icons/icon-stat-accuracy.png.asset.json";
+import sproutIcon from "@/assets/learn-icons/icon-sprout-small.png.asset.json";
 import { levelBadgeName, type ArtworkLevelName } from "@/lib/badgeArtwork";
 
 const GREEN = "#0F3D2A";
@@ -30,9 +34,9 @@ export function LearnScoreCard({ stats: raw }: { stats: unknown }) {
         </div>
       </div>
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 mt-5">
-        <Stat icon={<CheckRingIcon />} value={stats.total_correct} label={t("Correct")} />
-        <Stat icon={<CalendarSproutIcon size={44} />} value={stats.current_streak_weeks} label={t("Streak")} />
-        <Stat icon={<TargetIcon />} value={`${accuracy}%`} label={t("Accuracy")} />
+        <Stat icon={<img src={correctIcon.url} alt="" className="kg-learn-image kg-learn-stat-icon" />} value={stats.total_correct} label={t("Correct")} />
+        <Stat icon={<img src={calendarIcon.url} alt="" className="kg-learn-image kg-learn-stat-icon" />} value={stats.current_streak_weeks} label={t("Streak")} />
+        <Stat icon={<img src={accuracyIcon.url} alt="" className="kg-learn-image kg-learn-stat-icon" />} value={`${accuracy}%`} label={t("Accuracy")} />
       </div>
       <p className="text-center mt-4" style={{ fontSize: 18, color: "#55565E" }}>
         {t("Best streak:")} <span className="font-bold" style={{ color: GREEN }}>{stats.best_streak_weeks} {t("weeks")}</span>
@@ -48,7 +52,7 @@ export function LearnScoreCard({ stats: raw }: { stats: unknown }) {
               : es
                 ? "¡Ha hecho crecer un Árbol del conocimiento completo! Siga practicando para mantenerse alerta."
                 : "You've grown a full Knowledge Tree! Keep practicing to stay sharp."}
-            <SproutSoilIcon size={32} />
+            <img src={sproutIcon.url} alt="" className="kg-learn-image h-7 w-7" />
           </p>
         </div>
     </div>

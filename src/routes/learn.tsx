@@ -8,13 +8,21 @@ import { toast } from "sonner";
 import { LearnScoreCard } from "@/components/LearnScoreCard";
 import { BadgeCelebration, useBadgeQueue, useNotifyGuardiansOfBadge } from "@/components/BadgeCelebration";
 import { applyAnswer, applyPerfectWeek, normalizeStats } from "@/lib/badges";
-import { CalendarSproutIcon, ClapperIcon, GradCapIcon, LaptopBlueIcon, GrandparentsIcon, MedicalFormIcon, CoupleHeartIcon, SproutSoilIcon } from "@/components/LearnIcons";
+import challengeIcon from "@/assets/learn-icons/icon-challenge-calendar-badge.png.asset.json";
+import watchIcon from "@/assets/learn-icons/icon-watch-learn-clapper-badge.png.asset.json";
+import capIcon from "@/assets/learn-icons/icon-graduation-cap.png.asset.json";
+import headingSprout from "@/assets/learn-icons/icon-sprout-heading.png.asset.json";
+import medicareIcon from "@/assets/learn-icons/icon-medicare-health.png.asset.json";
+import romanceIcon from "@/assets/learn-icons/icon-romance-heart.png.asset.json";
+import irsIcon from "@/assets/kinguard-check-irs-ssa.webp.asset.json";
 
-const STYLED_CARDS: Record<string, { Icon: (p: { size?: number }) => React.ReactElement; border: string; es: string }> = {
-  tech: { Icon: LaptopBlueIcon, border: "#B3CFDA", es: "Estafas de soporte técnico" },
-  grand: { Icon: GrandparentsIcon, border: "#B3CFDA", es: "Estafas a abuelos" },
-  med: { Icon: MedicalFormIcon, border: "#B3CFDA", es: "Estafas de Medicare / salud" },
-  rom: { Icon: CoupleHeartIcon, border: "#A97570", es: "Estafas románticas" },
+const STYLED_CARDS: Record<string, { image?: string; border: string; es: string }> = {
+  irs: { image: irsIcon.url, border: "var(--learn-accordion-border)", es: "Estafas del IRS / gobierno" },
+  // Preserve icon slots until the two missing uploaded PNGs arrive; never draw substitutes.
+  tech: { border: "var(--learn-accordion-border)", es: "Estafas de soporte técnico" },
+  grand: { border: "var(--learn-accordion-border)", es: "Estafas a abuelos" },
+  med: { image: medicareIcon.url, border: "var(--learn-accordion-border)", es: "Estafas de Medicare / salud" },
+  rom: { image: romanceIcon.url, border: "var(--learn-romance-border)", es: "Estafas románticas" },
 };
 import { useI18n } from "@/lib/i18n";
 import { BadgeGrid } from "@/components/BadgeGrid";
@@ -96,7 +104,7 @@ function LearnScreen() {
       {profile && (
         <section id="knowledge-tree" className="px-5 mt-6">
           <h2 className="mb-3 flex items-center gap-2" style={{ fontSize: 36, color: "#0F3D2A", lineHeight: 1.1 }}>
-            {lang === "es" ? "Árbol del Conocimiento" : "Knowledge Tree"} <SproutSoilIcon size={44} />
+            {lang === "es" ? "Árbol del Conocimiento" : "Knowledge Tree"} <img src={headingSprout.url} alt="" className="kg-learn-image h-11 w-11" />
           </h2>
           <LearnScoreCard stats={profile.challenge_stats} />
           <h2 className="mb-2 mt-6">{t("My Badges 🏅")}</h2>
@@ -215,7 +223,7 @@ function Cards() {
             <details key={c.id} className="kg-accordion" style={{ background: "#fff", borderRadius: 28, boxShadow: "0 6px 20px -12px rgba(61,43,43,0.25)", borderTop: `6px solid ${Styled.border}`, overflow: "hidden" }} onToggle={(e) => { if ((e.target as HTMLDetailsElement).open) handleOpen(c.id); }}>
               <summary className="cursor-pointer flex items-center gap-3 px-5" style={{ minHeight: 72, listStyle: "none" }}>
                 <svg className="kg-accordion-arrow shrink-0" width="18" height="18" viewBox="0 0 18 18" aria-hidden="true"><path d="M4 2 L15 9 L4 16 Z" fill="#3D2B2B" /></svg>
-                <Styled.Icon size={40} />
+                {Styled.image ? <img src={Styled.image} alt="" className="kg-learn-image kg-learn-accordion-icon" /> : <span aria-hidden="true" className="kg-learn-accordion-icon block shrink-0" />}
                 <span className="font-extrabold" style={{ fontSize: 26, color: "#1E1A1A", lineHeight: 1.2 }}>{lang === "es" ? Styled.es : c.title}</span>
               </summary>
               <div className="px-5 pb-5 space-y-3">
@@ -262,9 +270,7 @@ function ChallengeHeader() {
     <>
       <div className="flex items-center gap-3 flex-wrap">
         <h2 style={{ fontSize: 32, color: "#0F4A2E", lineHeight: 1.15 }}>{es ? "El reto de esta semana" : "This Week's Challenge"}</h2>
-        <span className="rounded-full flex items-center justify-center shrink-0" style={{ width: 56, height: 56, background: "#FBF1DC", border: "3px solid #D4AE6A" }}>
-          <CalendarSproutIcon size={34} />
-        </span>
+        <img src={challengeIcon.url} alt="" className="kg-learn-image h-16 w-16" />
       </div>
       <p className="mt-1" style={{ fontSize: 18, color: "#55565E" }}>
         {es ? "Ponga a prueba lo que sabe. Preguntas nuevas cada semana." : "Test what you know. New questions every week."}
@@ -279,12 +285,10 @@ function Videos() {
   return (
     <section className="px-5 mt-6 mb-4">
       <div className="flex items-center gap-4" style={{ background: "#FDF8EC", border: "1px solid #F0DDB0", borderRadius: 32, padding: 20, boxShadow: "0 8px 24px -14px rgba(61,43,43,0.25)" }}>
-        <span className="rounded-full flex items-center justify-center shrink-0" style={{ width: 96, height: 96, background: "#FBF1DC", border: "4px solid #C9A23F" }}>
-          <ClapperIcon size={62} />
-        </span>
+        <img src={watchIcon.url} alt="" className="kg-learn-image kg-learn-watch-icon" />
         <div className="min-w-0">
           <h2 className="flex items-center gap-2 flex-wrap" style={{ fontSize: 36, color: "#0F3D22", lineHeight: 1.1 }}>
-            {es ? "Mire y aprenda" : "Watch & Learn"} <GradCapIcon size={38} />
+            {es ? "Mire y aprenda" : "Watch & Learn"} <img src={capIcon.url} alt="" className="kg-learn-image h-10 w-10" />
           </h2>
           <p className="mt-2" style={{ fontSize: 20, color: "#33343A" }}>
             {es ? "Toque el botón de reproducir para ver videos cortos. Aprenda y fortalezca su conocimiento sobre estafas." : "Tap the play button to watch short videos. Learn and build your scam awareness."}
