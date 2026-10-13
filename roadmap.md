@@ -22,4 +22,5 @@
 - [x] Apply the eight-level Knowledge Tree image mapping, animation and bilingual progress wording without changing bonus badges.
 - [x] Verify signed-in Learn artwork, every threshold and Legend-only completion wording in English and Spanish; verify gentle celebration and Continue dismissal in an isolated display without changing account progress.
 - [x] Replace Learn drawings with all ten supplied images, reuse IRS artwork and match its accordion; verify English/Spanish image loading, sizes and expansion with no page errors.
-- [ ] Add icon-tech-support-laptop.png and icon-grandparents.png; blocked because those two files were not attached (their icon spaces are reserved).
+- [x] Add icon-tech-support-laptop.png and icon-grandparents.png to the Tech Support and Grandparent accordions at 48px (40px below 480px) with no container.
+- [x] Verify both new accordion icons load and render at 48px on desktop and 40px on phone width with no circle, border or background and no page errors.
