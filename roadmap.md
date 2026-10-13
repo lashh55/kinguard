@@ -21,4 +21,5 @@
 - [x] Verify Ava's tip card renders the icon at 36x36 with 27px text in English and Spanish, soft blue background unchanged, no page errors.
 - [x] Apply the eight-level Knowledge Tree image mapping, animation and bilingual progress wording without changing bonus badges.
 - [x] Verify signed-in Learn artwork, every threshold and Legend-only completion wording in English and Spanish; verify gentle celebration and Continue dismissal in an isolated display without changing account progress.
-- [ ] Replace Learn drawings with supplied images and verify bilingual sizes; laptop and grandparents images await upload.
+- [x] Replace Learn drawings with all ten supplied images, reuse IRS artwork and match its accordion; verify English/Spanish image loading, sizes and expansion with no page errors.
+- [ ] Add icon-tech-support-laptop.png and icon-grandparents.png; blocked because those two files were not attached (their icon spaces are reserved).
