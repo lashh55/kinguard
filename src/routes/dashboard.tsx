@@ -1,3 +1,4 @@
+import { useRequireAccount } from "@/lib/requireAccount";
 import { GuardianRequests, GuardianNotices, SeniorGuardianNotice } from "@/components/GuardianRequests";
 import { pageHead } from "@/lib/pageHead";
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
@@ -62,12 +63,13 @@ const TIPS = [
 ];
 
 function Dashboard() {
+  useRequireAccount();
   const { user, profile, loading } = useAuth();
   const navigate = useNavigate();
   const { t } = useI18n();
 
   useEffect(() => {
-    if (!loading && !user) navigate({ to: "/" });
+    
   }, [loading, user, navigate]);
 
   if (!profile) return <div className="min-h-screen flex items-center justify-center">{t("Loading…")}</div>;

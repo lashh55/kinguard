@@ -1,3 +1,4 @@
+import { useRequireAccount } from "@/lib/requireAccount";
 import { pageHead } from "@/lib/pageHead";
 import { FamilyCodeGuidance, FamilyCodeWarning } from "@/components/FamilyCodeGuidance";
 import { createFileRoute, Link, useNavigate, useLocation } from "@tanstack/react-router";
@@ -87,6 +88,7 @@ type Question = {
 };
 
 function LearnScreen() {
+  useRequireAccount();
   const { profile, refreshProfile } = useAuth();
   const { current, enqueue, dismiss } = useBadgeQueue();
   const notifyGuardians = useNotifyGuardiansOfBadge();

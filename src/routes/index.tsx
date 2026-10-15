@@ -62,7 +62,7 @@ function Onboarding() {
           <FeatureIcons />
           <ScamVignette />
           <div className="mt-8 text-center">
-            <a href="/learn" className="btn-base btn-outline inline-block">
+            <a href="/scams" className="btn-base btn-outline inline-block">
               {t("Learn more about scams →")}
             </a>
           </div>

@@ -1,3 +1,4 @@
+import { useRequireAccount } from "@/lib/requireAccount";
 import { pageHead } from "@/lib/pageHead";
 import { createFileRoute, useNavigate, Link } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
@@ -86,6 +87,7 @@ function actionLabel(a: ActivityRow, t: (s: string) => string): string {
 }
 
 function ProfileScreen() {
+  useRequireAccount();
   const { user, profile, loading, signOut, refreshProfile } = useAuth();
   const { t, lang } = useI18n();
   const { ask: askSignOut, dialog: signOutDialog } = useSignOutConfirm();
@@ -127,7 +129,7 @@ function ProfileScreen() {
   const [confirmRemoveGuardian, setConfirmRemoveGuardian] = useState<GuardianRow | null>(null);
   const [removingGuardian, setRemovingGuardian] = useState(false);
 
-  useEffect(() => { if (!loading && !user) navigate({ to: "/" }); }, [loading, user, navigate]);
+  useEffect(() => {  }, [loading, user, navigate]);
 
   useEffect(() => {
     if (!profile || profile.role !== "senior") return;
