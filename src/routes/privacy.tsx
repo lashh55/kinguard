@@ -97,7 +97,7 @@ function PrivacyPage() {
       <Section title="Guardian System &amp; Trust" bg="#DFC18F">
         <div className="mb-4"><GuardianDisclaimer /></div>
         <ul className="list-disc pl-5 space-y-1">
-          <li>Maximum 5 guardians per senior</li>
+          <li>{es ? "Máximo de 3 guardianes por adulto mayor" : "Maximum 3 guardians per senior"}</li>
           <li>Only the senior can invite guardians</li>
           <li>Senior can remove any guardian anytime</li>
           <li>Guardians cannot change senior settings</li>

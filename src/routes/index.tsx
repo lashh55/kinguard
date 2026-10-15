@@ -350,6 +350,8 @@ function GuardianForm({ onLinked, onBack }: { onLinked: () => void; onBack: () =
       const raw: string = e?.message || "Something went wrong";
       setErr(raw.includes("KINGUARD_GUARDIAN_LIMIT")
         ? t("You're protecting 2 seniors, the most allowed.")
+        : raw.includes("KINGUARD_SENIOR_GUARDIAN_LIMIT")
+        ? t("This senior already has 3 guardians, the most allowed.")
         : raw);
     } finally { setBusy(false); }
   };
@@ -440,7 +442,7 @@ function InviteCodeView({ code, onContinue }: { code: string; onContinue: () => 
         {code}
       </div>
       <p className="text-sm" style={{ color: "var(--color-muted-foreground)" }}>
-        {t("Multiple family members can use this same code.")}
+        {t("Share this with up to 3 people you trust. Each can link to you with this same code.")}
       </p>
       <SponsorRequestCard />
       <button className="btn-base btn-primary w-full" onClick={handleContinue} disabled={busy}>
