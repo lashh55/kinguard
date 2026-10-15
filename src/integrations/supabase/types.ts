@@ -418,6 +418,10 @@ export type Database = {
           content_preview: string | null
           created_at: string
           guardian_notified: boolean
+          handled_at: string | null
+          handled_by: string | null
+          handled_by_name: string | null
+          handled_note: string | null
           id: string
           scam_flags: Json
           scam_flags_es: Json | null
@@ -436,6 +440,10 @@ export type Database = {
           content_preview?: string | null
           created_at?: string
           guardian_notified?: boolean
+          handled_at?: string | null
+          handled_by?: string | null
+          handled_by_name?: string | null
+          handled_note?: string | null
           id?: string
           scam_flags?: Json
           scam_flags_es?: Json | null
@@ -454,6 +462,10 @@ export type Database = {
           content_preview?: string | null
           created_at?: string
           guardian_notified?: boolean
+          handled_at?: string | null
+          handled_by?: string | null
+          handled_by_name?: string | null
+          handled_note?: string | null
           id?: string
           scam_flags?: Json
           scam_flags_es?: Json | null
@@ -704,6 +716,37 @@ export type Database = {
       link_guardian_by_code: {
         Args: { _code: string; _label: string }
         Returns: string
+      }
+      mark_scam_alert_handled: {
+        Args: { _alert_id: string; _note?: string }
+        Returns: {
+          ai_recommendation: string | null
+          ai_recommendation_es: string | null
+          ai_urgency: string | null
+          channel: string
+          content_preview: string | null
+          created_at: string
+          guardian_notified: boolean
+          handled_at: string | null
+          handled_by: string | null
+          handled_by_name: string | null
+          handled_note: string | null
+          id: string
+          scam_flags: Json
+          scam_flags_es: Json | null
+          scam_score: number
+          scam_type: string | null
+          scam_type_es: string | null
+          senior_id: string
+          senior_viewed_at: string | null
+          status: string
+        }
+        SetofOptions: {
+          from: "*"
+          to: "scam_alerts"
+          isOneToOne: true
+          isSetofReturn: false
+        }
       }
       purge_old_email_content: { Args: never; Returns: undefined }
       record_scam_alert_view: {
