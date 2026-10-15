@@ -1,5 +1,6 @@
 import { createFileRoute, Link, notFound } from "@tanstack/react-router";
 import { MarketingShell } from "@/components/MarketingShell";
+import { useI18n } from "@/lib/i18n";
 
 type Guide = {
   title: string;
@@ -155,61 +156,80 @@ export const Route = createFileRoute("/scams/$slug")({
   },
   notFoundComponent: () => (
     <MarketingShell>
-      <h1>Scam guide not found</h1>
-      <p className="mt-3">We don't have a guide at this URL yet.</p>
-      <Link to="/scams" className="btn-base btn-primary mt-6 inline-flex">See all scam guides</Link>
+      <NotFoundContent />
     </MarketingShell>
   ),
   errorComponent: ({ error, reset }) => (
     <MarketingShell>
-      <h1>Something went wrong</h1>
-      <p className="mt-3">{error.message}</p>
-      <button onClick={reset} className="btn-base btn-primary mt-6">Try again</button>
+      <ErrorContent errorMessage={error.message} reset={reset} />
     </MarketingShell>
   ),
   component: ScamGuide,
 });
 
+function NotFoundContent() {
+  const { t } = useI18n();
+  return (
+    <>
+      <h1>{t("Scam guide not found")}</h1>
+      <p className="mt-3">{t("We don't have a guide at this URL yet.")}</p>
+      <Link to="/scams" className="btn-base btn-primary mt-6 inline-flex">{t("See all scam guides")}</Link>
+    </>
+  );
+}
+
+function ErrorContent({ errorMessage, reset }: { errorMessage: string; reset: () => void }) {
+  const { t } = useI18n();
+  return (
+    <>
+      <h1>{t("Something went wrong")}</h1>
+      <p className="mt-3">{errorMessage}</p>
+      <button onClick={reset} className="btn-base btn-primary mt-6">{t("Try again")}</button>
+    </>
+  );
+}
+
 function ScamGuide() {
   const { guide } = Route.useLoaderData();
+  const { t } = useI18n();
   return (
     <MarketingShell>
       <p className="text-sm font-bold uppercase tracking-wider" style={{ color: "var(--color-rose)" }}>
-        <Link to="/scams">← All scam guides</Link>
+        <Link to="/scams">{t("← All scam guides")}</Link>
       </p>
       <div className="text-5xl mt-4">{guide.emoji}</div>
-      <h1 className="mt-2">{guide.title}</h1>
-      <p className="mt-3" style={{ fontSize: 18 }}>{guide.description}</p>
+      <h1 className="mt-2">{t(guide.title)}</h1>
+      <p className="mt-3" style={{ fontSize: 18 }}>{t(guide.description)}</p>
 
       <blockquote
         className="mt-6 p-5 rounded-2xl italic"
         style={{ background: "color-mix(in oklab, var(--color-danger) 12%, #fff)", borderLeft: "4px solid var(--color-danger)" }}
       >
-        {guide.hook}
+        {t(guide.hook)}
       </blockquote>
 
-      <Section title="How the scam works">
+      <Section title={t("How the scam works")}>
         <ol className="list-decimal pl-6 space-y-2">
-          {guide.howItWorks.map((s: string, i: number) => <li key={i}>{s}</li>)}
+          {guide.howItWorks.map((s: string, i: number) => <li key={i}>{t(s)}</li>)}
         </ol>
       </Section>
 
-      <Section title="Red flags" bg="color-mix(in oklab, #E74C3C 12%, #fff)">
+      <Section title={t("Red flags")} bg="color-mix(in oklab, #E74C3C 12%, #fff)">
         <ul className="list-disc pl-6 space-y-2">
-          {guide.redFlags.map((s: string, i: number) => <li key={i}>{s}</li>)}
+          {guide.redFlags.map((s: string, i: number) => <li key={i}>{t(s)}</li>)}
         </ul>
       </Section>
 
-      <Section title="What to do" bg="color-mix(in oklab, #2ECC71 14%, #fff)">
+      <Section title={t("What to do")} bg="color-mix(in oklab, #2ECC71 14%, #fff)">
         <ol className="list-decimal pl-6 space-y-2">
-          {guide.whatToDo.map((s: string, i: number) => <li key={i}>{s}</li>)}
+          {guide.whatToDo.map((s: string, i: number) => <li key={i}>{t(s)}</li>)}
         </ol>
       </Section>
 
       <div className="mt-10 card-soft" style={{ background: "var(--color-sky)" }}>
-        <h2>Not sure if a message is a scam?</h2>
-        <p className="mt-2">Paste it into KinGuard's free scam checker and get an instant safety score.</p>
-        <Link to="/" className="btn-base btn-primary mt-4 inline-flex">Check a message now</Link>
+        <h2>{t("Not sure if a message is a scam?")}</h2>
+        <p className="mt-2">{t("Paste it into KinGuard's free scam checker and get an instant safety score.")}</p>
+        <Link to="/" className="btn-base btn-primary mt-4 inline-flex">{t("Check a message now")}</Link>
       </div>
     </MarketingShell>
   );

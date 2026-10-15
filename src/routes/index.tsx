@@ -23,6 +23,23 @@ export const Route = createFileRoute("/")({
 
 type Step = "role" | "senior" | "guardian" | "invite" | "linked";
 
+function translateAuthMessage(msg: string | undefined, t: (s: string) => string): string {
+  const raw = msg || "Something went wrong";
+  const map: [RegExp, string][] = [
+    [/user already registered/i, "An account with this email already exists."],
+    [/password should be at least/i, "Your password is too short. Please use at least 10 characters."],
+    [/unable to validate email address/i, "Please enter a valid email address."],
+    [/email not confirmed/i, "Please confirm your email address before signing in."],
+    [/invalid login credentials/i, "We couldn't find an account with that email and password."],
+    [/for security purposes, you can only request this after/i, "For security reasons, please wait a moment before trying again."],
+    [/network/i, "Network error. Please check your connection and try again."],
+  ];
+  for (const [re, key] of map) {
+    if (re.test(raw)) return t(key);
+  }
+  return raw;
+}
+
 function Onboarding() {
   const { user, profile, loading, refreshProfile } = useAuth();
   const navigate = useNavigate();
@@ -190,7 +207,7 @@ function SeniorForm({ onCreated, onBack, initialMode = "signup" }: { onCreated: 
       });
       if (error) throw error;
       const uid = data.user?.id;
-      if (!uid) throw new Error("Account created — please check your email to confirm, then sign in.");
+      if (!uid) throw new Error(t("Account created — please check your email to confirm, then sign in."));
       const { error: pErr } = await supabase.from("profiles").insert({
         id: uid, full_name: name, role: "senior", font_size: font,
       });
@@ -200,7 +217,7 @@ function SeniorForm({ onCreated, onBack, initialMode = "signup" }: { onCreated: 
       track("senior_signup", { invite_code_issued: !!prof?.invite_code });
       onCreated(prof?.invite_code || "—");
     } catch (e: any) {
-      setErr(e?.message || t("Something went wrong"));
+      setErr(translateAuthMessage(e?.message, t));
     } finally { setBusy(false); }
   };
 
@@ -340,21 +357,21 @@ function GuardianForm({ onLinked, onBack }: { onLinked: () => void; onBack: () =
         });
         if (error) throw error;
         uid = data.user?.id;
-        if (!uid) throw new Error("Check your email to confirm, then sign in.");
+        if (!uid) throw new Error(t("Check your email to confirm, then sign in."));
         const { error: pErr } = await supabase.from("profiles").insert({
           id: uid, full_name: name, role: "guardian",
         });
         if (pErr) throw pErr;
         track("guardian_signup");
       }
-      if (!uid) throw new Error("Sign in failed");
+      if (!uid) throw new Error(t("Sign in failed"));
       const { error: linkErr } = await supabase.rpc("link_guardian_by_code", { _code: code, _label: rel });
       if (linkErr) throw linkErr;
       await refreshProfile();
       track("guardian_linked");
       onLinked();
     } catch (e: any) {
-      const raw: string = e?.message || "Something went wrong";
+      const raw: string = translateAuthMessage(e?.message, t);
       setErr(raw.includes("KINGUARD_GUARDIAN_LIMIT")
         ? t("You're protecting 2 seniors, the most allowed.")
         : raw.includes("KINGUARD_SENIOR_GUARDIAN_LIMIT")

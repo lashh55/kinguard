@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { ChevronLeft, ChevronRight, Pause, Play } from "lucide-react";
+import { useI18n } from "@/lib/i18n";
 
 type Vignette = {
   name: string;
@@ -52,6 +53,7 @@ const VIGNETTES: Vignette[] = [
 const ROTATE_MS = 10000;
 
 export function ScamVignette() {
+  const { t } = useI18n();
   const [i, setI] = useState(0);
   const [paused, setPaused] = useState(false);
   const [hovered, setHovered] = useState(false);
@@ -83,9 +85,9 @@ export function ScamVignette() {
     <section className="mt-12">
       <div className="text-center mb-4">
         <p className="text-sm font-bold uppercase tracking-wider" style={{ color: "var(--color-rose)" }}>
-          Awareness
+          {t("Awareness")}
         </p>
-        <h2 className="mt-1">Real Stories. Real Scams.</h2>
+        <h2 className="mt-1">{t("Real Stories. Real Scams.")}</h2>
       </div>
       <div
         className="card-soft relative overflow-hidden"
@@ -107,13 +109,13 @@ export function ScamVignette() {
               className="text-xs font-bold uppercase tracking-wider mt-0.5"
               style={{ color: "var(--color-rose)" }}
             >
-              {v.scamType}
+              {t(v.scamType)}
             </p>
             <p className="mt-3" style={{ fontSize: 16, lineHeight: 1.5 }}>
-              {v.story}
+              {t(v.story)}
             </p>
             <p className="mt-3 font-bold italic" style={{ color: "var(--color-brown)" }}>
-              💡 {v.takeaway}
+              💡 {t(v.takeaway)}
             </p>
           </div>
         </div>
@@ -121,7 +123,7 @@ export function ScamVignette() {
         <div className="flex items-center justify-between gap-3 mt-5">
           <button
             onClick={prev}
-            aria-label="Previous story"
+            aria-label={t("Previous story")}
             style={arrowStyle}
           >
             <ChevronLeft size={28} strokeWidth={2.5} />
@@ -129,7 +131,7 @@ export function ScamVignette() {
 
           <button
             onClick={() => setPaused((p) => !p)}
-            aria-label={paused ? "Resume auto-rotate" : "Pause auto-rotate"}
+            aria-label={paused ? t("Resume auto-rotate") : t("Pause auto-rotate")}
             className="inline-flex items-center gap-2 font-bold"
             style={{
               padding: "10px 18px",
@@ -142,25 +144,25 @@ export function ScamVignette() {
             }}
           >
             {paused ? <Play size={20} /> : <Pause size={20} />}
-            {paused ? "Play" : "Pause"}
+            {paused ? t("Play") : t("Pause")}
           </button>
 
           <button
             onClick={next}
-            aria-label="Next story"
+            aria-label={t("Next story")}
             style={arrowStyle}
           >
             <ChevronRight size={28} strokeWidth={2.5} />
           </button>
         </div>
 
-        <div className="flex justify-center gap-3 mt-5" role="tablist" aria-label="Story navigation">
+        <div className="flex justify-center gap-3 mt-5" role="tablist" aria-label={t("Story navigation")}>
           {VIGNETTES.map((_, idx) => (
             <button
               key={idx}
               role="tab"
               aria-selected={idx === i}
-              aria-label={`Show story ${idx + 1}`}
+              aria-label={`${t("Show story")} ${idx + 1}`}
               onClick={() => setI(idx)}
               className="rounded-full transition-all"
               style={{

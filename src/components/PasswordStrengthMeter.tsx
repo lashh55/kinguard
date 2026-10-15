@@ -1,3 +1,5 @@
+import { useI18n } from "@/lib/i18n";
+
 type Level = "empty" | "weak" | "good" | "strong";
 
 function levelOf(len: number): Level {
@@ -7,7 +9,7 @@ function levelOf(len: number): Level {
   return "strong";
 }
 
-const LABELS: Record<Level, string> = {
+const LABEL_KEYS: Record<Level, string> = {
   empty: " ",
   weak: "Keep going",
   good: "Good",
@@ -24,6 +26,7 @@ const COLORS: Record<Level, string> = {
 const FILLED: Record<Level, number> = { empty: 0, weak: 1, good: 2, strong: 3 };
 
 export function PasswordStrengthMeter({ value }: { value: string }) {
+  const { t } = useI18n();
   const lvl = levelOf(value.length);
   const filled = FILLED[lvl];
   const color = COLORS[lvl];
@@ -39,7 +42,7 @@ export function PasswordStrengthMeter({ value }: { value: string }) {
         ))}
       </div>
       <p className="text-sm mt-1 font-medium" style={{ color: lvl === "empty" ? "transparent" : color }}>
-        {LABELS[lvl]}
+        {lvl === "empty" ? " " : t(LABEL_KEYS[lvl])}
       </p>
     </div>
   );
