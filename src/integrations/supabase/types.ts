@@ -412,6 +412,7 @@ export type Database = {
       scam_alerts: {
         Row: {
           ai_recommendation: string | null
+          ai_recommendation_es: string | null
           ai_urgency: string | null
           channel: string
           content_preview: string | null
@@ -419,14 +420,17 @@ export type Database = {
           guardian_notified: boolean
           id: string
           scam_flags: Json
+          scam_flags_es: Json | null
           scam_score: number
           scam_type: string | null
+          scam_type_es: string | null
           senior_id: string
           senior_viewed_at: string | null
           status: string
         }
         Insert: {
           ai_recommendation?: string | null
+          ai_recommendation_es?: string | null
           ai_urgency?: string | null
           channel: string
           content_preview?: string | null
@@ -434,14 +438,17 @@ export type Database = {
           guardian_notified?: boolean
           id?: string
           scam_flags?: Json
+          scam_flags_es?: Json | null
           scam_score?: number
           scam_type?: string | null
+          scam_type_es?: string | null
           senior_id: string
           senior_viewed_at?: string | null
           status?: string
         }
         Update: {
           ai_recommendation?: string | null
+          ai_recommendation_es?: string | null
           ai_urgency?: string | null
           channel?: string
           content_preview?: string | null
@@ -449,8 +456,10 @@ export type Database = {
           guardian_notified?: boolean
           id?: string
           scam_flags?: Json
+          scam_flags_es?: Json | null
           scam_score?: number
           scam_type?: string | null
+          scam_type_es?: string | null
           senior_id?: string
           senior_viewed_at?: string | null
           status?: string
