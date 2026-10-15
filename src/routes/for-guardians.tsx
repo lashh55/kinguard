@@ -64,7 +64,29 @@ function ForGuardians() {
         </ul>
       </section>
 
+      <section className="mt-12">
+        <h2>{t("How to help protect your loved one")}</h2>
+        <ol className="mt-4 space-y-4">
+          {HELP_TIPS.map((tip, i) => (
+            <li key={tip.title} className="card-soft flex items-start gap-4">
+              <span
+                className="shrink-0 rounded-full flex items-center justify-center font-extrabold"
+                style={{ width: 40, height: 40, background: "var(--color-sky)", color: "var(--color-brown)", fontSize: 20 }}
+                aria-hidden="true"
+              >
+                {i + 1}
+              </span>
+              <div>
+                <h3 className="font-extrabold" style={{ fontSize: 20 }}>{t(tip.title)}</h3>
+                <p className="mt-1" style={{ fontSize: 18 }}>{t(tip.body)}</p>
+              </div>
+            </li>
+          ))}
+        </ol>
+      </section>
+
       <section className="mt-10">
+
         <h2>Common questions</h2>
         <Faq q="Does KinGuard listen to my parent's calls?" a="No. KinGuard only analyzes messages your parent chooses to paste into the app, or messages they forward for a check." />
         <Faq q="How many guardians can a senior have?" a="Up to five. Each guardian gets the same real-time alerts and activity feed." />
@@ -100,3 +122,35 @@ function Faq({ q, a }: { q: string; a: string }) {
     </div>
   );
 }
+
+const HELP_TIPS = [
+  {
+    title: "Suspicious emails",
+    body: "Don't just delete it. Mark it as spam or phishing so the email service learns to block it. In Gmail, open the email, tap the three dots, and choose 'Report phishing.' Then forward it to KinGuard to check.",
+  },
+  {
+    title: "Scam text messages",
+    body: "Forward the text to 7726 (it spells SPAM), then block the number. Never tap links in unexpected texts.",
+  },
+  {
+    title: "Scam phone calls",
+    body: "Register their number at donotcall.gov. Turn on your phone carrier's free scam-call blocking, and block numbers that call repeatedly.",
+  },
+  {
+    title: "Protect their money",
+    body: "Help them set up bank alerts for large withdrawals. Ask their bank about adding you as a trusted contact. Consider a free credit freeze using the SSN Shield page.",
+  },
+  {
+    title: "Report scams",
+    body: "Report scams at reportfraud.ftc.gov. For online fraud, also report at ic3.gov. Reporting helps stop scammers and can help recover money.",
+  },
+  {
+    title: "Talk without shame",
+    body: "Check in every week. If your loved one is scammed, never blame them. Shame keeps people silent, and silence is what scammers count on.",
+  },
+  {
+    title: "Set up the family code word together",
+    body: "Choose the code word with your loved one, in person or by phone. Make sure every family member knows it, and never share it by text or email.",
+  },
+];
+
