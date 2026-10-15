@@ -63,30 +63,49 @@ export function GuardianRequests({ onChange }: { onChange?: () => void }) {
   );
 }
 
-type Notice = { id: string; new_guardian_name: string; senior_name: string; created_at: string };
+type Notice = { id: string; new_guardian_name: string; senior_name: string; created_at: string; notice_kind: string };
+
+function useGuardianChangeNotices(seniorOnly: boolean) {
+  const [items, setItems] = useState<Notice[]>([]);
+  useEffect(() => {
+    let active = true;
+    let channel: ReturnType<typeof supabase.channel> | undefined;
+    const load = async () => {
+      const { data: u } = await supabase.auth.getUser();
+      const uid = u.user?.id;
+      if (!uid || !active) return;
+      let query = supabase.from("guardian_notices").select("id,new_guardian_name,senior_name,created_at,notice_kind")
+        .eq("guardian_id", uid).is("read_at", null).order("created_at", { ascending: false });
+      if (seniorOnly) query = query.eq("senior_id", uid).eq("notice_kind", "added");
+      const { data, error } = await query;
+      if (active && !error) setItems((data as Notice[]) ?? []);
+      if (active && !channel) {
+        channel = supabase.channel(`guardian-changes-${uid}-${seniorOnly}`)
+          .on("postgres_changes", { event: "*", schema: "public", table: "guardian_notices", filter: `guardian_id=eq.${uid}` }, () => { void load(); })
+          .subscribe((status) => { if (status === "SUBSCRIBED") void load(); });
+      }
+    };
+    void load();
+    const interval = setInterval(() => { void load(); }, 15000);
+    const onFocus = () => { void load(); };
+    window.addEventListener("focus", onFocus);
+    return () => {
+      active = false;
+      clearInterval(interval);
+      window.removeEventListener("focus", onFocus);
+      if (channel) void supabase.removeChannel(channel);
+    };
+  }, [seniorOnly]);
+  return { items, setItems };
+}
 
 /** Senior-side: "X is now your guardian. Don't know this person? Remove them." */
 export function SeniorGuardianNotice() {
   const { lang } = useI18n();
   const es = lang === "es";
-  const [items, setItems] = useState<Notice[]>([]);
+  const { items, setItems } = useGuardianChangeNotices(true);
   const [accepted, setAccepted] = useState<Record<string, boolean>>({});
   const [saving, setSaving] = useState<string | null>(null);
-  useEffect(() => {
-    let active = true;
-    const load = async () => {
-      const { data: u } = await supabase.auth.getUser();
-      const uid = u.user?.id;
-      if (!uid) return;
-      const { data } = await supabase.from("guardian_notices").select("id,new_guardian_name,senior_name,created_at")
-        .eq("guardian_id", uid).eq("senior_id", uid)
-        .is("read_at", null).order("created_at", { ascending: false }).limit(10);
-      if (active) setItems((data as Notice[]) ?? []);
-    };
-    void load();
-    const interval = setInterval(load, 15000);
-    return () => { active = false; clearInterval(interval); };
-  }, []);
   const dismiss = async (id: string) => {
     if (!accepted[id] || saving) return;
     setSaving(id);
@@ -97,7 +116,7 @@ export function SeniorGuardianNotice() {
   };
   if (!items.length) return null;
   return (
-    <section className="px-5 mb-3 space-y-2">
+    <section className="px-5 mb-3 space-y-2" aria-live="polite">
       {items.map((n) => (
         <div key={n.id} className="card-soft border-rose border-2">
           <p className="font-bold">
@@ -134,27 +153,27 @@ export function SeniorGuardianNotice() {
 export function GuardianNotices() {
   const { lang } = useI18n();
   const es = lang === "es";
-  const [items, setItems] = useState<Notice[]>([]);
-  useEffect(() => {
-    supabase.from("guardian_notices").select("id,new_guardian_name,senior_name,created_at")
-      .is("read_at", null).order("created_at", { ascending: false }).limit(10)
-      .then(({ data }) => setItems((data as Notice[]) ?? []));
-  }, []);
+  const { items, setItems } = useGuardianChangeNotices(false);
+  const [saving, setSaving] = useState<string | null>(null);
   const dismiss = async (id: string) => {
+    if (saving) return;
+    setSaving(id);
+    const { error } = await supabase.from("guardian_notices").update({ read_at: new Date().toISOString() }).eq("id", id);
+    setSaving(null);
+    if (error) { toast.error(error.message); return; }
     setItems((p) => p.filter((x) => x.id !== id));
-    await supabase.from("guardian_notices").update({ read_at: new Date().toISOString() }).eq("id", id);
   };
   if (!items.length) return null;
   return (
-    <section className="px-5 mb-3 space-y-2">
+    <section className="px-5 mb-3 space-y-2" aria-live="polite">
       {items.map((n) => (
         <div key={n.id} className="card-soft flex items-center gap-3">
           <p className="flex-1 font-bold">
-            ℹ️ {es
-              ? `${n.new_guardian_name} fue agregado como guardián de ${n.senior_name}.`
-              : `${n.new_guardian_name} was added as a guardian for ${n.senior_name}.`}
+            {n.notice_kind === "removed"
+              ? (es ? `Se quitó a un guardián de la cuenta de ${n.senior_name}.` : `A guardian was removed from ${n.senior_name}'s account.`)
+              : (es ? `${n.new_guardian_name} fue agregado como guardián de ${n.senior_name}.` : `${n.new_guardian_name} was added as a guardian for ${n.senior_name}.`)}
           </p>
-          <button className="text-sm underline" onClick={() => dismiss(n.id)}>{es ? "Entendido" : "OK"}</button>
+          <Button variant="link" disabled={saving !== null} onClick={() => dismiss(n.id)}>{es ? "Entendido" : "OK"}</Button>
         </div>
       ))}
     </section>

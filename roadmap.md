@@ -36,3 +36,5 @@
 - [x] Verify both labels render on the opened form in English and Spanish, typed text is displayed exactly as typed, and no page errors.
 - [x] Report guardian disclaimer placement, timing and published availability.
 - [x] Add bilingual Get help section to Privacy & Safety with senior Profile link and verify both languages with signed-in senior and phone-width checks; no page errors.
+- [ ] Add always-on guardian removal notices and first-name-plus-initial names to all guardian-change notices.
+- [ ] Verify new-link notices, senior acknowledgment and remaining-guardian removal notices in both languages.
