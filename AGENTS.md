@@ -18,3 +18,4 @@
 - Share family-code guidance and warnings between Profile and Learn so safety rules cannot diverge between pages.
 - Render bilingual marketing sections from one content list whose English text is the dictionary key in src/lib/i18n.tsx, so a section's English and Spanish versions stay together and no page shows a half-translated list.
 - Spanish strings live in per-area files under src/lib/translations/ merged into the i18n DICT; database-stored English content (quiz questions) is translated at display time via t() so seeds stay single-source.
+- Store generated scam results with parallel English and Spanish fields and select display text through scamLanguage; this preserves dynamic categories without translating user-authored content.

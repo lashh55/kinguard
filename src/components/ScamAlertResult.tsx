@@ -2,12 +2,16 @@ import { useEffect, useRef, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { useI18n } from "@/lib/i18n";
 import { Button } from "@/components/ui/button";
+import { scamTypeFor, recommendationFor } from "@/lib/scamLanguage";
 import { Dialog, DialogContent, DialogTitle, DialogDescription } from "@/components/ui/dialog";
 
 export type ScanAlert = {
   id: string;
   senior_id: string;
   scam_type: string | null;
+  scam_type_es?: string | null;
+  ai_recommendation?: string | null;
+  ai_recommendation_es?: string | null;
   scam_score: number;
   created_at: string;
   senior_viewed_at?: string | null;
@@ -59,9 +63,9 @@ function ScanDetails({ alert }: { alert: ScanAlert }) {
   const { lang } = useI18n();
   const es = lang === "es";
   return <div className="space-y-4 text-lg">
-    <p className="font-bold break-words">{es ? "Qué era:" : "What it was:"} {alert.scam_type || (es ? "Mensaje sospechoso" : "Suspicious message")}</p>
+    <p className="font-bold break-words">{es ? "Qué era:" : "What it was:"} {scamTypeFor(alert, lang)}</p>
     <p className="font-bold">{es ? "Riesgo:" : "Risk:"} {alert.scam_score}/100</p>
-    <p>{es ? "Qué hacer: No responda, no haga clic en ningún enlace y no envíe dinero. Puede borrarlo." : "What to do: Don't reply, don't click any links, and don't send money. You can delete it."}</p>
+    <p>{es ? "Qué hacer:" : "What to do:"} {recommendationFor(alert, lang)}</p>
   </div>;
 }
 
