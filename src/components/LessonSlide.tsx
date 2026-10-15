@@ -18,6 +18,7 @@ type Lesson = {
   photo: string;
   title: string;
   subtitle?: string;
+  explanation?: string;
   icons?: { icon: Icon; label?: string }[];
   rows?: { icon: Icon; label: string }[];
   lists?: { heading: string; items: string[]; good: boolean }[];
@@ -25,20 +26,21 @@ type Lesson = {
 
 /** English text is the dictionary key; Spanish lives in src/lib/translations/lessons.ts. */
 export const LESSONS: Lesson[] = [
-  { photo: p1.url, title: "Welcome to Digital Confidence", subtitle: "Tools for connection, confidence, and everyday living." },
-  { photo: p2.url, title: "Using Technology Safely", subtitle: "Protect yourself and use new tools with confidence.",
+  { photo: p1.url, title: "Welcome to AI Empowerment", subtitle: "Tools for connection, confidence, and everyday living.",
+    explanation: "AI (artificial intelligence) is technology that can answer questions and help with everyday tasks." },
+  { photo: p2.url, title: "Using AI Safely", subtitle: "Protect yourself and use new tools with confidence.",
     icons: [{ icon: ShieldCheck, label: "Be Aware" }, { icon: Eye, label: "Be Smart" }, { icon: User, label: "Be Safe" }] },
-  { photo: p3.url, title: "Keep Learning", subtitle: "Your journey with new technology starts today." },
-  { photo: p4.url, title: "Technology in Your Everyday Life", subtitle: "Simple tools can make a big difference.",
+  { photo: p3.url, title: "Keep Learning", subtitle: "Your journey with AI starts today." },
+  { photo: p4.url, title: "AI in Your Everyday Life", subtitle: "Simple tools can make a big difference.",
     icons: [{ icon: MessageCircle, label: "Communicate" }, { icon: CalendarDays, label: "Plan" }, { icon: Pencil, label: "Create" }, { icon: Globe, label: "Explore" }] },
   { photo: p5.url, title: "Your Data Matters", subtitle: "Your privacy. Your choice.",
     icons: [{ icon: Lock, label: "Secure Your Data" }, { icon: ShieldCheck, label: "Control Your Info" }, { icon: Settings, label: "Stay Informed" }] },
-  { photo: p6.url, title: "Hands-On Technology", subtitle: "Try it. Explore it. Make it yours.",
+  { photo: p6.url, title: "Hands-On AI", subtitle: "Try it. Explore it. Make it yours.",
     icons: [{ icon: Star }, { icon: ImageIcon }, { icon: MessageSquareText }] },
   { photo: p7.url, title: "Capabilities and Limitations",
     lists: [
-      { heading: "What these tools can do", good: true, items: ["Answer questions", "Help with tasks", "Spark ideas", "Support learning"] },
-      { heading: "What they can't do", good: false, items: ["Feel emotions", "Replace human judgment", "Always be 100% accurate", "Know your personal experiences"] },
+      { heading: "What AI can do", good: true, items: ["Answer questions", "Help with tasks", "Spark ideas", "Support learning"] },
+      { heading: "What AI can't do", good: false, items: ["Feel emotions", "Replace human judgment", "Always be 100% accurate", "Know your personal experiences"] },
     ] },
   { photo: p8.url, title: "Empowered Together.", subtitle: "Learning Together. Thriving Together." },
   { photo: p9.url, title: "Thank You",
@@ -55,6 +57,7 @@ export function LessonSlide({ index, t }: { index: number; t: (s: string) => str
         <h3 className="lesson-slide__title">{t(s.title)}</h3>
         <span className="lesson-slide__rule" aria-hidden="true" />
         {s.subtitle && <p className="lesson-slide__subtitle">{t(s.subtitle)}</p>}
+        {s.explanation && <p className="lesson-slide__subtitle">{t(s.explanation)}</p>}
         {s.icons && (
           <ul className="lesson-slide__icons">
             {s.icons.map(({ icon: I, label }, k) => (

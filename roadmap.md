@@ -1,3 +1,4 @@
+- [ ] Restore AI/IA lesson terminology, add slide 1 explanation, correct slide 2 Spanish; verify and show all nine bilingual texts without publishing.
 - [ ] Make signup confirmation and password-reset emails English-first then formal Spanish with exact safety footers; blocked until notify.getkinguard.com sender setup is completed; show draft copy before publishing.
 - [x] Confirm active Pro plan and explain included email quota and potential overage costs.
 - [ ] Provide assigned sender DNS records; blocked until notify.getkinguard.com is registered through email setup; preserve all main-domain records and forwarding.
