@@ -491,7 +491,7 @@ function ProfileScreen() {
         </Link>
 
         {profile.role === "senior" && (
-          <Button asChild variant="link" className="h-auto min-h-14 w-full whitespace-normal text-center text-lg underline">
+          <Button asChild variant="link" className="h-auto min-h-14 w-full whitespace-normal text-center text-lg text-foreground underline">
             <Link to="/privacy" hash="get-help">{lang === "es" ? "Obtener ayuda: si alguien se está aprovechando de usted" : "Get help: If someone is taking advantage of you"}</Link>
           </Button>
         )}
