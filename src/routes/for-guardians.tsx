@@ -37,30 +37,28 @@ function ForGuardians() {
   const { t } = useI18n();
   return (
     <MarketingShell>
-      <p className="text-sm font-bold uppercase tracking-wider" style={{ color: "var(--color-rose)" }}>For guardians</p>
-      <h1 className="mt-2">Know the moment a scammer targets your parent.</h1>
+      <p className="text-sm font-bold uppercase tracking-wider" style={{ color: "var(--color-rose)" }}>{t("For guardians")}</p>
+      <h1 className="mt-2">{t("Know the moment a scammer targets your parent.")}</h1>
       <p className="mt-4" style={{ fontSize: 18 }}>
-        KinGuard sits quietly in the background. When your mom, dad, or grandparent receives a suspicious text,
-        email, or call, they tap one button to check it — and you get an instant alert with the scam type and
-        risk score. No invasive monitoring. No SSN. No guesswork.
+        {t("KinGuard sits quietly in the background. When your mom, dad, or grandparent receives a suspicious text, email, or call, they tap one button to check it — and you get an instant alert with the scam type and risk score. No invasive monitoring. No SSN. No guesswork.")}
       </p>
 
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mt-8">
-        <Feature emoji="🛡️" title="Senior signs up">They get a simple, large-text app and a 6-character invite code.</Feature>
-        <Feature emoji="💙" title="You connect">Enter the invite code, name your relationship, and you're linked.</Feature>
-        <Feature emoji="🔔" title="You get alerts">Real-time notifications whenever they check a suspicious message.</Feature>
+        <Feature emoji="🛡️" title={t("Senior signs up")}>{t("They get a simple, large-text app and a 6-character invite code.")}</Feature>
+        <Feature emoji="💙" title={t("You connect")}>{t("Enter the invite code, name your relationship, and you're linked.")}</Feature>
+        <Feature emoji="🔔" title={t("You get alerts")}>{t("Real-time notifications whenever they check a suspicious message.")}</Feature>
       </div>
 
       <ScamVignette />
 
 
       <section className="mt-12">
-        <h2>What guardians actually see</h2>
+        <h2>{t("What guardians actually see")}</h2>
         <ul className="mt-3 space-y-2 list-disc pl-6">
-          <li>The scam category (grandparent, Medicare, IRS, romance, etc.)</li>
-          <li>A risk score from 0–100</li>
-          <li>When the check happened</li>
-          <li><strong>Never</strong>: the message body, contacts, location, or financial info.</li>
+          <li>{t("The scam category (grandparent, Medicare, IRS, romance, etc.)")}</li>
+          <li>{t("A risk score from 0–100")}</li>
+          <li>{t("When the check happened")}</li>
+          <li><strong>{t("Never")}</strong>{t(": the message body, contacts, location, or financial info.")}</li>
         </ul>
       </section>
 
@@ -87,18 +85,18 @@ function ForGuardians() {
 
       <section className="mt-10">
 
-        <h2>Common questions</h2>
-        <Faq q="Does KinGuard listen to my parent's calls?" a="No. KinGuard only analyzes messages your parent chooses to paste into the app, or messages they forward for a check." />
+        <h2>{t("Common questions")}</h2>
+        <Faq q={t("Does KinGuard listen to my parent's calls?")} a={t("No. KinGuard only analyzes messages your parent chooses to paste into the app, or messages they forward for a check.")} />
         <Faq q={t("How many guardians can a senior have?")} a={t("Up to three. Each guardian gets the same real-time alerts and activity feed.")} />
-        <Faq q="Does KinGuard ask for a Social Security number?" a="Never. KinGuard does not collect, store, or transmit Social Security numbers. If you ever see a field asking for one, you're not on KinGuard." />
+        <Faq q={t("Does KinGuard ask for a Social Security number?")} a={t("Never. KinGuard does not collect, store, or transmit Social Security numbers. If you ever see a field asking for one, you're not on KinGuard.")} />
         <Faq q={t("Can I use KinGuard if I don't have family?")} a={t("Yes. KinGuard is free for every senior. You can choose anyone you trust as your guardian, like a neighbor, church member, or friend. When our new family features launch, seniors without family can request a free sponsored plan from their Profile page.")} />
-        <Faq q="What does it cost?" a="Free to get started. You can connect as a guardian in under two minutes." />
+        <Faq q={t("What does it cost?")} a={t("Free to get started. You can connect as a guardian in under two minutes.")} />
       </section>
 
       <div className="mt-10 card-soft text-center" style={{ background: "var(--color-sky)" }}>
-        <h2>Ready to protect someone you love?</h2>
-        <p className="mt-2">Have them create an account first — they'll get an invite code to share with you.</p>
-        <Link to="/" className="btn-base btn-primary mt-4 inline-flex">Get started</Link>
+        <h2>{t("Ready to protect someone you love?")}</h2>
+        <p className="mt-2">{t("Have them create an account first — they'll get an invite code to share with you.")}</p>
+        <Link to="/" className="btn-base btn-primary mt-4 inline-flex">{t("Get started")}</Link>
       </div>
     </MarketingShell>
   );
