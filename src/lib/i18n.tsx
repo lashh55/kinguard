@@ -7,11 +7,12 @@ import { welcome_ES } from "@/lib/translations/welcome";
 import { senior_ES } from "@/lib/translations/senior";
 import { guardian_ES } from "@/lib/translations/guardian";
 import { shared_ES } from "@/lib/translations/shared";
+import { lessons_ES } from "@/lib/translations/lessons";
 
 export type Lang = "en" | "es";
 
 const DICT: Record<string, string> = {
-  ...public_ES, ...scams_ES, ...welcome_ES, ...senior_ES, ...guardian_ES, ...shared_ES,
+  ...public_ES, ...scams_ES, ...welcome_ES, ...senior_ES, ...guardian_ES, ...shared_ES, ...lessons_ES,
   "Create yours above with the \"Create my code word\" button.": "Cree la suya arriba con el botón \"Crear mi palabra clave\".",
   "Copy email address": "Copiar dirección de correo",
   "Create my code word": "Crear mi palabra clave",

@@ -32,17 +32,8 @@ import { useI18n } from "@/lib/i18n";
 import { BadgeGrid } from "@/components/BadgeGrid";
 import { track } from "@/lib/analytics";
 import { BrandIcon } from "@/components/KinGuardIcon";
-import slide1 from "@/assets/slide-1.png";
-import slide2 from "@/assets/slide-2.png";
-import slide3 from "@/assets/slide-3.png";
-import slide4 from "@/assets/slide-4.png";
-import slide5 from "@/assets/slide-5.png";
-import slide6 from "@/assets/slide-6.png";
-import slide7 from "@/assets/slide-7.png";
-import slide8 from "@/assets/slide-8.png";
-import slide9 from "@/assets/slide-9.png";
 
-const SLIDE_IMAGES = [slide1, slide2, slide3, slide4, slide5, slide6, slide7, slide8, slide9];
+import { LessonSlide } from "@/components/LessonSlide";
 
 export const Route = createFileRoute("/learn")({
   head: () => pageHead("Learn to spot scams", "Explore KinGuard scam lessons, quizzes, and safety challenges."),
@@ -166,11 +157,7 @@ function Slides() {
         onMouseEnter={() => setPaused(true)}
         onTouchStart={() => setPaused(true)}
       >
-        <img
-          src={SLIDE_IMAGES[i % SLIDE_IMAGES.length]}
-          alt={`Lesson slide ${i + 1}`}
-          className="w-full h-auto block"
-        />
+        <LessonSlide index={i} t={t} />
       </div>
       <div className="flex items-center justify-between mt-3">
         <button className="btn-base btn-outline" style={{ minHeight: 44, padding: "8px 14px" }} onClick={() => manual((p) => (p - 1 + SLIDES.length) % SLIDES.length)}>←</button>
