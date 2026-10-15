@@ -1,3 +1,4 @@
+- [ ] Make signup confirmation and password-reset emails English-first then formal Spanish; blocked until sender-domain setup is completed; show draft copy before publishing.
 - [x] Reduce senior guardian cap to three in screens and database without removing links; zero existing seniors exceed the cap; rolled-back enforcement test confirms fourth guardian is refused.
 - [x] Replace public and senior AI terminology with bilingual plain language; verify signed-in Profile and seven public/senior pages in English and Spanish with no page errors.
 - [x] Check community plan quantities and annual pricing wherever shown: no community plan-size or price listings exist in this app; save requested sizes and annual pricing without adding an unrequested page.
