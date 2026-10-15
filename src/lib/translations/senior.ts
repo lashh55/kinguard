@@ -171,7 +171,5 @@ export const senior_ES: Record<string, string> = {
 // Additional i18n wiring (BadgeGrid/LearningTree/profile/learn)
   "guardian slot available": "espacio de guardián disponible",
   "guardian slots available": "espacios de guardián disponibles",
-  "👨‍👩‍👧 You earned the Team Player badge!": "👨‍👩‍👧 ¡Ganó la insignia de Jugador en Equipo!",
-  "📚 You earned the Scholar badge!": "📚 ¡Ganó la insignia de Erudito!",
   "Could not analyze. Please try again.": "No se pudo analizar. Inténtelo de nuevo.",
 };
