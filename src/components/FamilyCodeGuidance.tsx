@@ -1,5 +1,10 @@
 import { useI18n } from "@/lib/i18n";
 
+export function FamilyCodeDefinition() {
+  const { t } = useI18n();
+  return <p className="mt-1">{t("A short, private phrase that only you and your real loved ones know. KinGuard creates a unique one for you. Never use a code word you've seen anywhere else.")}</p>;
+}
+
 export function FamilyCodeGuidance() {
   const { lang } = useI18n();
   return (

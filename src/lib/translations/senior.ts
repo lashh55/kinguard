@@ -85,8 +85,8 @@ export const senior_ES: Record<string, string> = {
   "Remove your family code word?": "¿Quitar su palabra clave familiar?",
   "Code word removed.": "Palabra clave eliminada.",
   "What is a family code word?": "¿Qué es una palabra clave familiar?",
-  "A short, private phrase your family shares — like apple-river-sunset — that only your real loved ones know.":
-    "Una frase corta y privada que su familia comparte — como manzana-río-atardecer — que solo sus verdaderos seres queridos conocen.",
+  "A short, private phrase that only you and your real loved ones know. KinGuard creates a unique one for you. Never use a code word you've seen anywhere else.":
+    "Una frase corta y privada que solo usted y sus seres queridos conocen. KinGuard crea una única para usted. Nunca use una palabra clave que haya visto en otro lugar.",
   "Why AARP recommends it": "Por qué AARP la recomienda",
   "How to use it": "Cómo usarla",
   "Share it with trusted family by phone or in person — never by text or email.":
