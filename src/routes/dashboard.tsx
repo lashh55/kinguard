@@ -250,13 +250,13 @@ function SeniorDashboard() {
       <section className="px-5 mt-4">
         <div className="card-soft text-center" style={{ background: "var(--color-cream)" }}>
           {streak > 0
-            ? <p className="font-bold" style={{ fontSize: 18 }}>🔥 {streak}{lang === "es" ? "-semanas de racha! ¡Sigue así!" : "-week streak! Keep it up!"}</p>
+            ? <p className="font-bold" style={{ fontSize: 18 }}>🔥 {streak}{lang === "es" ? (streak === 1 ? " semana de racha! ¡Siga así!" : " semanas de racha! ¡Siga así!") : "-week streak! Keep it up!"}</p>
             : <p className="font-bold" style={{ fontSize: 18 }}>{t("Start a new streak this week! You've got this ✨")}</p>}
         </div>
       </section>
 
       <section className="px-5 mt-4 grid grid-cols-3 gap-2">
-        <Stat icon={alertsIcon.url} label={t("Alerts")} value={totalAlerts} onClick={() => {
+        <Stat icon={alertsIcon.url} label={totalAlerts === 1 ? (lang === "es" ? "Alerta" : "Alert") : t("Alerts")} value={totalAlerts} onClick={() => {
           setInboxOpen(true);
           requestAnimationFrame(() => inboxRef.current?.scrollIntoView({ behavior: "instant", block: "start" }));
         }} />
