@@ -14,7 +14,6 @@ import { scamBannerActive, type HandledScam } from "@/lib/scamStatus";
 import alertsIcon from "@/assets/senior-alerts.webp.asset.json";
 import checkedIcon from "@/assets/senior-checked.webp.asset.json";
 import knowledgeTreeIcon from "@/assets/senior-knowledge-tree.webp.asset.json";
-import allClearLogo from "@/assets/kinguard-all-clear.webp.asset.json";
 import inboxIcon from "@/assets/kinguard-inbox.webp.asset.json";
 import helpIcon from "@/assets/kinguard-help-people.webp.asset.json";
 import { KinGuardShield } from "@/components/KinGuardIcon";
@@ -227,23 +226,20 @@ function SeniorDashboard() {
         <Button variant="link" className="whitespace-normal" onClick={() => openAlert(a)}>{lang === "es" ? "Ver alerta:" : "View alert:"} {scamTypeFor(a, lang)}</Button>
       </section>)}
 
-      {unreadCount > 0 && (
-        <section className="px-5 mb-3">
+      <section className="px-5 mb-3" data-senior-status>
+        {unreadCount > 0 ? (
           <Button variant="secondary" onClick={() => { const a = unreadAlerts[0]; if (a) openAlert(a); }}
-            className="w-full h-auto min-h-20 whitespace-normal rounded-lg p-4 text-left justify-start text-lg font-bold">
-            <KinGuardShield className="text-3xl" />
-            <span>{lang === "es" ? "KinGuard detectó una posible estafa. Usted está a salvo. Toque para ver qué era." : "KinGuard caught a possible scam. You're safe. Tap to see what it was."}</span>
+            className="w-full h-auto min-h-32 whitespace-normal rounded-lg bg-primary p-5 text-left justify-start text-xl font-bold text-primary-foreground hover:bg-primary/90">
+            <KinGuardShield className="shrink-0 text-4xl" />
+            <span>{lang === "es" ? "Hay algo que revisar. Usted está a salvo. Toque para ver lo que KinGuard detectó." : "Something to look at. You're safe. Tap to see what KinGuard caught."}</span>
           </Button>
-        </section>
-      )}
-      {unreadCount === 0 && (
-        <section className="px-5 mb-3">
-          <div className="overflow-hidden rounded-lg bg-secondary text-center pt-4" data-all-clear>
+        ) : (
+          <div className="flex min-h-32 items-center justify-center gap-4 rounded-lg bg-safe p-5 text-center" data-all-clear>
+            <KinGuardShield className="text-5xl" />
             <h2 className="font-extrabold">{t("All clear")}</h2>
-            <img src={allClearLogo.url} alt="KinGuard — Protecting the people you love" width={370} height={456} className="block w-full max-h-80 object-contain" />
           </div>
-        </section>
-      )}
+        )}
+      </section>
       {latestReceiptAlert && (
         <section className="px-5 mb-3">
           <GuardianScanStatus receipts={receipts.filter((r) => r.alert_id === latestReceiptAlert.id)} />

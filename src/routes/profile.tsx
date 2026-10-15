@@ -17,7 +17,7 @@ import { generatePassphrase } from "@/lib/passphrase";
 import { NameFields, formatName, isValidName } from "@/components/NameFields";
 import { SponsorRequestCard } from "@/components/SponsorRequest";
 import { Button } from "@/components/ui/button";
-import { FamilyCodeGuidance, FamilyCodeWarning } from "@/components/FamilyCodeGuidance";
+import { FamilyCodeDefinition, FamilyCodeGuidance, FamilyCodeWarning } from "@/components/FamilyCodeGuidance";
 import {
   setFamilyCodeWord,
   revealFamilyCodeWord,
@@ -699,7 +699,6 @@ function FamilyCodeCard() {
               style={{ fontSize: 22, fontWeight: 700, letterSpacing: "0.02em" }}
               value={draft}
               onChange={(e) => setDraft(e.target.value)}
-              placeholder="apple-river-sunset"
             />
             <button
               className="btn-base btn-outline w-full mt-2"
@@ -785,7 +784,7 @@ function FamilyCodeExplainer() {
   return (
     <div className="card-soft" style={{ background: "var(--color-cream)", borderTop: "6px solid var(--color-rose)" }}>
       <p className="font-bold" style={{ fontSize: 18 }}>{t("What is a family code word?")}</p>
-      <p className="mt-1">{t("A short, private phrase your family shares — like apple-river-sunset — that only your real loved ones know.")}</p>
+      <FamilyCodeDefinition />
       <p className="font-bold mt-3">{t("Why AARP recommends it")}</p>
       <div className="mt-1"><FamilyCodeGuidance /></div>
       <FamilyCodeWarning />

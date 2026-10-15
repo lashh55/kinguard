@@ -1,6 +1,6 @@
 import { useRequireAccount } from "@/lib/requireAccount";
 import { pageHead } from "@/lib/pageHead";
-import { FamilyCodeGuidance, FamilyCodeWarning } from "@/components/FamilyCodeGuidance";
+import { FamilyCodeDefinition, FamilyCodeGuidance, FamilyCodeWarning } from "@/components/FamilyCodeGuidance";
 import { createFileRoute, Link, useNavigate, useLocation } from "@tanstack/react-router";
 import { useEffect, useMemo, useState } from "react";
 import { ScreenShell } from "@/components/ScreenShell";
@@ -99,6 +99,7 @@ function LearnScreen() {
       <Cards />
       <section className="px-5 mt-6">
         <h2>{lang === "es" ? "¿Qué es una palabra clave familiar?" : "What is a family code word?"}</h2>
+        <FamilyCodeDefinition />
         <div className="mt-3"><FamilyCodeGuidance /></div>
         <FamilyCodeWarning />
       </section>

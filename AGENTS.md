@@ -17,6 +17,7 @@
 - Knowledge Tree level artwork resolves through the single name-to-asset config in src/lib/badgeArtwork.ts; keep scoring and bonus badges separate so replacing an image never changes earned progress.
 - Learn decorative artwork uses asset pointers from src/assets/learn-icons and responsive CSS image sizing; retain LearnIcons only for the shared level BadgeIcon so obsolete SVG artwork cannot return.
 - Share family-code guidance and warnings between Profile and Learn so safety rules cannot diverge between pages.
+- Share the family-code definition between Profile and Learn, and derive the single senior status card from the existing unread-alert predicate; this keeps copy consistent and preserves handled/read/expiry behavior.
 - Render bilingual marketing sections from one content list whose English text is the dictionary key in src/lib/i18n.tsx, so a section's English and Spanish versions stay together and no page shows a half-translated list.
 - Spanish strings live in per-area files under src/lib/translations/ merged into the i18n DICT; database-stored English content (quiz questions) is translated at display time via t() so seeds stay single-source.
 - Store generated scam results with parallel English and Spanish fields and select display text through scamLanguage; this preserves dynamic categories without translating user-authored content.
