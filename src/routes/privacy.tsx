@@ -105,6 +105,21 @@ function PrivacyPage() {
         </ul>
       </Section>
 
+      <section id="get-help" aria-labelledby="get-help-heading" className="px-5 py-5 mt-5 scroll-mt-28 bg-sky text-foreground">
+        <h2 id="get-help-heading" className="mb-3">{es ? "Si alguien se está aprovechando de usted" : "If someone is taking advantage of you"}</h2>
+        <p className="leading-relaxed">
+          {es
+            ? "Si alguien, incluso una persona de confianza, le está presionando por dinero, tomando su dinero o haciéndole sentir inseguro/a, usted no está solo/a y no es su culpa. Comuníquese con los Servicios de Protección para Adultos de su área. Para encontrarlos, visite "
+            : "If anyone, including someone you trust, is pressuring you for money, taking your money, or making you feel unsafe, you are not alone and it is not your fault. Contact Adult Protective Services in your area. To find them, visit "}
+          <a href="https://eldercare.acl.gov" className="font-bold underline break-words">eldercare.acl.gov</a>
+          {es ? " o llame al Localizador de Cuidado para Personas Mayores al " : " or call the Eldercare Locator at "}
+          <a href="tel:18006771116" className="font-bold underline whitespace-nowrap">1-800-677-1116</a>.
+          {es ? " Si está en peligro ahora mismo, llame al " : " If you are in danger right now, call "}
+          <a href="tel:911" className="font-bold underline">911</a>.
+          {es ? " También puede quitar a cualquier guardián desde su Perfil en cualquier momento." : " You can also remove any guardian from your Profile at any time."}
+        </p>
+      </section>
+
       <Section title="AI Analysis" bg="#ACD0DC">
         <ul className="list-disc pl-5 space-y-1">
           <li>Messages analyzed without personal info</li>

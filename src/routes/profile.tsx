@@ -15,6 +15,7 @@ import { track } from "@/lib/analytics";
 import { generatePassphrase } from "@/lib/passphrase";
 import { NameFields, formatName, isValidName } from "@/components/NameFields";
 import { SponsorRequestCard } from "@/components/SponsorRequest";
+import { Button } from "@/components/ui/button";
 import {
   setFamilyCodeWord,
   revealFamilyCodeWord,
@@ -488,6 +489,12 @@ function ProfileScreen() {
         <Link to="/privacy" className="btn-base w-full" style={{ background: "#fff", border: "1.5px solid #D9C7A3", borderRadius: 24, minHeight: 64, color: "#2B1810", fontSize: 22, fontWeight: 600, boxShadow: "0 2px 8px -4px rgba(43,24,16,0.18)" }}>
           <ShieldLockIcon size={28} /> {t("Privacy & Safety")}
         </Link>
+
+        {profile.role === "senior" && (
+          <Button asChild variant="link" className="h-auto min-h-14 w-full whitespace-normal text-center text-lg text-foreground underline">
+            <Link to="/privacy" hash="get-help">{lang === "es" ? "Obtener ayuda: si alguien se está aprovechando de usted" : "Get help: If someone is taking advantage of you"}</Link>
+          </Button>
+        )}
 
         <button className="btn-base btn-outline w-full" onClick={() => askSignOut()}>
           {t("Sign Out")}
