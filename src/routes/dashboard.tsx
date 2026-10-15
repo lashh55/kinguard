@@ -9,7 +9,8 @@ import { ScreenShell } from "@/components/ScreenShell";
 import { notifyGuardianSOS, notifyGuardianScam } from "@/lib/guardianAlerts";
 import { normalizeStats } from "@/lib/badges";
 import { Button } from "@/components/ui/button";
-import { ScamAlertResult, GuardianScamCard, GuardianScanStatus, useScanReceipts } from "@/components/ScamAlertResult";
+import { ScamAlertResult, GuardianScamCard, GuardianScanStatus, ScamHandledStatus, useScanReceipts, type ScanAlert } from "@/components/ScamAlertResult";
+import { scamBannerActive, type HandledScam } from "@/lib/scamStatus";
 import alertsIcon from "@/assets/senior-alerts.webp.asset.json";
 import checkedIcon from "@/assets/senior-checked.webp.asset.json";
 import knowledgeTreeIcon from "@/assets/senior-knowledge-tree.webp.asset.json";
@@ -33,7 +34,7 @@ export const Route = createFileRoute("/dashboard")({
   component: Dashboard,
 });
 
-type Alert = {
+type Alert = HandledScam & {
   id: string;
   channel: string;
   scam_type: string | null;
@@ -95,13 +96,18 @@ function SeniorDashboard() {
   const inboxRef = useRef<HTMLElement>(null);
   const [lastSos, setLastSos] = useState<SosEvent | null>(null);
   const [sendingHelp, setSendingHelp] = useState(false);
+  const [bannerNow, setBannerNow] = useState(() => Date.now());
+  useEffect(() => {
+    const timer = setInterval(() => setBannerNow(Date.now()), 1000);
+    return () => clearInterval(timer);
+  }, []);
 
   useEffect(() => {
     if (!profile) return;
     (async () => {
       const { data } = await supabase
         .from("scam_alerts")
-        .select("id,channel,scam_type,scam_type_es,ai_recommendation,ai_recommendation_es,scam_score,content_preview,status,created_at,senior_id,senior_viewed_at")
+        .select("id,channel,scam_type,scam_type_es,ai_recommendation,ai_recommendation_es,scam_score,content_preview,status,created_at,senior_id,senior_viewed_at,handled_at,handled_by_name,handled_note")
         .eq("senior_id", profile.id)
         .order("created_at", { ascending: false })
         .limit(100);
@@ -126,6 +132,12 @@ function SeniorDashboard() {
   // Realtime: surface new alerts (e.g. from forwarded emails) instantly
   useEffect(() => {
     if (!profile) return;
+    let alive = true;
+    const load = async () => {
+      const { data } = await supabase.from("scam_alerts").select("*").eq("senior_id", profile.id).order("created_at", { ascending: false }).limit(100);
+      if (alive && data) setAlerts(data);
+    };
+    const timer = setInterval(load, 15000);
     const channel = supabase
       .channel(`scam_alerts_senior_${profile.id}`)
       .on(
@@ -137,8 +149,9 @@ function SeniorDashboard() {
 
         },
       )
-      .subscribe();
-    return () => { supabase.removeChannel(channel); };
+      .on("postgres_changes", { event: "UPDATE", schema: "public", table: "scam_alerts", filter: `senior_id=eq.${profile.id}` }, () => { void load(); })
+      .subscribe((status) => { if (status === "SUBSCRIBED") void load(); });
+    return () => { alive = false; clearInterval(timer); supabase.removeChannel(channel); };
   }, [profile, t]);
 
   // Latest SOS + live "guardian saw your alert" updates
@@ -170,13 +183,15 @@ function SeniorDashboard() {
 
   if (!profile) return null;
 
-  const unreadAlerts = alerts.filter((a) => !a.senior_viewed_at);
+  const unreadAlerts = alerts.filter((a) => scamBannerActive(a, bannerNow));
   const unreadCount = unreadAlerts.length;
   const openAlert = (a: Alert) => setSelectedAlert(a);
   const markViewed = (id: string, time: string) => {
     setAlerts((prev) => prev.map((a) => a.id === id ? { ...a, senior_viewed_at: time } : a));
   };
   const latestReceiptAlert = alerts.find((a) => receipts.some((r) => r.alert_id === a.id));
+  const handledAlerts = alerts.filter((a) => a.handled_at);
+  const liveSelectedAlert = alerts.find((a) => a.id === selectedAlert?.id) || selectedAlert;
 
   const tip = TIPS[new Date().getDay() % TIPS.length];
   const totalAlerts = alerts.length;
@@ -207,6 +222,10 @@ function SeniorDashboard() {
       </header>
       <GuardianRequests onChange={() => supabase.rpc("get_my_guardians").then(({ data }) => setGuardianCount((data ?? []).length))} />
       <SeniorGuardianNotice />
+      {handledAlerts.map((a) => <section key={a.id} className="px-5 mb-3">
+        <ScamHandledStatus alert={a} />
+        <Button variant="link" className="whitespace-normal" onClick={() => openAlert(a)}>{lang === "es" ? "Ver alerta:" : "View alert:"} {scamTypeFor(a, lang)}</Button>
+      </section>)}
 
       {unreadCount > 0 && (
         <section className="px-5 mb-3">
@@ -233,8 +252,8 @@ function SeniorDashboard() {
           </Button>
         </section>
       )}
-      {selectedAlert && <ScamAlertResult key={selectedAlert.id} alert={selectedAlert}
-        receipts={receipts.filter((r) => r.alert_id === selectedAlert.id)} onClose={() => setSelectedAlert(null)} onViewed={markViewed} />}
+      {liveSelectedAlert && <ScamAlertResult key={liveSelectedAlert.id} alert={liveSelectedAlert}
+        receipts={receipts.filter((r) => r.alert_id === liveSelectedAlert.id)} onClose={() => setSelectedAlert(null)} onViewed={markViewed} />}
       <Dialog open={checkedOpen} onOpenChange={setCheckedOpen}>
         <DialogContent className="max-h-[80dvh] overflow-y-auto">
           <DialogHeader>
@@ -289,7 +308,7 @@ function SeniorDashboard() {
         ) : (
           <ul className="space-y-2">
             {(inboxOpen ? alerts : alerts.slice(0, 3)).map((a) => (
-              <AlertCard key={a.id} a={a} unread={!a.senior_viewed_at} onOpen={() => openAlert(a)} />
+              <AlertCard key={a.id} a={a} unread={scamBannerActive(a, bannerNow)} onOpen={() => openAlert(a)} />
             ))}
           </ul>
         )}
@@ -521,7 +540,7 @@ function GuardianDashboard() {
 
       const { data: alerts } = await supabase
         .from("scam_alerts")
-        .select("id,channel,scam_type,scam_type_es,ai_recommendation,ai_recommendation_es,scam_score,content_preview,status,created_at,senior_id,senior_viewed_at")
+        .select("id,channel,scam_type,scam_type_es,ai_recommendation,ai_recommendation_es,scam_score,content_preview,status,created_at,senior_id,senior_viewed_at,handled_at,handled_by_name,handled_note")
         .in("senior_id", ids)
         .order("created_at", { ascending: false })
         .limit(10);
@@ -550,7 +569,7 @@ function GuardianDashboard() {
           full_name: r.first_name,
           invite_code: null,
           relationship_label: r.relationship_label,
-          alertCount: sa.filter((a) => a.status === "flagged").length,
+          alertCount: sa.filter((a) => a.status === "flagged" && !a.handled_at).length,
           lastAlert: sa[0],
           challenge_stats: undefined,
         };
@@ -558,6 +577,26 @@ function GuardianDashboard() {
       setSeniors(enriched);
     })();
   }, [profile, reload]);
+
+  const refreshGuardianAlerts = async () => {
+    const ids = Object.keys(seniorMap);
+    if (!ids.length) return;
+    const { data } = await supabase.from("scam_alerts").select("*").in("senior_id", ids).order("created_at", { ascending: false }).limit(10);
+    if (!data) return;
+    setRecentAlerts(data);
+    setSeniors((prev) => prev.map((s) => {
+      const own = data.filter((a) => a.senior_id === s.id);
+      return { ...s, alertCount: own.filter((a) => a.status === "flagged" && !a.handled_at).length, lastAlert: own[0] };
+    }));
+  };
+  const onHandled = (updated: ScanAlert) => {
+    setRecentAlerts((prev) => prev.map((a) => a.id === updated.id ? { ...a, ...updated, status: "handled" } : a));
+    void refreshGuardianAlerts();
+  };
+  useEffect(() => {
+    const timer = setInterval(() => { void refreshGuardianAlerts(); }, 15000);
+    return () => clearInterval(timer);
+  }, [seniorMap]);
 
   // Realtime: fan-out alerts from any linked senior (forwarded emails included)
   useEffect(() => {
@@ -586,7 +625,10 @@ function GuardianDashboard() {
           }, lang);
         },
       )
-      .subscribe();
+      .on("postgres_changes", { event: "UPDATE", schema: "public", table: "scam_alerts" }, (payload) => {
+        if (linkedIds.includes((payload.new as Alert).senior_id)) void refreshGuardianAlerts();
+      })
+      .subscribe((status) => { if (status === "SUBSCRIBED") void refreshGuardianAlerts(); });
     return () => { supabase.removeChannel(channel); };
   }, [profile, seniorMap, lang]);
 
@@ -797,7 +839,7 @@ function GuardianDashboard() {
         ) : (
           <ul className="space-y-2">
             {recentAlerts.slice(0, 5).map((a) => (
-              <GuardianScamCard key={a.id} alert={a} seniorName={seniorMap[a.senior_id] || (es ? "Su ser querido" : "Your loved one")} />
+              <GuardianScamCard key={a.id} alert={a} onHandled={onHandled} seniorName={seniorMap[a.senior_id] || (es ? "Su ser querido" : "Your loved one")} />
             ))}
           </ul>
         )}
