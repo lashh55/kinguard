@@ -1,5 +1,6 @@
 import { forwardRef, useState } from "react";
 import { Eye, EyeOff } from "lucide-react";
+import { useI18n } from "@/lib/i18n";
 
 type Props = Omit<React.InputHTMLAttributes<HTMLInputElement>, "type"> & {
   forceVisible?: boolean;
@@ -7,6 +8,7 @@ type Props = Omit<React.InputHTMLAttributes<HTMLInputElement>, "type"> & {
 
 export const PasswordInput = forwardRef<HTMLInputElement, Props>(
   ({ className = "input-large", forceVisible, ...props }, ref) => {
+    const { t } = useI18n();
     const [show, setShow] = useState(false);
     const visible = forceVisible || show;
     return (
@@ -21,7 +23,7 @@ export const PasswordInput = forwardRef<HTMLInputElement, Props>(
           <button
             type="button"
             onClick={() => setShow((s) => !s)}
-            aria-label={show ? "Hide password" : "Show password"}
+            aria-label={show ? t("Hide password") : t("Show password")}
             aria-pressed={show}
             className="absolute right-2 top-1/2 -translate-y-1/2 p-2 rounded-md hover:bg-black/5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
             tabIndex={-1}

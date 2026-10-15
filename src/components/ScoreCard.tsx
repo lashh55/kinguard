@@ -36,7 +36,7 @@ export function ScoreCard({ stats: raw, compact, tree }: { stats: unknown; compa
         <div className="flex-1 min-w-0">
           <p className="font-bold" style={{ fontSize: 14, color: "var(--color-muted-foreground)" }}>{t("Current badge")}</p>
           <p className="font-extrabold" style={{ fontSize: compact ? 18 : 22 }}>
-            {current?.name ?? t("Just getting started")}
+            {current ? t(current.name) : t("Just getting started")}
           </p>
         </div>
         {tree && (
@@ -64,7 +64,7 @@ export function ScoreCard({ stats: raw, compact, tree }: { stats: unknown; compa
             />
           </div>
           <p className="text-sm mt-2 text-center font-bold">
-            {(() => { const n = Math.max(0, progressTarget - stats.total_correct); return lang === "es" ? `${n} ${n === 1 ? "respuesta correcta más" : "respuestas correctas más"} para llegar a ${next.name}` : `${n} more correct ${n === 1 ? "answer" : "answers"} to reach ${next.name}`; })()} <BrandIcon icon={next.icon} />
+            {(() => { const n = Math.max(0, progressTarget - stats.total_correct); return lang === "es" ? `${n} ${n === 1 ? "respuesta correcta más" : "respuestas correctas más"} para llegar a ${t(next.name)}` : `${n} more correct ${n === 1 ? "answer" : "answers"} to reach ${t(next.name)}`; })()} <BrandIcon icon={next.icon} />
           </p>
         </div>
       )}

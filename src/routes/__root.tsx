@@ -2,19 +2,20 @@ import { Outlet, Link, createRootRoute, HeadContent, Scripts } from "@tanstack/r
 import { useEffect } from "react";
 import appCss from "../styles.css?url";
 import { AuthProvider } from "@/lib/auth";
-import { I18nProvider } from "@/lib/i18n";
+import { I18nProvider, useI18n } from "@/lib/i18n";
 import { Toaster } from "@/components/ui/sonner";
 import { initAnalytics } from "@/lib/analytics";
 import { SiteNavigation } from "@/components/SiteNavigation";
 import { BackToTop } from "@/components/BackToTop";
 
 function NotFoundComponent() {
+  const { t } = useI18n();
   return (
     <div className="flex min-h-screen items-center justify-center px-4">
       <div className="max-w-md text-center">
         <h1>404</h1>
-        <p className="mt-2">This page doesn't exist.</p>
-        <Link to="/" className="btn-base btn-primary mt-6 inline-flex">Go home</Link>
+        <p className="mt-2">{t("This page doesn't exist.")}</p>
+        <Link to="/" className="btn-base btn-primary mt-6 inline-flex">{t("Go home")}</Link>
       </div>
     </div>
   );

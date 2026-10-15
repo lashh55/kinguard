@@ -337,10 +337,10 @@ function SeniorDashboard() {
         <section className="px-5 mt-5">
           <div className="card-soft" style={{ background: "var(--color-cream)" }}>
             <p className="font-bold mb-1 flex items-center gap-2"><img src={questionIcon.url} alt="" width={32} height={32} className="kinguard-badge-icon" /> {t("This Week's Question")}</p>
-            <p className="font-bold" style={{ fontSize: 18 }}>{question.question_text}</p>
+            <p className="font-bold" style={{ fontSize: 18 }}>{t(question.question_text)}</p>
             <div className="mt-3 space-y-2">
               {(["a","b","c","d"] as const).map((l) => {
-                const txt = question[`answer_${l}` as const];
+                const txt = t(question[`answer_${l}` as const]);
                 const isPicked = picked === l;
                 const isCorrect = l === question.correct_answer;
                 let style: React.CSSProperties = {};
@@ -359,7 +359,7 @@ function SeniorDashboard() {
             {picked && (
               <p className="mt-3" style={{ fontSize: 16 }}>
                 {picked === question.correct_answer ? `${t("✅ Correct!")} ` : `${t("❌ Not quite.")} `}
-                {question.explanation}
+                {t(question.explanation)}
               </p>
             )}
             <Link to="/learn" className="btn-base btn-outline w-full mt-3">{t("See All Questions")}</Link>
@@ -463,7 +463,7 @@ function GuardianDashboard() {
   const addSenior = async (e: React.FormEvent) => {
     e.preventDefault();
     const code = newCode.trim().toUpperCase();
-    if (code.length !== 6) { setLinkMsg({ ok: false, text: "Invite codes are 6 characters." }); return; }
+    if (code.length !== 6) { setLinkMsg({ ok: false, text: es ? "Los códigos de invitación tienen 6 caracteres." : "Invite codes are 6 characters." }); return; }
     setLinking(true); setLinkMsg(null);
     const { error } = await supabase.rpc("link_guardian_by_code", { _code: code, _label: newLabel.trim() || "Family" });
     setLinking(false);
@@ -473,7 +473,7 @@ function GuardianDashboard() {
       } else if (error.message.includes("KINGUARD_SENIOR_GUARDIAN_LIMIT")) {
         setLinkMsg({ ok: false, text: es ? "Este adulto mayor ya tiene 3 guardianes, el máximo permitido." : "This senior already has 3 guardians, the most allowed." });
       } else {
-        setLinkMsg({ ok: false, text: error.message.includes("Invalid") ? "That code didn't match anyone. Please check it and try again." : error.message });
+        setLinkMsg({ ok: false, text: error.message.includes("Invalid") ? (es ? "Ese código no coincidió con nadie. Verifíquelo e inténtelo de nuevo." : "That code didn't match anyone. Please check it and try again.") : error.message });
       }
       return;
     }
@@ -493,11 +493,11 @@ function GuardianDashboard() {
       .eq("senior_id", confirmRemove.id);
     setRemoving(false);
     if (error) {
-      toast.error("Something went wrong. Please try again.");
+      toast.error(es ? "Algo salió mal. Por favor inténtelo de nuevo." : "Something went wrong. Please try again.");
       setConfirmRemove(null);
       return;
     }
-    setRemoveMsg(`You are no longer protecting ${confirmRemove.name}.`);
+    setRemoveMsg(es ? `Usted ya no está protegiendo a ${confirmRemove.name}.` : `You are no longer protecting ${confirmRemove.name}.`);
     setConfirmRemove(null);
     setReload((r) => r + 1);
   };
@@ -575,11 +575,11 @@ function GuardianDashboard() {
               : s,
           ));
           notifyGuardianScam({
-            seniorName: seniorMap[a.senior_id] || "Your loved one",
-            scamType: a.scam_type || "Suspicious message",
+            seniorName: seniorMap[a.senior_id] || (lang === "es" ? "Su ser querido" : "Your loved one"),
+            scamType: a.scam_type || (lang === "es" ? "Mensaje sospechoso" : "Suspicious message"),
             score: a.scam_score,
             channel: a.channel,
-          });
+          }, lang);
         },
       )
       .subscribe();
@@ -608,20 +608,20 @@ function GuardianDashboard() {
   return (
     <ScreenShell withPhotoPanel>
       <header className="px-5 pt-6 pb-4">
-        <h1>Hello, {profile.full_name.split(" ")[0]} 💙</h1>
+        <h1>{es ? "Hola" : "Hello"}, {profile.full_name.split(" ")[0]} 💙</h1>
         <p className="mt-1" style={{ color: "var(--color-muted-foreground)" }}>
-          You're protecting {seniors.length} {seniors.length === 1 ? "loved one" : "loved ones"}.
+          {es ? `Usted está protegiendo a ${seniors.length} ${seniors.length === 1 ? "ser querido" : "seres queridos"}.` : `You're protecting ${seniors.length} ${seniors.length === 1 ? "loved one" : "loved ones"}.`}
         </p>
       </header>
       <GuardianNotices />
 
       <section className="px-5">
-        <h2 className="mb-2">You are protecting</h2>
+        <h2 className="mb-2">{es ? "Usted está protegiendo" : "You are protecting"}</h2>
         {seniors.length === 0 ? (
           <div className="card-soft text-center">
-            <p className="font-bold mb-2">No one linked yet</p>
+            <p className="font-bold mb-2">{es ? "Nadie vinculado todavía" : "No one linked yet"}</p>
             <p className="text-sm" style={{ color: "var(--color-muted-foreground)" }}>
-              Ask your loved one for their 6-character invite code, then tap "Protect a new senior" below.
+              {es ? 'Pídale a su ser querido su código de invitación de 6 caracteres y luego toque "Proteger a un nuevo adulto mayor" abajo.' : 'Ask your loved one for their 6-character invite code, then tap "Protect a new senior" below.'}
             </p>
           </div>
         ) : (
@@ -630,8 +630,8 @@ function GuardianDashboard() {
               <li key={s.id} className="card-soft">
                 <div className="flex items-start justify-between gap-3">
                   <div>
-                    <p className="font-extrabold" style={{ fontSize: 19 }}>You are protecting: {s.full_name}</p>
-                    <p className="text-sm" style={{ color: "var(--color-muted-foreground)" }}>{s.relationship_label || "Family"}</p>
+                    <p className="font-extrabold" style={{ fontSize: 19 }}>{es ? `Usted está protegiendo a: ${s.full_name}` : `You are protecting: ${s.full_name}`}</p>
+                    <p className="text-sm" style={{ color: "var(--color-muted-foreground)" }}>{s.relationship_label || (es ? "Familia" : "Family")}</p>
                     <button
                       type="button"
                       className="mt-2 text-sm font-bold underline underline-offset-2"
@@ -644,14 +644,14 @@ function GuardianDashboard() {
                   {sosEvents.some((e) => e.senior_id === s.id && !e.acknowledged_at) ? (
                     <span className="px-3 py-1 rounded-full text-sm font-bold" style={{ background: "#E74C3C", color: "#fff" }}>🚨 {es ? "Alerta" : "Alert"}</span>
                   ) : s.alertCount > 0 ? (
-                    <span className="badge-score-danger px-3 py-1 rounded-full text-sm font-bold">{s.alertCount} flagged</span>
+                    <span className="badge-score-danger px-3 py-1 rounded-full text-sm font-bold">{s.alertCount} {es ? "marcadas" : "flagged"}</span>
                   ) : (
-                    <span className="badge-score-safe px-3 py-1 rounded-full text-sm font-bold">All clear</span>
+                    <span className="badge-score-safe px-3 py-1 rounded-full text-sm font-bold">{es ? "Todo en orden" : "All clear"}</span>
                   )}
                 </div>
                 {s.lastAlert && (
                   <p className="text-sm mt-3" style={{ color: "var(--color-muted-foreground)" }}>
-                    Last alert: <span className="font-bold">{s.lastAlert.scam_type || "Suspicious message"}</span> · {timeAgo(s.lastAlert.created_at)}
+                    {es ? "Última alerta:" : "Last alert:"} <span className="font-bold">{s.lastAlert.scam_type || (es ? "Mensaje sospechoso" : "Suspicious message")}</span> · {timeAgo(s.lastAlert.created_at, es)}
                   </p>
                 )}
               </li>
@@ -742,7 +742,7 @@ function GuardianDashboard() {
                   <p className="font-extrabold" style={{ fontSize: 18 }}>
                     🚨 {helpRequestText(e, name, es)}
                   </p>
-                  <p className="text-sm mt-1">{es ? "Enviada a las" : "Sent at"} {fmtTime(e.created_at)} · {timeAgo(e.created_at)}</p>
+                  <p className="text-sm mt-1">{es ? "Enviada a las" : "Sent at"} {fmtTime(e.created_at)} · {timeAgo(e.created_at, es)}</p>
                   {open && e.claimed_by && (
                     <p className="mt-2 font-bold" role="status" style={{ fontSize: 16 }}>
                       📞 {mine
@@ -788,7 +788,7 @@ function GuardianDashboard() {
         )}
         {recentAlerts.length === 0 ? (
           <div className="card-soft text-center font-bold" style={{ color: "#2ECC71" }}>
-            ✅ No alerts across your loved ones.
+            ✅ {es ? "No hay alertas entre sus seres queridos." : "No alerts across your loved ones."}
           </div>
         ) : (
           <ul className="space-y-2">
@@ -800,7 +800,7 @@ function GuardianDashboard() {
       </section>
 
       <section className="px-5 mt-6 mb-4">
-        <Link to="/profile" className="btn-base btn-outline w-full">Manage my profile</Link>
+        <Link to="/profile" className="btn-base btn-outline w-full">{es ? "Administrar mi perfil" : "Manage my profile"}</Link>
       </section>
 
       {confirmRemove && (
@@ -809,7 +809,7 @@ function GuardianDashboard() {
           style={{ background: "rgba(15, 23, 42, 0.6)" }}
           role="dialog"
           aria-modal="true"
-          aria-label="Confirm removing senior"
+          aria-label={es ? "Confirmar que se dejará de proteger al adulto mayor" : "Confirm removing senior"}
           onClick={() => { if (!removing) setConfirmRemove(null); }}
         >
           <div
@@ -886,10 +886,10 @@ function AlertCard({ a, unread, onOpen }: { a: Alert; unread?: boolean; onOpen: 
   </li>;
 }
 
-function timeAgo(iso: string) {
+function timeAgo(iso: string, es: boolean = false) {
   const d = (Date.now() - new Date(iso).getTime()) / 1000;
-  if (d < 60) return "just now";
-  if (d < 3600) return `${Math.floor(d/60)}m ago`;
-  if (d < 86400) return `${Math.floor(d/3600)}h ago`;
-  return `${Math.floor(d/86400)}d ago`;
+  if (d < 60) return es ? "justo ahora" : "just now";
+  if (d < 3600) return es ? `hace ${Math.floor(d/60)} min` : `${Math.floor(d/60)}m ago`;
+  if (d < 86400) return es ? `hace ${Math.floor(d/3600)} h` : `${Math.floor(d/3600)}h ago`;
+  return es ? `hace ${Math.floor(d/86400)} d` : `${Math.floor(d/86400)}d ago`;
 }

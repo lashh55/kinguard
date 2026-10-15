@@ -18,7 +18,7 @@ export function BadgeCelebration({
   name: string;
   onDismiss: () => void;
 }) {
-  const { lang } = useI18n();
+  const { lang, t } = useI18n();
   const pieces = useMemo(
     () =>
       Array.from({ length: 60 }).map((_, i) => ({
@@ -34,10 +34,10 @@ export function BadgeCelebration({
   );
 
   const share = async () => {
-    const text = `I just earned the ${badge.name} badge on KinGuard! I'm learning to stay safe from scams.`;
+    const text = t("I just earned the {badge} badge on KinGuard! I'm learning to stay safe from scams.").replace("{badge}", t(badge.name));
     try {
       await navigator.clipboard.writeText(text);
-      toast("✅ Copied! Share with friends and family.");
+      toast(t("✅ Copied! Share with friends and family."));
     } catch {
       toast(text);
     }
@@ -119,18 +119,21 @@ export function BadgeCelebration({
         >
           <BrandIcon icon={badge.icon} />
         </div>
-        <h2 className="mt-4">🎉 Congratulations {name.split(" ")[0]}!</h2>
+        <h2 className="mt-4">{t("🎉 Congratulations {name}!").replace("{name}", name.split(" ")[0])}</h2>
         <p className="mt-2" style={{ fontSize: 18 }}>
-          You just earned the <span className="font-extrabold">{badge.name}</span> badge!
+          {(() => {
+            const parts = t("You just earned the {badge} badge!").split("{badge}");
+            return <>{parts[0]}<span className="font-extrabold">{t(badge.name)}</span>{parts[1]}</>;
+          })()}
         </p>
         <button className="btn-base btn-primary w-full mt-5" onClick={share}>
-          📣 Share My Achievement
+          {t("📣 Share My Achievement")}
         </button>
         <button className="btn-base btn-outline w-full mt-2" onClick={onDismiss}>
-          Continue
+          {t("Continue")}
         </button>
         <p className="text-xs mt-3" style={{ color: "var(--color-muted-foreground)" }}>
-          Tap anywhere to dismiss
+          {t("Tap anywhere to dismiss")}
         </p>
       </div>
     </div>
@@ -152,8 +155,9 @@ export function useBadgeQueue() {
 
 export function useNotifyGuardiansOfBadge() {
   // Surfaced as toast for now (mirrors guardianAlerts pattern).
+  const { t } = useI18n();
   return (seniorName: string, badge: BadgeDef) => {
-    const msg = `🌟 ${seniorName} just earned the ${badge.name} badge on KinGuard! They are building their scam protection skills.`;
+    const msg = t("🌟 {name} just earned the {badge} badge on KinGuard! They are building their scam protection skills.").replace("{name}", seniorName).replace("{badge}", t(badge.name));
     toast(msg, { duration: 4500, style: { whiteSpace: "pre-line" } });
   };
 }

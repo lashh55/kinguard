@@ -1,5 +1,6 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { MarketingShell } from "@/components/MarketingShell";
+import { useI18n } from "@/lib/i18n";
 import iconGuideGrandparent from "@/assets/learn-icons/icon-guide-grandparent.png.asset.json";
 import iconGuideSocialSecurity from "@/assets/learn-icons/icon-guide-social-security.png.asset.json";
 import iconMedicareHealth from "@/assets/learn-icons/icon-medicare-health.png.asset.json";
@@ -29,12 +30,12 @@ export const Route = createFileRoute("/scams")({
 });
 
 function ScamsHub() {
+  const { t } = useI18n();
   return (
     <MarketingShell>
-      <h1>Common scams targeting seniors</h1>
+      <h1>{t("Common scams targeting seniors")}</h1>
       <p className="mt-3" style={{ fontSize: 18 }}>
-        Scammers rely on urgency, fear, and unfamiliar payment methods. Each guide below explains the exact script
-        scammers use, the red flags to watch for, and what to do next.
+        {t("Scammers rely on urgency, fear, and unfamiliar payment methods. Each guide below explains the exact script scammers use, the red flags to watch for, and what to do next.")}
       </p>
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-8">
         {SCAMS.map((s) => (
@@ -48,18 +49,18 @@ function ScamsHub() {
                 <img src={s.icon.url} alt="" className="kg-guide-icon-solo" />
               )}
               <div>
-                <h2 className="font-bold" style={{ fontFamily: "var(--font-display)", fontSize: 28, color: "#0F3D2A" }}>{s.title}</h2>
-                <p className="mt-2">{s.blurb}</p>
-                <span className="inline-block mt-3 font-bold underline" style={{ color: "#0F3D2A" }}>Read the guide →</span>
+                <h2 className="font-bold" style={{ fontFamily: "var(--font-display)", fontSize: 28, color: "#0F3D2A" }}>{t(s.title)}</h2>
+                <p className="mt-2">{t(s.blurb)}</p>
+                <span className="inline-block mt-3 font-bold underline" style={{ color: "#0F3D2A" }}>{t("Read the guide →")}</span>
               </div>
             </div>
           </Link>
         ))}
       </div>
       <div className="mt-10 card-soft" style={{ background: "var(--color-sky)" }}>
-        <h2>Worried about a specific message?</h2>
-        <p className="mt-2">KinGuard's free scam checker analyzes texts, emails, and call transcripts in seconds.</p>
-        <Link to="/" className="btn-base btn-primary mt-4 inline-flex">Try the scam checker</Link>
+        <h2>{t("Worried about a specific message?")}</h2>
+        <p className="mt-2">{t("KinGuard's free scam checker analyzes texts, emails, and call transcripts in seconds.")}</p>
+        <Link to="/" className="btn-base btn-primary mt-4 inline-flex">{t("Try the scam checker")}</Link>
       </div>
     </MarketingShell>
   );

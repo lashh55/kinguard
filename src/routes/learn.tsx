@@ -216,7 +216,7 @@ function Cards() {
         const updated = { ...stats, badges_earned: [...stats.badges_earned, "scholar"] };
         await supabase.from("profiles").update({ challenge_stats: updated as any }).eq("id", profile.id);
         track("badge_earned", { badge_id: "scholar", badge_name: "Scholar" });
-        toast("📚 You earned the Scholar badge!");
+        toast(t("📚 You earned the Scholar badge!"));
         refreshProfile();
       }
     }
@@ -237,9 +237,9 @@ function Cards() {
                 <span className="font-extrabold" style={{ fontSize: 26, color: "#1E1A1A", lineHeight: 1.2 }}>{lang === "es" ? Styled.es : c.title}</span>
               </summary>
               <div className="px-5 pb-5 space-y-3">
-                <div><p className="font-bold">{t("What it looks like:")}</p><p>"{c.look}"</p></div>
-                <div><p className="font-bold">{t("Red flags:")}</p><ul className="list-disc pl-5">{c.flags.map((f) => <li key={f}>{f}</li>)}</ul></div>
-                <div><p className="font-bold">{t("What to do:")}</p><p>{c.doIt}</p></div>
+                <div><p className="font-bold">{t("What it looks like:")}</p><p>"{t(c.look)}"</p></div>
+                <div><p className="font-bold">{t("Red flags:")}</p><ul className="list-disc pl-5">{c.flags.map((f) => <li key={f}>{t(f)}</li>)}</ul></div>
+                <div><p className="font-bold">{t("What to do:")}</p><p>{t(c.doIt)}</p></div>
               </div>
             </details>
           );
@@ -251,15 +251,15 @@ function Cards() {
             <div className="mt-3 space-y-3">
               <div>
                 <p className="font-bold">{t("What it looks like:")}</p>
-                <p>"{c.look}"</p>
+                <p>"{t(c.look)}"</p>
               </div>
               <div>
                 <p className="font-bold">{t("Red flags:")}</p>
-                <ul className="list-disc pl-5">{c.flags.map((f) => <li key={f}>{f}</li>)}</ul>
+                <ul className="list-disc pl-5">{c.flags.map((f) => <li key={f}>{t(f)}</li>)}</ul>
               </div>
               <div>
                 <p className="font-bold">{t("What to do:")}</p>
-                <p>{c.doIt}</p>
+                <p>{t(c.doIt)}</p>
               </div>
               {c.linkSsn && (
                 <button className="btn-base btn-rose w-full" onClick={() => navigate({ to: "/ssn" })}>{t("→ Go to SSN Shield")}</button>
@@ -403,10 +403,10 @@ function Quiz({ onBadges }: { onBadges: (b: ReturnType<typeof applyAnswer>["newB
       <ChallengeHeader />
       <div className="card-soft mt-3" style={{ background: "var(--color-cream)" }}>
         <p className="text-sm font-bold mb-2">{t("Question")} {idx + 1} {t("of")} {questions.length}</p>
-        <p className="font-bold" style={{ fontSize: 20 }}>{q.question_text}</p>
+        <p className="font-bold" style={{ fontSize: 20 }}>{t(q.question_text)}</p>
         <div className="mt-3 space-y-2">
           {(["a","b","c","d"] as const).map((l) => {
-            const txt = q[`answer_${l}` as const];
+            const txt = t(q[`answer_${l}` as const]);
             let style: React.CSSProperties = {};
             if (picked) {
               if (l === picked && l === q.correct_answer) style = { background: "#2ECC71", color: "#fff" };
@@ -424,7 +424,7 @@ function Quiz({ onBadges }: { onBadges: (b: ReturnType<typeof applyAnswer>["newB
           <>
             <p className="mt-3" style={{ fontSize: 17 }}>
               {picked === q.correct_answer ? `${t("✅ Correct!")} ` : `${t("❌ Not quite.")} `}
-              {q.explanation}
+              {t(q.explanation)}
             </p>
             {idx < questions.length - 1 && (
               <button className="btn-base btn-primary w-full mt-3" onClick={next}>{t("Next Question →")}</button>

@@ -17,18 +17,18 @@ export function SiteNavigation() {
   const menuButton = useRef<HTMLButtonElement>(null);
   const isAdminPage = path === "/admin" || path.startsWith("/admin/");
   const links = [
-    { to: user ? "/dashboard" : "/", label: "Home" },
+    { to: user ? "/dashboard" : "/", label: t("Home") },
     ...(user ? [
       ...(profile?.role === "guardian" ? [] : [
-        { to: "/check", label: "Check" },
-        { to: "/ssn", label: "SSN Shield" },
-        { to: "/learn", label: "Learn" },
+        { to: "/check", label: t("Check") },
+        { to: "/ssn", label: t("SSN Shield") },
+        { to: "/learn", label: t("Learn") },
       ]),
-      { to: "/profile", label: "Profile" },
+      { to: "/profile", label: t("Profile") },
     ] : []),
-    { to: "/scams", label: "Common scams" },
-    { to: "/for-guardians", label: "For guardians" },
-    { to: "/privacy", label: "Privacy" },
+    { to: "/scams", label: t("Common scams") },
+    { to: "/for-guardians", label: t("For guardians") },
+    { to: "/privacy", label: t("Privacy") },
     ...(isAdminPage ? [
       { to: "/admin", label: "Admin home" },
       { to: "/admin/seniors", label: "Seniors" },
@@ -65,7 +65,7 @@ export function SiteNavigation() {
           </Button>
         </div>
         <nav id="site-page-menu" aria-label={t("Main navigation")} className={`${open ? "flex" : "hidden"} w-full flex-col gap-1 overflow-y-auto lg:flex lg:flex-row lg:flex-wrap lg:gap-x-4`}>
-          {links.map((link) => <Link key={link.to} to={link.to} activeOptions={{ exact: true }} activeProps={{ className: "bg-secondary" }} className="rounded-md px-3 py-3 text-sm font-bold hover:bg-secondary focus-visible:outline focus-visible:outline-ring lg:py-2" onClick={() => setOpen(false)}>{t(link.label)}</Link>)}
+          {links.map((link) => <Link key={link.to} to={link.to} activeOptions={{ exact: true }} activeProps={{ className: "bg-secondary" }} className="rounded-md px-3 py-3 text-sm font-bold hover:bg-secondary focus-visible:outline focus-visible:outline-ring lg:py-2" onClick={() => setOpen(false)}>{link.label}</Link>)}
         </nav>
       </div>
       {signOutDialog}

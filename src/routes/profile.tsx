@@ -53,25 +53,25 @@ function formatDate(iso: string) {
   return new Date(iso).toLocaleDateString(undefined, { month: "short", day: "numeric", year: "numeric" });
 }
 
-function timeframe(iso: string | null): string {
-  if (!iso) return "Never";
+function timeframe(iso: string | null, t: (s: string) => string): string {
+  if (!iso) return t("Never");
   const days = Math.floor((Date.now() - new Date(iso).getTime()) / 86400000);
   if (days <= 0) {
     const d = new Date(iso);
-    return `Today ${d.toLocaleTimeString(undefined, { hour: "numeric", minute: "2-digit" }).toLowerCase()}`;
+    return `${t("Today")} ${d.toLocaleTimeString(undefined, { hour: "numeric", minute: "2-digit" }).toLowerCase()}`;
   }
-  if (days === 1) return "Yesterday";
-  if (days < 7) return `${days} days ago`;
-  if (days < 30) { const w = Math.floor(days / 7); return `${w} week${w === 1 ? "" : "s"} ago`; }
-  if (days < 365) { const m = Math.floor(days / 30); return `${m} month${m === 1 ? "" : "s"} ago`; }
-  const y = Math.floor(days / 365); return `${y} year${y === 1 ? "" : "s"} ago`;
+  if (days === 1) return t("Yesterday");
+  if (days < 7) return t("{n} days ago").replace("{n}", String(days));
+  if (days < 30) { const w = Math.floor(days / 7); return t(w === 1 ? "{n} week ago" : "{n} weeks ago").replace("{n}", String(w)); }
+  if (days < 365) { const m = Math.floor(days / 30); return t(m === 1 ? "{n} month ago" : "{n} months ago").replace("{n}", String(m)); }
+  const y = Math.floor(days / 365); return t(y === 1 ? "{n} year ago" : "{n} years ago").replace("{n}", String(y));
 }
 
-function lastActiveLabel(iso: string | null): { text: string; status: "active" | "inactive" | "never" } {
-  if (!iso) return { text: "Never checked alerts", status: "never" };
+function lastActiveLabel(iso: string | null, t: (s: string) => string): { text: string; status: "active" | "inactive" | "never" } {
+  if (!iso) return { text: t("Never checked alerts"), status: "never" };
   const days = Math.floor((Date.now() - new Date(iso).getTime()) / 86400000);
   const status: "active" | "inactive" = days <= 7 ? "active" : "inactive";
-  return { text: `Last active: ${timeframe(iso)}`, status };
+  return { text: `${t("Last active:")} ${timeframe(iso, t)}`, status };
 }
 
 function actionLabel(a: ActivityRow, t: (s: string) => string): string {
@@ -147,7 +147,7 @@ function ProfileScreen() {
           const updated = { ...stats, badges_earned: [...stats.badges_earned, "team_player"] };
           await supabase.from("profiles").update({ challenge_stats: updated as any }).eq("id", profile.id);
           track("badge_earned", { badge_id: "team_player", badge_name: "Team Player" });
-          toast("👨‍👩‍👧 You earned the Team Player badge!");
+          toast(t("👨‍👩‍👧 You earned the Team Player badge!"));
           refreshProfile();
         }
       }
@@ -364,7 +364,7 @@ function ProfileScreen() {
               ) : (
                 <ul className="space-y-3">
                   {guardians.map((g) => {
-                    const active = lastActiveLabel(g.last_alert_view_at);
+                    const active = lastActiveLabel(g.last_alert_view_at, t);
                     const dot = active.status === "active" ? "🟢" : active.status === "inactive" ? "🟡" : "🔴";
                     const dotLabel = active.status === "active" ? t("Active") : active.status === "inactive" ? t("Inactive") : t("Never checked");
                     return (
@@ -382,7 +382,7 @@ function ProfileScreen() {
                               {active.text}
                             </p>
                             <p className="text-sm mt-1">
-                              <span className="font-bold">{t("Last viewed your alerts:")}</span> {timeframe(g.last_alert_view_at)}
+                              <span className="font-bold">{t("Last viewed your alerts:")}</span> {timeframe(g.last_alert_view_at, t)}
                             </p>
                             <p className="text-sm">
                               <span className="font-bold">{t("Total alerts reviewed:")}</span> {g.total_alerts_reviewed ?? 0}
@@ -471,7 +471,7 @@ function ProfileScreen() {
                 <div className="card-soft" style={{ background: "var(--color-cream)", border: "2px solid var(--color-warn)" }}>
                   {neglected.map((g) => (
                     <p key={g.link_id} className="mb-2 last:mb-0">
-                      👋 <span className="font-bold">{g.full_name}</span> hasn't checked your alerts yet. You may want to remind them or add a more active guardian. You have {slotsAvail} guardian slot{slotsAvail === 1 ? "" : "s"} available.
+                      👋 <span className="font-bold">{g.full_name}</span> {t("hasn't checked your alerts yet. You may want to remind them or add a more active guardian. You have")} {slotsAvail} {slotsAvail === 1 ? t("guardian slot available") : t("guardian slots available")}.
                     </p>
                   ))}
                 </div>
