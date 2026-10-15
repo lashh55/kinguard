@@ -26,6 +26,7 @@ import { useI18n } from "@/lib/i18n";
 import { SsnDisclaimer } from "@/components/SsnDisclaimer";
 import { track } from "@/lib/analytics";
 import { toast } from "sonner";
+import { scamTypeFor, flaggedCount } from "@/lib/scamLanguage";
 
 export const Route = createFileRoute("/dashboard")({
   head: () => pageHead("Your protection overview", "Review your KinGuard scam alerts, guardian connections, and protection activity."),
@@ -36,6 +37,9 @@ type Alert = {
   id: string;
   channel: string;
   scam_type: string | null;
+  scam_type_es?: string | null;
+  ai_recommendation?: string | null;
+  ai_recommendation_es?: string | null;
   scam_score: number;
   content_preview: string | null;
   status: string;
@@ -97,7 +101,7 @@ function SeniorDashboard() {
     (async () => {
       const { data } = await supabase
         .from("scam_alerts")
-        .select("id,channel,scam_type,scam_score,content_preview,status,created_at,senior_id,senior_viewed_at")
+        .select("id,channel,scam_type,scam_type_es,ai_recommendation,ai_recommendation_es,scam_score,content_preview,status,created_at,senior_id,senior_viewed_at")
         .eq("senior_id", profile.id)
         .order("created_at", { ascending: false })
         .limit(100);
@@ -225,7 +229,7 @@ function SeniorDashboard() {
         <section className="px-5 mb-3">
           <GuardianScanStatus receipts={receipts.filter((r) => r.alert_id === latestReceiptAlert.id)} />
           <Button variant="link" className="text-foreground whitespace-normal" onClick={() => openAlert(latestReceiptAlert)}>
-            {lang === "es" ? "Ver alerta:" : "View alert:"} {latestReceiptAlert.scam_type}
+            {lang === "es" ? "Ver alerta:" : "View alert:"} {scamTypeFor(latestReceiptAlert, lang)}
           </Button>
         </section>
       )}
@@ -517,7 +521,7 @@ function GuardianDashboard() {
 
       const { data: alerts } = await supabase
         .from("scam_alerts")
-        .select("id,channel,scam_type,scam_score,content_preview,status,created_at,senior_id,senior_viewed_at")
+        .select("id,channel,scam_type,scam_type_es,ai_recommendation,ai_recommendation_es,scam_score,content_preview,status,created_at,senior_id,senior_viewed_at")
         .in("senior_id", ids)
         .order("created_at", { ascending: false })
         .limit(10);
@@ -576,7 +580,7 @@ function GuardianDashboard() {
           ));
           notifyGuardianScam({
             seniorName: seniorMap[a.senior_id] || (lang === "es" ? "Su ser querido" : "Your loved one"),
-            scamType: a.scam_type || (lang === "es" ? "Mensaje sospechoso" : "Suspicious message"),
+            scamType: scamTypeFor(a, lang),
             score: a.scam_score,
             channel: a.channel,
           }, lang);
@@ -584,7 +588,7 @@ function GuardianDashboard() {
       )
       .subscribe();
     return () => { supabase.removeChannel(channel); };
-  }, [profile, seniorMap]);
+  }, [profile, seniorMap, lang]);
 
   if (!profile) return null;
 
@@ -644,14 +648,14 @@ function GuardianDashboard() {
                   {sosEvents.some((e) => e.senior_id === s.id && !e.acknowledged_at) ? (
                     <span className="px-3 py-1 rounded-full text-sm font-bold" style={{ background: "#E74C3C", color: "#fff" }}>🚨 {es ? "Alerta" : "Alert"}</span>
                   ) : s.alertCount > 0 ? (
-                    <span className="badge-score-danger px-3 py-1 rounded-full text-sm font-bold">{s.alertCount} {es ? "marcadas" : "flagged"}</span>
+                    <span className="badge-score-danger px-3 py-1 rounded-full text-sm font-bold">{flaggedCount(s.alertCount, lang)}</span>
                   ) : (
                     <span className="badge-score-safe px-3 py-1 rounded-full text-sm font-bold">{es ? "Todo en orden" : "All clear"}</span>
                   )}
                 </div>
                 {s.lastAlert && (
                   <p className="text-sm mt-3" style={{ color: "var(--color-muted-foreground)" }}>
-                    {es ? "Última alerta:" : "Last alert:"} <span className="font-bold">{s.lastAlert.scam_type || (es ? "Mensaje sospechoso" : "Suspicious message")}</span> · {timeAgo(s.lastAlert.created_at, es)}
+                    {es ? "Última alerta:" : "Last alert:"} <span className="font-bold">{scamTypeFor(s.lastAlert, lang)}</span> · {timeAgo(s.lastAlert.created_at, es)}
                   </p>
                 )}
               </li>
@@ -878,7 +882,7 @@ function AlertCard({ a, unread, onOpen }: { a: Alert; unread?: boolean; onOpen: 
     <Button variant="outline" onClick={onOpen} className={`w-full h-auto whitespace-normal text-left justify-start p-4 text-base rounded-lg ${unread ? "border-2 border-sky bg-secondary" : "bg-card"}`}>
       <KinGuardShield className="text-2xl" />
       <span className="min-w-0 flex-1">
-        <span className="block font-bold break-words">{a.scam_type || (lang === "es" ? "Mensaje sospechoso" : "Suspicious message")}</span>
+        <span className="block font-bold break-words">{scamTypeFor(a, lang)}</span>
         <span className="block text-sm">{lang === "es" ? "Riesgo:" : "Risk:"} {a.scam_score}/100</span>
         <span className="block text-xs text-muted-foreground">{new Date(a.created_at).toLocaleString(lang === "es" ? "es" : "en")}</span>
       </span>

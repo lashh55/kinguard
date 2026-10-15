@@ -21,8 +21,11 @@ export const Route = createFileRoute("/check")({
 type Result = {
   score: number;
   type: string;
+  type_es: string;
   flags: string[];
+  flags_es: string[];
   recommendation: string;
+  recommendation_es: string;
   urgency: string;
   ssn_requested: boolean;
 };
@@ -56,8 +59,11 @@ function CheckScreen() {
           content_preview: content.slice(0, 200),
           scam_score: r.score,
           scam_type: r.type,
+          scam_type_es: r.type_es,
           scam_flags: r.flags,
+          scam_flags_es: r.flags_es,
           ai_recommendation: r.recommendation,
+          ai_recommendation_es: r.recommendation_es,
           ai_urgency: r.urgency,
           status: "flagged",
         });
@@ -187,31 +193,31 @@ function CheckScreen() {
               {result.score}
             </div>
             <p className="mt-3 font-extrabold" style={{ fontSize: 22, color: scoreColor(result.score) }}>{verdict.label}</p>
-            <p className="font-bold mt-1">{result.type}</p>
+            <p className="font-bold mt-1">{lang === "es" ? result.type_es : result.type}</p>
           </div>
 
           {result.flags.length > 0 && (
             <div className="card-soft">
               <p className="font-bold mb-2">{t("Red flags we found:")}</p>
               <ul className="space-y-2">
-                {result.flags.map((f, i) => <li key={i}>{f}</li>)}
+                {(lang === "es" ? result.flags_es : result.flags).map((f, i) => <li key={i}>{f}</li>)}
               </ul>
             </div>
           )}
 
           <div className="card-soft" style={{ background: "var(--color-sky)" }}>
             <p className="font-bold mb-1">{t("What to do:")}</p>
-            <p style={{ fontSize: 19 }}>{result.recommendation}</p>
+            <p style={{ fontSize: 19 }}>{lang === "es" ? result.recommendation_es : result.recommendation}</p>
           </div>
 
           <div className="grid grid-cols-1 gap-2">
             <button className="btn-base btn-sky" onClick={() => {
               if (result && profile) notifyGuardianScam({
                 seniorName: profile.full_name,
-                scamType: result.type,
+                scamType: lang === "es" ? result.type_es : result.type,
                 score: result.score,
                 channel,
-              });
+              }, lang);
               toast(t("✅ Your guardian has been notified"));
             }}>{t("Alert My Guardian")}</button>
             <button className="btn-base btn-safe" onClick={() => toast(t("✅ Marked as safe"))}>{t("Mark as Safe")}</button>
