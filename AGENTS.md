@@ -14,3 +14,4 @@
 - Account-safety icons (warning triangle, remove/delete person marks) are custom filled inline SVGs exported from the shared icon module, not emoji or generic icon-library glyphs; keep them there so every page that needs one reuses the same drawing.
 - Knowledge Tree level artwork resolves through the single name-to-asset config in src/lib/badgeArtwork.ts; keep scoring and bonus badges separate so replacing an image never changes earned progress.
 - Learn decorative artwork uses asset pointers from src/assets/learn-icons and responsive CSS image sizing; retain LearnIcons only for the shared level BadgeIcon so obsolete SVG artwork cannot return.
+- Share family-code guidance and warnings between Profile and Learn so safety rules cannot diverge between pages.

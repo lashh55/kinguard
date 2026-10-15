@@ -16,6 +16,7 @@ import { generatePassphrase } from "@/lib/passphrase";
 import { NameFields, formatName, isValidName } from "@/components/NameFields";
 import { SponsorRequestCard } from "@/components/SponsorRequest";
 import { Button } from "@/components/ui/button";
+import { FamilyCodeGuidance, FamilyCodeWarning } from "@/components/FamilyCodeGuidance";
 import {
   setFamilyCodeWord,
   revealFamilyCodeWord,
@@ -652,9 +653,10 @@ function FamilyCodeCard() {
         <GlowIcon color="#E0A63A" size={64}><ShieldLockIcon size={64} /></GlowIcon>
         <div>
           <h2 className="mb-1" style={{ fontFamily: "var(--font-display)", fontWeight: 800, color: "#2B1810", fontSize: 28, lineHeight: 1.15 }}>{t("Family Safety Code")}</h2>
-          <p style={{ fontSize: 18, color: "#2B1810" }}>
-            {t("When someone calls claiming to be family or an official, ask them for your code word. If they cannot, treat the call with caution.")}
-          </p>
+          <div className="text-lg text-foreground">
+            <FamilyCodeGuidance />
+            <FamilyCodeWarning />
+          </div>
         </div>
       </div>
 
@@ -783,7 +785,8 @@ function FamilyCodeExplainer() {
       <p className="font-bold" style={{ fontSize: 18 }}>{t("What is a family code word?")}</p>
       <p className="mt-1">{t("A short, private phrase your family shares — like apple-river-sunset — that only your real loved ones know.")}</p>
       <p className="font-bold mt-3">{t("Why AARP recommends it")}</p>
-      <p className="mt-1">{t("AARP recommends a family code word to stop grandparent scams and impersonator scams. When a caller says they are your grandchild, your bank, or the police and pressures you for money or information, ask for the code word. A real loved one will know it. A scammer will not.")}</p>
+      <div className="mt-1"><FamilyCodeGuidance /></div>
+      <FamilyCodeWarning />
       <p className="font-bold mt-3">{t("How to use it")}</p>
       <ul className="list-disc pl-5 mt-1 space-y-1">
         <li>{t("Create yours above with the \"Create my code word\" button.")}</li>

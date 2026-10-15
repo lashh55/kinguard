@@ -118,7 +118,6 @@ const DICT: Record<string, string> = {
   "Suspicious message": "Mensaje sospechoso",
   "just now": "ahora mismo",
   "Family": "Familia",
-  "When someone calls claiming to be family or an official, ask them to say your code word. If they cannot, treat that call with caution.": "Cuando alguien llame diciendo ser un familiar o un funcionario, pídales que digan su palabra clave. Si no pueden, trate esa llamada con precaución.",
 
   // Check page
   "Check a Suspicious Message_title": "Verificar un Mensaje Sospechoso",
@@ -307,7 +306,6 @@ const DICT: Record<string, string> = {
   "Privacy & Safety": "Privacidad y seguridad",
   "Delete My Account": "Eliminar mi cuenta",
   "DANGER ZONE": "ZONA DE PELIGRO",
-  "When someone calls claiming to be family or an official, ask them for your code word. If they cannot, treat the call with caution.": "Cuando alguien llame diciendo ser un familiar o un funcionario, pídale su palabra clave. Si no puede decirla, tenga precaución con esa llamada.",
   "Permanently delete your account and all your data. This cannot be undone.": "Elimine permanentemente su cuenta y todos sus datos. Esta acción no se puede deshacer.",
   "Are you sure?": "¿Estás seguro/a?",
   "This will permanently delete your account and all your data. This cannot be undone.": "Esto eliminará permanentemente tu cuenta y todos tus datos. Esto no se puede deshacer.",
