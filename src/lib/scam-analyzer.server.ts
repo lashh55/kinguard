@@ -40,7 +40,7 @@ export async function analyzeScamServer(
   if (!res.ok) {
     const t = await res.text();
     console.error("Claude API error", res.status, t);
-    throw new Error(`AI analysis failed (${res.status})`);
+    throw new Error("KinGuard couldn't check this message. Please try again.");
   }
 
   const json = await res.json();
@@ -51,7 +51,7 @@ export async function analyzeScamServer(
     parsed = JSON.parse(cleaned);
   } catch {
     const m = cleaned.match(/\{[\s\S]*\}/);
-    if (!m) throw new Error("AI returned invalid JSON");
+    if (!m) throw new Error("KinGuard couldn't read the result. Please try again.");
     parsed = JSON.parse(m[0]);
   }
   return {

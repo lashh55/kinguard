@@ -120,7 +120,8 @@ function PrivacyPage() {
         </p>
       </section>
 
-      <Section title="AI Analysis" bg="#ACD0DC">
+      <Section title={es ? "Revisor de estafas" : "Scam Checker"} bg="#ACD0DC">
+        <p className="mb-2">{es ? "KinGuard lo revisa por usted y le dice con palabras sencillas si es una estafa." : "KinGuard checks it for you and tells you in plain words if it's a scam."}</p>
         <ul className="list-disc pl-5 space-y-1">
           <li>Messages analyzed without personal info</li>
           <li>Text content only — no attachments</li>

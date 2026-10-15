@@ -28,7 +28,12 @@ export function GuardianRequests({ onChange }: { onChange?: () => void }) {
     setBusy(r.link_id);
     const { error } = await supabase.rpc("respond_guardian_request", { _link_id: r.link_id, _approve: approve });
     setBusy(null);
-    if (error) { toast.error(error.message); return; }
+    if (error) {
+      toast.error(error.message.includes("KINGUARD_SENIOR_GUARDIAN_LIMIT")
+        ? (es ? "Usted ha alcanzado el máximo de 3 guardianes. Quite uno antes de agregar otro." : "You've reached the maximum of 3 guardians. Remove one before adding another.")
+        : error.message);
+      return;
+    }
     setReqs((p) => p.filter((x) => x.link_id !== r.link_id));
     onChange?.();
   };
