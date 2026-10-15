@@ -170,7 +170,7 @@ export function GuardianNotices() {
         <div key={n.id} className="card-soft flex items-center gap-3">
           <p className="flex-1 font-bold">
             {n.notice_kind === "removed"
-              ? (es ? `Se quitó a un guardián de la cuenta de ${n.senior_name}.` : `A guardian was removed from ${n.senior_name}'s account.`)
+              ? (es ? `Se quitó a un guardián de la cuenta de ${n.senior_name}${n.senior_name.endsWith(".") ? "" : "."}` : `A guardian was removed from ${n.senior_name}'s account.`)
               : (es ? `${n.new_guardian_name} fue agregado como guardián de ${n.senior_name}${n.senior_name.endsWith(".") ? "" : "."}` : `${n.new_guardian_name} was added as a guardian for ${n.senior_name}${n.senior_name.endsWith(".") ? "" : "."}`)}
           </p>
           <Button variant="link" disabled={saving !== null} onClick={() => dismiss(n.id)}>{es ? "Entendido" : "OK"}</Button>
