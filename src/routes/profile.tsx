@@ -328,6 +328,7 @@ function ProfileScreen() {
           )}
         </div>
 
+        {isSenior && <p className="text-base">{lang === "es" ? "¿Quiere que su familia le ayude a protegerse? Comparta su código de invitación de arriba." : "Want family to help protect you? Share your invite code above."}</p>}
         {isSenior && (
           <>
             <div className="card-soft">

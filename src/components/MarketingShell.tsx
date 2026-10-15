@@ -1,9 +1,11 @@
 import { Link } from "@tanstack/react-router";
 import { ReactNode } from "react";
 import { useI18n } from "@/lib/i18n";
+import { useAuth } from "@/lib/auth";
 
 export function MarketingShell({ children }: { children: ReactNode }) {
   const { t, lang } = useI18n();
+  const { profile } = useAuth();
   return (
     <div className="min-h-screen bg-background flex flex-col">
       <main className="flex-1">
@@ -15,7 +17,7 @@ export function MarketingShell({ children }: { children: ReactNode }) {
             <Link to="/privacy" className="hover:underline">{t("Privacy")}</Link>
             <Link to="/terms" className="hover:underline">{lang === "es" ? "Términos de servicio" : "Terms of Service"}</Link>
             <Link to="/scams" className="hover:underline">{t("Scam guides")}</Link>
-            <Link to="/for-guardians" className="hover:underline">{t("For guardians")}</Link>
+            {profile?.role !== "senior" && <Link to="/for-guardians" className="hover:underline">{t("For guardians")}</Link>}
           </div>
           <p className="text-center text-xs mt-4 leading-relaxed break-words">
             © {new Date().getFullYear()} KinGuard. {t("All rights reserved.")} | {t("Designed by")}{" "}

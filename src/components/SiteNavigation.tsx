@@ -27,7 +27,7 @@ export function SiteNavigation() {
       { to: "/profile", label: t("Profile") },
     ] : []),
     { to: "/scams", label: t("Common scams") },
-    { to: "/for-guardians", label: t("For guardians") },
+    ...(profile?.role === "senior" ? [] : [{ to: "/for-guardians", label: t("For guardians") }]),
     { to: "/privacy", label: t("Privacy") },
     ...(isAdminPage ? [
       { to: "/admin", label: "Admin home" },

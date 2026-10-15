@@ -1,4 +1,5 @@
-import { createFileRoute, Link } from "@tanstack/react-router";
+import { createFileRoute, Link, Navigate } from "@tanstack/react-router";
+import { useAuth } from "@/lib/auth";
 import { MarketingShell } from "@/components/MarketingShell";
 import { ScamVignette } from "@/components/ScamVignette";
 import { BrandIcon } from "@/components/KinGuardIcon";
@@ -35,6 +36,9 @@ export const Route = createFileRoute("/for-guardians")({
 
 function ForGuardians() {
   const { t } = useI18n();
+  const { profile, loading } = useAuth();
+  if (loading) return null;
+  if (profile?.role === "senior") return <Navigate to="/dashboard" replace />;
   return (
     <MarketingShell>
       <p className="text-sm font-bold uppercase tracking-wider" style={{ color: "var(--color-rose)" }}>{t("For guardians")}</p>

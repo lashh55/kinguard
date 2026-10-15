@@ -1,4 +1,5 @@
 - Mount shared site navigation and back-to-top controls inside the root auth/i18n providers; one shared implementation keeps every page consistent.
+- Filter guardian-only public navigation by the hydrated profile role in shared navigation and footer, and redirect senior direct visits at the page boundary; this preserves public/guardian access without exposing senior-inappropriate destinations.
 - Enforce the senior guardian cap through a row-locking relationship trigger plus linking and approval RPCs; this prevents concurrent additions while preserving existing links.
 - Senior stat tiles reuse the existing scam results for inbox/history; Learn's knowledge-tree anchor scrolls after profile hydration so direct links bypass lessons reliably.
 - Render uploaded shield artwork through KinGuardIcon; one shared text-relative image replaces emoji consistently across navigation, badges and pages.
