@@ -468,6 +468,8 @@ function GuardianDashboard() {
     if (error) {
       if (error.message.includes("KINGUARD_GUARDIAN_LIMIT")) {
         setLinkMsg({ ok: false, text: es ? "Usted está protegiendo a 2 adultos mayores, el máximo permitido." : "You're protecting 2 seniors, the most allowed." });
+      } else if (error.message.includes("KINGUARD_SENIOR_GUARDIAN_LIMIT")) {
+        setLinkMsg({ ok: false, text: es ? "Este adulto mayor ya tiene 3 guardianes, el máximo permitido." : "This senior already has 3 guardians, the most allowed." });
       } else {
         setLinkMsg({ ok: false, text: error.message.includes("Invalid") ? "That code didn't match anyone. Please check it and try again." : error.message });
       }

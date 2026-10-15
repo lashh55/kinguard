@@ -1,4 +1,5 @@
 - Mount shared site navigation and back-to-top controls inside the root auth/i18n providers; one shared implementation keeps every page consistent.
+- Enforce the senior guardian cap through a row-locking relationship trigger plus linking and approval RPCs; this prevents concurrent additions while preserving existing links.
 - Senior stat tiles reuse the existing scam results for inbox/history; Learn's knowledge-tree anchor scrolls after profile hydration so direct links bypass lessons reliably.
 - Render uploaded shield artwork through KinGuardIcon; one shared text-relative image replaces emoji consistently across navigation, badges and pages.
 - Create help requests through self-scoped request_sos with a per-senior transaction lock; repeated presses update one open event atomically and guardian OK closes outstanding events together.

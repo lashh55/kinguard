@@ -290,7 +290,7 @@ function ProfileScreen() {
                 </p>
               )}
               <p className="text-sm mt-2" style={{ color: "var(--color-muted-foreground)" }}>
-                {t("Share this with up to 5 people you trust. Each can link to you with this same code.")}
+                {t("Share this with up to 3 people you trust. Each can link to you with this same code.")}
               </p>
               <button
                 type="button"
@@ -331,10 +331,10 @@ function ProfileScreen() {
           <>
             <div className="card-soft">
               <h2 className="mb-2">
-                {t("My Guardians:")} {guardians.length}/5
-                {guardians.length < 5 && (
+                {t("My Guardians:")} {guardians.length}/3
+                {guardians.length < 3 && (
                   <span className="text-sm font-normal" style={{ color: "var(--color-muted-foreground)" }}>
-                    {" "}— {5 - guardians.length} {5 - guardians.length === 1 ? t("slot available") : t("slots available")}
+                    {" "}— {3 - guardians.length} {3 - guardians.length === 1 ? t("slot available") : t("slots available")}
                   </span>
                 )}
               </h2>
@@ -403,9 +403,9 @@ function ProfileScreen() {
                   })}
                 </ul>
               )}
-              {guardians.length >= 5 && (
+              {guardians.length >= 3 && (
                 <p className="text-sm mt-3 font-bold" style={{ color: "var(--color-warn)" }}>
-                  {t("You've reached the maximum of 5 guardians. Remove one before adding another.")}
+                  {t("You've reached the maximum of 3 guardians. Remove one before adding another.")}
                 </p>
               )}
             </div>
@@ -459,7 +459,7 @@ function ProfileScreen() {
             )}
 
             {(() => {
-              const slotsAvail = 5 - guardians.length;
+              const slotsAvail = Math.max(0, 3 - guardians.length);
               const neglected = guardians.filter((g) => {
                 if (g.last_alert_view_at) return false;
                 const days = Math.floor((Date.now() - new Date(g.linked_at).getTime()) / 86400000);

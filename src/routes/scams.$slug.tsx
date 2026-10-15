@@ -22,7 +22,7 @@ const GUIDES: Record<string, Guide> = {
       "Voice may sound off — they'll blame a cold, an injury, or a bad connection.",
       "They beg you not to tell other family members.",
       "They demand payment by gift cards, wire transfer, or cryptocurrency — usually within the hour.",
-      "AI voice-cloning now lets scammers mimic a real grandchild from just a few seconds of social-media audio.",
+      "Scammers can copy a real grandchild's voice from just a few seconds of social-media audio.",
     ],
     redFlags: [
       "Urgency and secrecy: \"Don't tell Mom.\"",

@@ -25,7 +25,7 @@ export const Route = createFileRoute("/for-guardians")({
         "@type": "FAQPage",
         mainEntity: [
           { "@type": "Question", name: "Does KinGuard listen to my parent's calls?", acceptedAnswer: { "@type": "Answer", text: "No. KinGuard only analyzes messages your parent chooses to paste into the app, or messages they forward for a check." } },
-          { "@type": "Question", name: "How many guardians can a senior have?", acceptedAnswer: { "@type": "Answer", text: "Up to five. Each guardian gets the same real-time alerts and activity feed." } },
+           { "@type": "Question", name: "How many guardians can a senior have?", acceptedAnswer: { "@type": "Answer", text: "Up to three. Each guardian gets the same real-time alerts and activity feed." } },
           { "@type": "Question", name: "Does KinGuard ask for a Social Security number?", acceptedAnswer: { "@type": "Answer", text: "Never. KinGuard does not collect, store, or transmit Social Security numbers." } },
         ],
       }),
@@ -89,7 +89,7 @@ function ForGuardians() {
 
         <h2>Common questions</h2>
         <Faq q="Does KinGuard listen to my parent's calls?" a="No. KinGuard only analyzes messages your parent chooses to paste into the app, or messages they forward for a check." />
-        <Faq q="How many guardians can a senior have?" a="Up to five. Each guardian gets the same real-time alerts and activity feed." />
+        <Faq q={t("How many guardians can a senior have?")} a={t("Up to three. Each guardian gets the same real-time alerts and activity feed.")} />
         <Faq q="Does KinGuard ask for a Social Security number?" a="Never. KinGuard does not collect, store, or transmit Social Security numbers. If you ever see a field asking for one, you're not on KinGuard." />
         <Faq q={t("Can I use KinGuard if I don't have family?")} a={t("Yes. KinGuard is free for every senior. You can choose anyone you trust as your guardian, like a neighbor, church member, or friend. When our new family features launch, seniors without family can request a free sponsored plan from their Profile page.")} />
         <Faq q="What does it cost?" a="Free to get started. You can connect as a guardian in under two minutes." />
