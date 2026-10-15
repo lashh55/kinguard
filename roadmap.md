@@ -39,3 +39,5 @@
 - [x] Add always-on guardian removal notices and first-name-plus-initial names to new guardian-change notices.
 - [x] Verify add/removal fan-out and pending activation/rejection in a rolled-back test; verify saved guardian and senior acknowledgment in both languages using temporary notices, removed afterward, with original links unchanged.
 - [x] Correct family-code guidance on Profile and Learn in both languages, include family-only warning and retain guardian notice; verified exact paragraphs and warnings on signed-in pages in both languages with no page errors or phone-width overflow.
+- [x] Add bilingual "How to help protect your loved one" section with seven numbered tips to the For guardians page.
+- [x] Verify all seven tips render in English and Spanish on desktop and phone width with no page errors.

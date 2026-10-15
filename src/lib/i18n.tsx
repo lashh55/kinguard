@@ -346,6 +346,30 @@ const DICT: Record<string, string> = {
    "Message": "Mensaje",
    "All rights reserved.": "Todos los derechos reservados.",
    "Designed by": "Diseñado por",
+
+  // For guardians: how to help protect your loved one
+  "How to help protect your loved one": "Cómo ayudar a proteger a su ser querido",
+  "Suspicious emails": "Correos electrónicos sospechosos",
+  "Don't just delete it. Mark it as spam or phishing so the email service learns to block it. In Gmail, open the email, tap the three dots, and choose 'Report phishing.' Then forward it to KinGuard to check.":
+    "No solo lo borre. Márquelo como correo no deseado o phishing para que el servicio aprenda a bloquearlo. En Gmail, abra el correo, toque los tres puntos y elija 'Denunciar phishing'. Luego reenvíelo a KinGuard para revisarlo.",
+  "Scam text messages": "Mensajes de texto fraudulentos",
+  "Forward the text to 7726 (it spells SPAM), then block the number. Never tap links in unexpected texts.":
+    "Reenvíe el mensaje al 7726 (que forma la palabra SPAM en inglés) y luego bloquee el número. Nunca toque enlaces en mensajes inesperados.",
+  "Scam phone calls": "Llamadas telefónicas fraudulentas",
+  "Register their number at donotcall.gov. Turn on your phone carrier's free scam-call blocking, and block numbers that call repeatedly.":
+    "Registre su número en donotcall.gov. Active el bloqueo gratuito de llamadas fraudulentas de su compañía telefónica y bloquee los números que llaman repetidamente.",
+  "Protect their money": "Proteja su dinero",
+  "Help them set up bank alerts for large withdrawals. Ask their bank about adding you as a trusted contact. Consider a free credit freeze using the SSN Shield page.":
+    "Ayúdele a activar alertas bancarias para retiros grandes. Pregunte a su banco cómo agregarle a usted como contacto de confianza. Considere congelar su crédito gratis usando la página Escudo del Seguro Social.",
+  "Report scams": "Denuncie las estafas",
+  "Report scams at reportfraud.ftc.gov. For online fraud, also report at ic3.gov. Reporting helps stop scammers and can help recover money.":
+    "Denuncie las estafas en reportfraud.ftc.gov. Para fraudes en línea, también denúncielas en ic3.gov. Denunciar ayuda a detener a los estafadores y puede ayudar a recuperar dinero.",
+  "Talk without shame": "Hable sin vergüenza",
+  "Check in every week. If your loved one is scammed, never blame them. Shame keeps people silent, and silence is what scammers count on.":
+    "Comuníquese cada semana. Si su ser querido es víctima de una estafa, nunca le culpe. La vergüenza hace que las personas guarden silencio, y los estafadores cuentan con ese silencio.",
+  "Set up the family code word together": "Establezcan juntos la palabra clave familiar",
+  "Choose the code word with your loved one, in person or by phone. Make sure every family member knows it, and never share it by text or email.":
+    "Elijan juntos la palabra clave, en persona o por teléfono. Asegúrese de que todos los familiares la conozcan y nunca la comparta por mensaje de texto o correo electrónico.",
  };
 
 type Ctx = { lang: Lang; setLang: (l: Lang) => void; t: (s: string) => string };
