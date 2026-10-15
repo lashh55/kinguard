@@ -7,6 +7,7 @@
 - Persist guardian scam receipts through the self-scoped record_scam_alert_view RPC with profile/alert cascading references; this prevents forged names, cross-family access, and orphaned replies.
 - Keep page-specific bottom navigation in ScreenShell and mark it for scroll-control clearance; this preserves app navigation without overlapping floating controls.
 - Share guardian disclaimer copy across senior notices and legal pages; persist acknowledged notices using guardian_notices.read_at only after the required checkbox is checked and the save succeeds.
+- Generate guardian-change notices atomically through the relationship trigger for activation and deletion; shared live subscriptions with periodic read-back show undismissed notices and use privacy-safe display names without notification preferences.
 - Use pageHead for simple content-route metadata and custom heads for scam guides; each page needs distinct sharing metadata.
 - Keep exploitation support on Privacy & Safety with the stable get-help section anchor; the senior Profile link opens it directly without duplicating safety copy.
 - Guardian links start as "pending" and become active only via the senior-called respond_guardian_request RPC; is_guardian_of only trusts active rows, so unapproved guardians see nothing.
