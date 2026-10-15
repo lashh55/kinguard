@@ -337,10 +337,10 @@ function SeniorDashboard() {
         <section className="px-5 mt-5">
           <div className="card-soft" style={{ background: "var(--color-cream)" }}>
             <p className="font-bold mb-1 flex items-center gap-2"><img src={questionIcon.url} alt="" width={32} height={32} className="kinguard-badge-icon" /> {t("This Week's Question")}</p>
-            <p className="font-bold" style={{ fontSize: 18 }}>{question.question_text}</p>
+            <p className="font-bold" style={{ fontSize: 18 }}>{t(question.question_text)}</p>
             <div className="mt-3 space-y-2">
               {(["a","b","c","d"] as const).map((l) => {
-                const txt = question[`answer_${l}` as const];
+                const txt = t(question[`answer_${l}` as const]);
                 const isPicked = picked === l;
                 const isCorrect = l === question.correct_answer;
                 let style: React.CSSProperties = {};
@@ -359,7 +359,7 @@ function SeniorDashboard() {
             {picked && (
               <p className="mt-3" style={{ fontSize: 16 }}>
                 {picked === question.correct_answer ? `${t("✅ Correct!")} ` : `${t("❌ Not quite.")} `}
-                {question.explanation}
+                {t(question.explanation)}
               </p>
             )}
             <Link to="/learn" className="btn-base btn-outline w-full mt-3">{t("See All Questions")}</Link>

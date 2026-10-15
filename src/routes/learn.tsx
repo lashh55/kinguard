@@ -403,10 +403,10 @@ function Quiz({ onBadges }: { onBadges: (b: ReturnType<typeof applyAnswer>["newB
       <ChallengeHeader />
       <div className="card-soft mt-3" style={{ background: "var(--color-cream)" }}>
         <p className="text-sm font-bold mb-2">{t("Question")} {idx + 1} {t("of")} {questions.length}</p>
-        <p className="font-bold" style={{ fontSize: 20 }}>{q.question_text}</p>
+        <p className="font-bold" style={{ fontSize: 20 }}>{t(q.question_text)}</p>
         <div className="mt-3 space-y-2">
           {(["a","b","c","d"] as const).map((l) => {
-            const txt = q[`answer_${l}` as const];
+            const txt = t(q[`answer_${l}` as const]);
             let style: React.CSSProperties = {};
             if (picked) {
               if (l === picked && l === q.correct_answer) style = { background: "#2ECC71", color: "#fff" };
@@ -424,7 +424,7 @@ function Quiz({ onBadges }: { onBadges: (b: ReturnType<typeof applyAnswer>["newB
           <>
             <p className="mt-3" style={{ fontSize: 17 }}>
               {picked === q.correct_answer ? `${t("✅ Correct!")} ` : `${t("❌ Not quite.")} `}
-              {q.explanation}
+              {t(q.explanation)}
             </p>
             {idx < questions.length - 1 && (
               <button className="btn-base btn-primary w-full mt-3" onClick={next}>{t("Next Question →")}</button>
