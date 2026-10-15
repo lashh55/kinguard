@@ -1,4 +1,5 @@
 import { pageHead } from "@/lib/pageHead";
+import { FamilyCodeGuidance, FamilyCodeWarning } from "@/components/FamilyCodeGuidance";
 import { createFileRoute, Link, useNavigate, useLocation } from "@tanstack/react-router";
 import { useEffect, useMemo, useState } from "react";
 import { ScreenShell } from "@/components/ScreenShell";
@@ -103,6 +104,11 @@ function LearnScreen() {
       <header className="px-5 pt-6 pb-3"><h1>🎓 {t("Learn")}</h1></header>
       <Slides />
       <Cards />
+      <section className="px-5 mt-6">
+        <h2>{lang === "es" ? "¿Qué es una palabra clave familiar?" : "What is a family code word?"}</h2>
+        <div className="mt-3"><FamilyCodeGuidance /></div>
+        <FamilyCodeWarning />
+      </section>
       {profile && (
         <section id="knowledge-tree" className="px-5 mt-6">
           <h2 className="mb-3 flex items-center gap-2" style={{ fontSize: 36, color: "#0F3D2A", lineHeight: 1.1 }}>
