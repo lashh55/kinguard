@@ -575,11 +575,11 @@ function GuardianDashboard() {
               : s,
           ));
           notifyGuardianScam({
-            seniorName: seniorMap[a.senior_id] || "Your loved one",
-            scamType: a.scam_type || "Suspicious message",
+            seniorName: seniorMap[a.senior_id] || (lang === "es" ? "Su ser querido" : "Your loved one"),
+            scamType: a.scam_type || (lang === "es" ? "Mensaje sospechoso" : "Suspicious message"),
             score: a.scam_score,
             channel: a.channel,
-          });
+          }, lang);
         },
       )
       .subscribe();
