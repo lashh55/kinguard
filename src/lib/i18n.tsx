@@ -12,6 +12,7 @@ const DICT: Record<string, string> = {
     "Reenvíe el mensaje desde el correo electrónico que usó para registrarse en KinGuard.",
   // Onboarding / Welcome
   "Protecting the people you love": "Protegiendo a las personas que amas",
+  "Create your free account to check messages and stay protected.": "Cree su cuenta gratuita para revisar mensajes y mantenerse protegido/a.",
   "I want to be protected": "Quiero estar protegido/a",
   "🛡️ I want to be protected": "🛡️ Quiero estar protegido/a",
   "I want to protect someone": "Quiero proteger a alguien",
