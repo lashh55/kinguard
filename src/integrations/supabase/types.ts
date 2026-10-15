@@ -109,6 +109,7 @@ export type Database = {
           guardian_id: string
           id: string
           new_guardian_name: string
+          notice_kind: string
           read_at: string | null
           senior_id: string
           senior_name: string
@@ -118,6 +119,7 @@ export type Database = {
           guardian_id: string
           id?: string
           new_guardian_name: string
+          notice_kind?: string
           read_at?: string | null
           senior_id: string
           senior_name: string
@@ -127,6 +129,7 @@ export type Database = {
           guardian_id?: string
           id?: string
           new_guardian_name?: string
+          notice_kind?: string
           read_at?: string | null
           senior_id?: string
           senior_name?: string
@@ -686,6 +689,7 @@ export type Database = {
           relationship_label: string
         }[]
       }
+      guardian_notice_display_name: { Args: { _name: string }; Returns: string }
       is_admin: { Args: never; Returns: boolean }
       is_guardian_of: { Args: { _senior: string }; Returns: boolean }
       link_guardian_by_code: {
