@@ -169,9 +169,6 @@ export const senior_ES: Record<string, string> = {
   "Team Player": "Jugador en equipo",
   "Link 2 or more guardians to your account": "Vincular 2 o más guardianes a su cuenta",
 // Additional i18n wiring (BadgeGrid/LearningTree/profile/learn)
-  "✅ Earned!": "✅ ¡Obtenida!",
-  "🔒 Not yet earned": "🔒 Aún no obtenida",
-  "Close": "Cerrar",
   "{n} correct answers to next stage": "{n} respuestas correctas para la siguiente etapa",
   "guardian slot available": "espacio de guardián disponible",
   "guardian slots available": "espacios de guardián disponibles",
