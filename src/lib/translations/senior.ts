@@ -168,4 +168,14 @@ export const senior_ES: Record<string, string> = {
   "Read all 6 scam type cards fully": "Leer por completo las 6 tarjetas de tipos de estafas",
   "Team Player": "Jugador en equipo",
   "Link 2 or more guardians to your account": "Vincular 2 o más guardianes a su cuenta",
+// Additional i18n wiring (BadgeGrid/LearningTree/profile/learn)
+  "✅ Earned!": "✅ ¡Obtenida!",
+  "🔒 Not yet earned": "🔒 Aún no obtenida",
+  "Close": "Cerrar",
+  "{n} correct answers to next stage": "{n} respuestas correctas para la siguiente etapa",
+  "guardian slot available": "espacio de guardián disponible",
+  "guardian slots available": "espacios de guardián disponibles",
+  "👨‍👩‍👧 You earned the Team Player badge!": "👨‍👩‍👧 ¡Ganó la insignia de Jugador en Equipo!",
+  "📚 You earned the Scholar badge!": "📚 ¡Ganó la insignia de Erudito!",
+  "Could not analyze. Please try again.": "No se pudo analizar. Inténtelo de nuevo.",
 };

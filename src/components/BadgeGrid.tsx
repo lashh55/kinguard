@@ -27,7 +27,7 @@ export function BadgeGrid({ stats: raw }: { stats: unknown }) {
               }}
             >
               <div style={{ fontSize: 36 }}><BrandIcon icon={isEarned ? b.icon : "🔒"} /></div>
-              <p className="text-xs font-bold mt-1">{b.name}</p>
+              <p className="text-xs font-bold mt-1">{t(b.name)}</p>
             </button>
           );
         })}
@@ -51,12 +51,12 @@ export function BadgeGrid({ stats: raw }: { stats: unknown }) {
             >
               <BrandIcon icon={earned.has(selected.id) ? selected.icon : "🔒"} />
             </div>
-            <h2 className="mt-3">{selected.name}</h2>
-            <p className="mt-2">{selected.description}</p>
+            <h2 className="mt-3">{t(selected.name)}</h2>
+            <p className="mt-2">{t(selected.description)}</p>
             <p className="mt-3 font-bold" style={{ color: earned.has(selected.id) ? "var(--color-safe)" : "var(--color-muted-foreground)" }}>
-              {earned.has(selected.id) ? "✅ Earned!" : "🔒 Not yet earned"}
+              {earned.has(selected.id) ? t("✅ Earned!") : t("🔒 Not yet earned")}
             </p>
-            <button className="btn-base btn-outline w-full mt-3" onClick={() => setSelected(null)}>Close</button>
+            <button className="btn-base btn-outline w-full mt-3" onClick={() => setSelected(null)}>{t("Close")}</button>
           </div>
         </div>
       )}

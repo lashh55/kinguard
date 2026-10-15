@@ -1,5 +1,6 @@
 import { useState } from "react";
 import type { ChallengeStats } from "@/lib/badges";
+import { useI18n } from "@/lib/i18n";
 
 const TRUNK = "#DFC18F";
 const TRUNK_DARK = "#A8865A";
@@ -188,6 +189,7 @@ export function LearningTree({
   showLabel?: boolean;
   onClick?: () => void;
 }) {
+  const { t } = useI18n();
   const { stage, wilt } = effectiveStage(stats);
   const next = NEXT_THRESHOLDS[stage];
   const remaining = next ? Math.max(0, next - stats.total_correct) : 0;
@@ -199,19 +201,19 @@ export function LearningTree({
       </div>
       {showLabel && (
         <div className="text-center mt-2">
-          <p className="font-extrabold" style={{ fontSize: 17 }}>{STAGE_NAMES[stage]}</p>
+          <p className="font-extrabold" style={{ fontSize: 17 }}>{t(STAGE_NAMES[stage])}</p>
           {next ? (
             <p className="text-sm" style={{ color: "var(--color-muted-foreground)" }}>
-              {remaining} correct answers to next stage
+              {t("{n} correct answers to next stage").replace("{n}", String(remaining))}
             </p>
           ) : (
             <p className="text-sm" style={{ color: "var(--color-muted-foreground)" }}>
-              You've reached the highest stage! 🌳
+              {t("You've reached the highest stage! 🌳")}
             </p>
           )}
-          {wilt === "yellowing" && <p className="text-sm mt-1" style={{ color: "#F39C12" }}>🍂 Your tree is starting to wilt — answer a question to perk it up!</p>}
-          {wilt === "bare" && <p className="text-sm mt-1" style={{ color: "#E74C3C" }}>🥀 Your tree has lost its leaves — return to bring it back!</p>}
-          {wilt === "reset" && <p className="text-sm mt-1" style={{ color: "#E74C3C" }}>🌱 Your tree reset to a seedling — start again to grow!</p>}
+          {wilt === "yellowing" && <p className="text-sm mt-1" style={{ color: "#F39C12" }}>{t("🍂 Your tree is starting to wilt — answer a question to perk it up!")}</p>}
+          {wilt === "bare" && <p className="text-sm mt-1" style={{ color: "#E74C3C" }}>{t("🥀 Your tree has lost its leaves — return to bring it back!")}</p>}
+          {wilt === "reset" && <p className="text-sm mt-1" style={{ color: "#E74C3C" }}>{t("🌱 Your tree reset to a seedling — start again to grow!")}</p>}
         </div>
       )}
     </div>
@@ -219,6 +221,7 @@ export function LearningTree({
 }
 
 export function LearningTreeWithTooltip(props: Parameters<typeof LearningTree>[0]) {
+  const { t } = useI18n();
   const [showTip, setShowTip] = useState(false);
   return (
     <div className="relative">
@@ -229,7 +232,7 @@ export function LearningTreeWithTooltip(props: Parameters<typeof LearningTree>[0
           style={{ background: "#3D2B2B", color: "#fff", maxWidth: 240, top: "100%" }}
           onClick={(e) => { e.stopPropagation(); setShowTip(false); }}
         >
-          Your learning tree grows as you complete challenges. Keep learning to help it thrive! 🌱
+          {t("Your learning tree grows as you complete challenges. Keep learning to help it thrive! 🌱")}
         </div>
       )}
     </div>
