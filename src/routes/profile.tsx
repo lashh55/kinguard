@@ -129,7 +129,6 @@ function ProfileScreen() {
   const [confirmRemoveGuardian, setConfirmRemoveGuardian] = useState<GuardianRow | null>(null);
   const [removingGuardian, setRemovingGuardian] = useState(false);
 
-  useEffect(() => {  }, [loading, user, navigate]);
 
   useEffect(() => {
     if (!profile || profile.role !== "senior") return;

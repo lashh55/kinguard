@@ -17,6 +17,7 @@ import { SponsorRequestCard } from "@/components/SponsorRequest";
 
 export const Route = createFileRoute("/")({
   head: () => pageHead("Protecting the people you love", "Start your KinGuard protection or sign in to check suspicious messages and connect with guardians."),
+  validateSearch: (s: Record<string, unknown>): { signup?: number } => (s.signup ? { signup: 1 } : {}),
   component: Onboarding,
 });
 
@@ -29,6 +30,7 @@ function Onboarding() {
   const [seniorMode, setSeniorMode] = useState<"signup" | "signin">("signup");
   const [code, setCode] = useState<string | null>(null);
   const { t } = useI18n();
+  const { signup } = Route.useSearch();
 
   useEffect(() => {
     if (!loading && user && profile) navigate({ to: "/dashboard" });
@@ -51,6 +53,11 @@ function Onboarding() {
             </p>
           </div>
 
+          {signup && step === "role" && (
+            <div role="status" className="mt-6 card-soft text-center font-bold" style={{ background: "var(--color-sky)", fontSize: 19 }}>
+              {t("Create your free account to check messages and stay protected.")}
+            </div>
+          )}
           <div className="mt-8">
             {step === "role" && <RoleStep onPick={setStep} onSignIn={() => { setSeniorMode("signin"); setStep("senior"); }} onSignUp={() => { setSeniorMode("signup"); setStep("senior"); }} />}
             {step === "senior" && <SeniorForm initialMode={seniorMode} onCreated={(c) => { setCode(c); setStep("invite"); }} onBack={() => setStep("role")} />}
