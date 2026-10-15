@@ -1,3 +1,4 @@
+import { useRequireAccount } from "@/lib/requireAccount";
 import { pageHead } from "@/lib/pageHead";
 import { createFileRoute } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
@@ -78,6 +79,7 @@ const BUREAUS = [
 ];
 
 function SsnShield() {
+  useRequireAccount();
   const { profile, refreshProfile } = useAuth();
   const { t } = useI18n();
   const [asker, setAsker] = useState<Asker | null>(null);

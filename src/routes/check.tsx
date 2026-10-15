@@ -1,3 +1,4 @@
+import { useRequireAccount } from "@/lib/requireAccount";
 import { pageHead } from "@/lib/pageHead";
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useState } from "react";
@@ -27,6 +28,7 @@ type Result = {
 };
 
 function CheckScreen() {
+  useRequireAccount();
   const { profile } = useAuth();
   const { t, lang } = useI18n();
   const navigate = useNavigate();
