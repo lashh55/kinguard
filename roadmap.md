@@ -1,4 +1,4 @@
-- [ ] Store and show bilingual scam results across all alert displays, translate existing alerts, correct count grammar, and verify user-written relationships stay unchanged.
+- [x] Store and show bilingual scam results across all alert displays; translated the one pre-existing alert. Verified a real signed-in check saves both languages and reads back on Home; historical result switches type and recommendation between EN/ES without page errors. Flagged-count assertions pass; reviewed seniors/guardians/spots and preserved raw relationship labels. Guardian display uses the shared verified formatter; its signed-in screen was not exercised separately.
 - [x] Restore AI/IA lesson terminology, add slide 1 explanation, correct slide 2 Spanish; verified all nine bilingual texts signed in, with no page errors; show final text without publishing.
 - [ ] Make signup confirmation and password-reset emails English-first then formal Spanish with exact safety footers; blocked until notify.getkinguard.com sender setup is completed; show draft copy before publishing.
 - [x] Confirm active Pro plan and explain included email quota and potential overage costs.
