@@ -213,7 +213,7 @@ function HelperPanel({ onClose }: { onClose: () => void }) {
         </form>
         <p className="text-center pb-3 px-3" style={{ fontSize: 14, color: "var(--color-muted-foreground)" }}>{s.footer}</p>
       </div>
-    </div>
+    </>
   );
 }
 
