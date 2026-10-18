@@ -118,16 +118,13 @@ function HelperPanel({ onClose }: { onClose: () => void }) {
   };
 
   return (
-    <div
-      role="dialog"
-      aria-label={s.needHelp}
-      className="fixed inset-0 sm:inset-auto sm:right-4 sm:w-[420px] sm:max-w-[calc(100vw-2rem)] z-50 flex flex-col bg-background"
-      style={{ bottom: undefined, top: undefined, ...(typeof window !== "undefined" ? {} : {}) }}
-      // full screen on phones via inset-0; panel on larger screens
-      ref={undefined}
-    >
-      <style>{`@media (min-width: 640px) { .kg-helper-panel { bottom: calc(env(safe-area-inset-bottom, 0px) + 100px); height: min(70vh, 640px); border-radius: 1.25rem; border: 2px solid var(--color-border); box-shadow: 0 12px 40px -12px rgba(61,43,43,0.35); } }`}</style>
-      <div className="kg-helper-panel absolute inset-0 flex flex-col bg-background">
+    <>
+      <style>{`@media (min-width: 640px) { .kg-helper-panel { inset: auto; right: 1rem; width: 420px; max-width: calc(100vw - 2rem); bottom: calc(env(safe-area-inset-bottom, 0px) + 100px); height: min(70vh, 640px); border-radius: 1.25rem; border: 2px solid var(--color-border); box-shadow: 0 12px 40px -12px rgba(61,43,43,0.35); } }`}</style>
+      <div
+        role="dialog"
+        aria-label={s.needHelp}
+        className="kg-helper-panel fixed inset-0 z-50 flex flex-col bg-background"
+      >
         <header className="flex items-center gap-3 p-3 border-b" style={{ background: "var(--color-sky)" }}>
           <img src={faithAvatar.url} alt="" aria-hidden="true" width={56} height={56} className="rounded-full" />
           <div className="flex-1 min-w-0">
