@@ -23,6 +23,7 @@ import { Route as CheckRouteImport } from './routes/check'
 import { Route as AdminRouteImport } from './routes/_admin'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as ScamsSlugRouteImport } from './routes/scams.$slug'
+import { Route as ApiHelperChatRouteImport } from './routes/api/helper-chat'
 import { Route as AdminAdminIndexRouteImport } from './routes/_admin/admin.index'
 import { Route as ApiPublicInboundEmailRouteImport } from './routes/api/public/inbound-email'
 import { Route as AdminAdminSponsorsRouteImport } from './routes/_admin/admin.sponsors'
@@ -101,6 +102,11 @@ const ScamsSlugRoute = ScamsSlugRouteImport.update({
   path: '/$slug',
   getParentRoute: () => ScamsRoute,
 } as any)
+const ApiHelperChatRoute = ApiHelperChatRouteImport.update({
+  id: '/api/helper-chat',
+  path: '/api/helper-chat',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const AdminAdminIndexRoute = AdminAdminIndexRouteImport.update({
   id: '/admin/',
   path: '/admin/',
@@ -155,6 +161,7 @@ export interface FileRoutesByFullPath {
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/ssn': typeof SsnRoute
   '/terms': typeof TermsRoute
+  '/api/helper-chat': typeof ApiHelperChatRoute
   '/scams/$slug': typeof ScamsSlugRoute
   '/admin/audit': typeof AdminAdminAuditRoute
   '/admin/guardians': typeof AdminAdminGuardiansRoute
@@ -178,6 +185,7 @@ export interface FileRoutesByTo {
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/ssn': typeof SsnRoute
   '/terms': typeof TermsRoute
+  '/api/helper-chat': typeof ApiHelperChatRoute
   '/scams/$slug': typeof ScamsSlugRoute
   '/admin/audit': typeof AdminAdminAuditRoute
   '/admin/guardians': typeof AdminAdminGuardiansRoute
@@ -203,6 +211,7 @@ export interface FileRoutesById {
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/ssn': typeof SsnRoute
   '/terms': typeof TermsRoute
+  '/api/helper-chat': typeof ApiHelperChatRoute
   '/scams/$slug': typeof ScamsSlugRoute
   '/_admin/admin/audit': typeof AdminAdminAuditRoute
   '/_admin/admin/guardians': typeof AdminAdminGuardiansRoute
@@ -228,6 +237,7 @@ export interface FileRouteTypes {
     | '/sitemap.xml'
     | '/ssn'
     | '/terms'
+    | '/api/helper-chat'
     | '/scams/$slug'
     | '/admin/audit'
     | '/admin/guardians'
@@ -251,6 +261,7 @@ export interface FileRouteTypes {
     | '/sitemap.xml'
     | '/ssn'
     | '/terms'
+    | '/api/helper-chat'
     | '/scams/$slug'
     | '/admin/audit'
     | '/admin/guardians'
@@ -275,6 +286,7 @@ export interface FileRouteTypes {
     | '/sitemap.xml'
     | '/ssn'
     | '/terms'
+    | '/api/helper-chat'
     | '/scams/$slug'
     | '/_admin/admin/audit'
     | '/_admin/admin/guardians'
@@ -300,6 +312,7 @@ export interface RootRouteChildren {
   SitemapDotxmlRoute: typeof SitemapDotxmlRoute
   SsnRoute: typeof SsnRoute
   TermsRoute: typeof TermsRoute
+  ApiHelperChatRoute: typeof ApiHelperChatRoute
   ApiPublicInboundEmailRoute: typeof ApiPublicInboundEmailRoute
 }
 
@@ -402,6 +415,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/scams/$slug'
       preLoaderRoute: typeof ScamsSlugRouteImport
       parentRoute: typeof ScamsRoute
+    }
+    '/api/helper-chat': {
+      id: '/api/helper-chat'
+      path: '/api/helper-chat'
+      fullPath: '/api/helper-chat'
+      preLoaderRoute: typeof ApiHelperChatRouteImport
+      parentRoute: typeof rootRouteImport
     }
     '/_admin/admin/': {
       id: '/_admin/admin/'
@@ -508,6 +528,7 @@ const rootRouteChildren: RootRouteChildren = {
   SitemapDotxmlRoute: SitemapDotxmlRoute,
   SsnRoute: SsnRoute,
   TermsRoute: TermsRoute,
+  ApiHelperChatRoute: ApiHelperChatRoute,
   ApiPublicInboundEmailRoute: ApiPublicInboundEmailRoute,
 }
 export const routeTree = rootRouteImport
