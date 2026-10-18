@@ -161,7 +161,7 @@ export const Route = createFileRoute("/scams/$slug")({
   ),
   errorComponent: ({ error, reset }) => (
     <MarketingShell>
-      <ErrorContent errorMessage={error.message} reset={reset} />
+      <ErrorContent errorMessage={error instanceof Error ? error.message : String(error)} reset={reset} />
     </MarketingShell>
   ),
   component: ScamGuide,

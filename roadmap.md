@@ -52,3 +52,4 @@
 - [x] Correct family-code guidance on Profile and Learn in both languages, include family-only warning and retain guardian notice; verified exact paragraphs and warnings on signed-in pages in both languages with no page errors or phone-width overflow.
 - [x] Add bilingual "How to help protect your loved one" section with seven numbered tips to the For guardians page.
 - [x] Verify all seven tips render in English and Spanish on desktop and phone width with no page errors.
+- [x] Build KinGuard Helper (Faith) floating chat: bilingual, safety rules, 30 msg/hour limit, no persistence, Privacy note; verified EN/ES answers and SSN refusal live.

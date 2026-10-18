@@ -9,77 +9,37 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
-import { Route as TermsRouteImport } from './routes/terms'
-import { Route as SsnRouteImport } from './routes/ssn'
-import { Route as SitemapDotxmlRouteImport } from './routes/sitemap[.]xml'
-import { Route as ScamsRouteImport } from './routes/scams'
-import { Route as ResetPasswordRouteImport } from './routes/reset-password'
-import { Route as ProfileRouteImport } from './routes/profile'
-import { Route as PrivacyRouteImport } from './routes/privacy'
-import { Route as LearnRouteImport } from './routes/learn'
-import { Route as ForGuardiansRouteImport } from './routes/for-guardians'
-import { Route as DashboardRouteImport } from './routes/dashboard'
-import { Route as CheckRouteImport } from './routes/check'
-import { Route as AdminRouteImport } from './routes/_admin'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as AdminRouteImport } from './routes/_admin'
+import { Route as CheckRouteImport } from './routes/check'
+import { Route as DashboardRouteImport } from './routes/dashboard'
+import { Route as ForGuardiansRouteImport } from './routes/for-guardians'
+import { Route as LearnRouteImport } from './routes/learn'
+import { Route as PrivacyRouteImport } from './routes/privacy'
+import { Route as ProfileRouteImport } from './routes/profile'
+import { Route as ResetPasswordRouteImport } from './routes/reset-password'
+import { Route as ScamsRouteImport } from './routes/scams'
+import { Route as SitemapDotxmlRouteImport } from './routes/sitemap[.]xml'
+import { Route as SsnRouteImport } from './routes/ssn'
+import { Route as TermsRouteImport } from './routes/terms'
+import { Route as ApiHelperChatRouteImport } from './routes/api/helper-chat'
 import { Route as ScamsSlugRouteImport } from './routes/scams.$slug'
 import { Route as AdminAdminIndexRouteImport } from './routes/_admin/admin.index'
-import { Route as ApiPublicInboundEmailRouteImport } from './routes/api/public/inbound-email'
-import { Route as AdminAdminSponsorsRouteImport } from './routes/_admin/admin.sponsors'
-import { Route as AdminAdminSosRouteImport } from './routes/_admin/admin.sos'
-import { Route as AdminAdminSeniorsRouteImport } from './routes/_admin/admin.seniors'
-import { Route as AdminAdminMessagesRouteImport } from './routes/_admin/admin.messages'
-import { Route as AdminAdminGuardiansRouteImport } from './routes/_admin/admin.guardians'
 import { Route as AdminAdminAuditRouteImport } from './routes/_admin/admin.audit'
+import { Route as AdminAdminGuardiansRouteImport } from './routes/_admin/admin.guardians'
+import { Route as AdminAdminMessagesRouteImport } from './routes/_admin/admin.messages'
+import { Route as AdminAdminSeniorsRouteImport } from './routes/_admin/admin.seniors'
+import { Route as AdminAdminSosRouteImport } from './routes/_admin/admin.sos'
+import { Route as AdminAdminSponsorsRouteImport } from './routes/_admin/admin.sponsors'
+import { Route as ApiPublicInboundEmailRouteImport } from './routes/api/public/inbound-email'
 
-const TermsRoute = TermsRouteImport.update({
-  id: '/terms',
-  path: '/terms',
+const IndexRoute = IndexRouteImport.update({
+  id: '/',
+  path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
-const SsnRoute = SsnRouteImport.update({
-  id: '/ssn',
-  path: '/ssn',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const SitemapDotxmlRoute = SitemapDotxmlRouteImport.update({
-  id: '/sitemap.xml',
-  path: '/sitemap.xml',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const ScamsRoute = ScamsRouteImport.update({
-  id: '/scams',
-  path: '/scams',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const ResetPasswordRoute = ResetPasswordRouteImport.update({
-  id: '/reset-password',
-  path: '/reset-password',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const ProfileRoute = ProfileRouteImport.update({
-  id: '/profile',
-  path: '/profile',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const PrivacyRoute = PrivacyRouteImport.update({
-  id: '/privacy',
-  path: '/privacy',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const LearnRoute = LearnRouteImport.update({
-  id: '/learn',
-  path: '/learn',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const ForGuardiansRoute = ForGuardiansRouteImport.update({
-  id: '/for-guardians',
-  path: '/for-guardians',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const DashboardRoute = DashboardRouteImport.update({
-  id: '/dashboard',
-  path: '/dashboard',
+const AdminRoute = AdminRouteImport.update({
+  id: '/_admin',
   getParentRoute: () => rootRouteImport,
 } as any)
 const CheckRoute = CheckRouteImport.update({
@@ -87,13 +47,59 @@ const CheckRoute = CheckRouteImport.update({
   path: '/check',
   getParentRoute: () => rootRouteImport,
 } as any)
-const AdminRoute = AdminRouteImport.update({
-  id: '/_admin',
+const DashboardRoute = DashboardRouteImport.update({
+  id: '/dashboard',
+  path: '/dashboard',
   getParentRoute: () => rootRouteImport,
 } as any)
-const IndexRoute = IndexRouteImport.update({
-  id: '/',
-  path: '/',
+const ForGuardiansRoute = ForGuardiansRouteImport.update({
+  id: '/for-guardians',
+  path: '/for-guardians',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const LearnRoute = LearnRouteImport.update({
+  id: '/learn',
+  path: '/learn',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PrivacyRoute = PrivacyRouteImport.update({
+  id: '/privacy',
+  path: '/privacy',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ProfileRoute = ProfileRouteImport.update({
+  id: '/profile',
+  path: '/profile',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ResetPasswordRoute = ResetPasswordRouteImport.update({
+  id: '/reset-password',
+  path: '/reset-password',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ScamsRoute = ScamsRouteImport.update({
+  id: '/scams',
+  path: '/scams',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const SitemapDotxmlRoute = SitemapDotxmlRouteImport.update({
+  id: '/sitemap.xml',
+  path: '/sitemap.xml',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const SsnRoute = SsnRouteImport.update({
+  id: '/ssn',
+  path: '/ssn',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const TermsRoute = TermsRouteImport.update({
+  id: '/terms',
+  path: '/terms',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiHelperChatRoute = ApiHelperChatRouteImport.update({
+  id: '/api/helper-chat',
+  path: '/api/helper-chat',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ScamsSlugRoute = ScamsSlugRouteImport.update({
@@ -106,29 +112,9 @@ const AdminAdminIndexRoute = AdminAdminIndexRouteImport.update({
   path: '/admin/',
   getParentRoute: () => AdminRoute,
 } as any)
-const ApiPublicInboundEmailRoute = ApiPublicInboundEmailRouteImport.update({
-  id: '/api/public/inbound-email',
-  path: '/api/public/inbound-email',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const AdminAdminSponsorsRoute = AdminAdminSponsorsRouteImport.update({
-  id: '/admin/sponsors',
-  path: '/admin/sponsors',
-  getParentRoute: () => AdminRoute,
-} as any)
-const AdminAdminSosRoute = AdminAdminSosRouteImport.update({
-  id: '/admin/sos',
-  path: '/admin/sos',
-  getParentRoute: () => AdminRoute,
-} as any)
-const AdminAdminSeniorsRoute = AdminAdminSeniorsRouteImport.update({
-  id: '/admin/seniors',
-  path: '/admin/seniors',
-  getParentRoute: () => AdminRoute,
-} as any)
-const AdminAdminMessagesRoute = AdminAdminMessagesRouteImport.update({
-  id: '/admin/messages',
-  path: '/admin/messages',
+const AdminAdminAuditRoute = AdminAdminAuditRouteImport.update({
+  id: '/admin/audit',
+  path: '/admin/audit',
   getParentRoute: () => AdminRoute,
 } as any)
 const AdminAdminGuardiansRoute = AdminAdminGuardiansRouteImport.update({
@@ -136,10 +122,30 @@ const AdminAdminGuardiansRoute = AdminAdminGuardiansRouteImport.update({
   path: '/admin/guardians',
   getParentRoute: () => AdminRoute,
 } as any)
-const AdminAdminAuditRoute = AdminAdminAuditRouteImport.update({
-  id: '/admin/audit',
-  path: '/admin/audit',
+const AdminAdminMessagesRoute = AdminAdminMessagesRouteImport.update({
+  id: '/admin/messages',
+  path: '/admin/messages',
   getParentRoute: () => AdminRoute,
+} as any)
+const AdminAdminSeniorsRoute = AdminAdminSeniorsRouteImport.update({
+  id: '/admin/seniors',
+  path: '/admin/seniors',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminAdminSosRoute = AdminAdminSosRouteImport.update({
+  id: '/admin/sos',
+  path: '/admin/sos',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminAdminSponsorsRoute = AdminAdminSponsorsRouteImport.update({
+  id: '/admin/sponsors',
+  path: '/admin/sponsors',
+  getParentRoute: () => AdminRoute,
+} as any)
+const ApiPublicInboundEmailRoute = ApiPublicInboundEmailRouteImport.update({
+  id: '/api/public/inbound-email',
+  path: '/api/public/inbound-email',
+  getParentRoute: () => rootRouteImport,
 } as any)
 
 export interface FileRoutesByFullPath {
@@ -155,6 +161,7 @@ export interface FileRoutesByFullPath {
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/ssn': typeof SsnRoute
   '/terms': typeof TermsRoute
+  '/api/helper-chat': typeof ApiHelperChatRoute
   '/scams/$slug': typeof ScamsSlugRoute
   '/admin/audit': typeof AdminAdminAuditRoute
   '/admin/guardians': typeof AdminAdminGuardiansRoute
@@ -178,6 +185,7 @@ export interface FileRoutesByTo {
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/ssn': typeof SsnRoute
   '/terms': typeof TermsRoute
+  '/api/helper-chat': typeof ApiHelperChatRoute
   '/scams/$slug': typeof ScamsSlugRoute
   '/admin/audit': typeof AdminAdminAuditRoute
   '/admin/guardians': typeof AdminAdminGuardiansRoute
@@ -203,6 +211,7 @@ export interface FileRoutesById {
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/ssn': typeof SsnRoute
   '/terms': typeof TermsRoute
+  '/api/helper-chat': typeof ApiHelperChatRoute
   '/scams/$slug': typeof ScamsSlugRoute
   '/_admin/admin/audit': typeof AdminAdminAuditRoute
   '/_admin/admin/guardians': typeof AdminAdminGuardiansRoute
@@ -228,6 +237,7 @@ export interface FileRouteTypes {
     | '/sitemap.xml'
     | '/ssn'
     | '/terms'
+    | '/api/helper-chat'
     | '/scams/$slug'
     | '/admin/audit'
     | '/admin/guardians'
@@ -251,6 +261,7 @@ export interface FileRouteTypes {
     | '/sitemap.xml'
     | '/ssn'
     | '/terms'
+    | '/api/helper-chat'
     | '/scams/$slug'
     | '/admin/audit'
     | '/admin/guardians'
@@ -275,6 +286,7 @@ export interface FileRouteTypes {
     | '/sitemap.xml'
     | '/ssn'
     | '/terms'
+    | '/api/helper-chat'
     | '/scams/$slug'
     | '/_admin/admin/audit'
     | '/_admin/admin/guardians'
@@ -300,86 +312,17 @@ export interface RootRouteChildren {
   SitemapDotxmlRoute: typeof SitemapDotxmlRoute
   SsnRoute: typeof SsnRoute
   TermsRoute: typeof TermsRoute
+  ApiHelperChatRoute: typeof ApiHelperChatRoute
   ApiPublicInboundEmailRoute: typeof ApiPublicInboundEmailRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
-    '/terms': {
-      id: '/terms'
-      path: '/terms'
-      fullPath: '/terms'
-      preLoaderRoute: typeof TermsRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/ssn': {
-      id: '/ssn'
-      path: '/ssn'
-      fullPath: '/ssn'
-      preLoaderRoute: typeof SsnRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/sitemap.xml': {
-      id: '/sitemap.xml'
-      path: '/sitemap.xml'
-      fullPath: '/sitemap.xml'
-      preLoaderRoute: typeof SitemapDotxmlRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/scams': {
-      id: '/scams'
-      path: '/scams'
-      fullPath: '/scams'
-      preLoaderRoute: typeof ScamsRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/reset-password': {
-      id: '/reset-password'
-      path: '/reset-password'
-      fullPath: '/reset-password'
-      preLoaderRoute: typeof ResetPasswordRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/profile': {
-      id: '/profile'
-      path: '/profile'
-      fullPath: '/profile'
-      preLoaderRoute: typeof ProfileRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/privacy': {
-      id: '/privacy'
-      path: '/privacy'
-      fullPath: '/privacy'
-      preLoaderRoute: typeof PrivacyRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/learn': {
-      id: '/learn'
-      path: '/learn'
-      fullPath: '/learn'
-      preLoaderRoute: typeof LearnRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/for-guardians': {
-      id: '/for-guardians'
-      path: '/for-guardians'
-      fullPath: '/for-guardians'
-      preLoaderRoute: typeof ForGuardiansRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/dashboard': {
-      id: '/dashboard'
-      path: '/dashboard'
-      fullPath: '/dashboard'
-      preLoaderRoute: typeof DashboardRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/check': {
-      id: '/check'
-      path: '/check'
-      fullPath: '/check'
-      preLoaderRoute: typeof CheckRouteImport
+    '/': {
+      id: '/'
+      path: '/'
+      fullPath: '/'
+      preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/_admin': {
@@ -389,11 +332,88 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/': {
-      id: '/'
-      path: '/'
-      fullPath: '/'
-      preLoaderRoute: typeof IndexRouteImport
+    '/check': {
+      id: '/check'
+      path: '/check'
+      fullPath: '/check'
+      preLoaderRoute: typeof CheckRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/dashboard': {
+      id: '/dashboard'
+      path: '/dashboard'
+      fullPath: '/dashboard'
+      preLoaderRoute: typeof DashboardRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/for-guardians': {
+      id: '/for-guardians'
+      path: '/for-guardians'
+      fullPath: '/for-guardians'
+      preLoaderRoute: typeof ForGuardiansRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/learn': {
+      id: '/learn'
+      path: '/learn'
+      fullPath: '/learn'
+      preLoaderRoute: typeof LearnRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/privacy': {
+      id: '/privacy'
+      path: '/privacy'
+      fullPath: '/privacy'
+      preLoaderRoute: typeof PrivacyRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/profile': {
+      id: '/profile'
+      path: '/profile'
+      fullPath: '/profile'
+      preLoaderRoute: typeof ProfileRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/reset-password': {
+      id: '/reset-password'
+      path: '/reset-password'
+      fullPath: '/reset-password'
+      preLoaderRoute: typeof ResetPasswordRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/scams': {
+      id: '/scams'
+      path: '/scams'
+      fullPath: '/scams'
+      preLoaderRoute: typeof ScamsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/sitemap.xml': {
+      id: '/sitemap.xml'
+      path: '/sitemap.xml'
+      fullPath: '/sitemap.xml'
+      preLoaderRoute: typeof SitemapDotxmlRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/ssn': {
+      id: '/ssn'
+      path: '/ssn'
+      fullPath: '/ssn'
+      preLoaderRoute: typeof SsnRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/terms': {
+      id: '/terms'
+      path: '/terms'
+      fullPath: '/terms'
+      preLoaderRoute: typeof TermsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/helper-chat': {
+      id: '/api/helper-chat'
+      path: '/api/helper-chat'
+      fullPath: '/api/helper-chat'
+      preLoaderRoute: typeof ApiHelperChatRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/scams/$slug': {
@@ -410,39 +430,11 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminAdminIndexRouteImport
       parentRoute: typeof AdminRoute
     }
-    '/api/public/inbound-email': {
-      id: '/api/public/inbound-email'
-      path: '/api/public/inbound-email'
-      fullPath: '/api/public/inbound-email'
-      preLoaderRoute: typeof ApiPublicInboundEmailRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/_admin/admin/sponsors': {
-      id: '/_admin/admin/sponsors'
-      path: '/admin/sponsors'
-      fullPath: '/admin/sponsors'
-      preLoaderRoute: typeof AdminAdminSponsorsRouteImport
-      parentRoute: typeof AdminRoute
-    }
-    '/_admin/admin/sos': {
-      id: '/_admin/admin/sos'
-      path: '/admin/sos'
-      fullPath: '/admin/sos'
-      preLoaderRoute: typeof AdminAdminSosRouteImport
-      parentRoute: typeof AdminRoute
-    }
-    '/_admin/admin/seniors': {
-      id: '/_admin/admin/seniors'
-      path: '/admin/seniors'
-      fullPath: '/admin/seniors'
-      preLoaderRoute: typeof AdminAdminSeniorsRouteImport
-      parentRoute: typeof AdminRoute
-    }
-    '/_admin/admin/messages': {
-      id: '/_admin/admin/messages'
-      path: '/admin/messages'
-      fullPath: '/admin/messages'
-      preLoaderRoute: typeof AdminAdminMessagesRouteImport
+    '/_admin/admin/audit': {
+      id: '/_admin/admin/audit'
+      path: '/admin/audit'
+      fullPath: '/admin/audit'
+      preLoaderRoute: typeof AdminAdminAuditRouteImport
       parentRoute: typeof AdminRoute
     }
     '/_admin/admin/guardians': {
@@ -452,12 +444,40 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminAdminGuardiansRouteImport
       parentRoute: typeof AdminRoute
     }
-    '/_admin/admin/audit': {
-      id: '/_admin/admin/audit'
-      path: '/admin/audit'
-      fullPath: '/admin/audit'
-      preLoaderRoute: typeof AdminAdminAuditRouteImport
+    '/_admin/admin/messages': {
+      id: '/_admin/admin/messages'
+      path: '/admin/messages'
+      fullPath: '/admin/messages'
+      preLoaderRoute: typeof AdminAdminMessagesRouteImport
       parentRoute: typeof AdminRoute
+    }
+    '/_admin/admin/seniors': {
+      id: '/_admin/admin/seniors'
+      path: '/admin/seniors'
+      fullPath: '/admin/seniors'
+      preLoaderRoute: typeof AdminAdminSeniorsRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/_admin/admin/sos': {
+      id: '/_admin/admin/sos'
+      path: '/admin/sos'
+      fullPath: '/admin/sos'
+      preLoaderRoute: typeof AdminAdminSosRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/_admin/admin/sponsors': {
+      id: '/_admin/admin/sponsors'
+      path: '/admin/sponsors'
+      fullPath: '/admin/sponsors'
+      preLoaderRoute: typeof AdminAdminSponsorsRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/api/public/inbound-email': {
+      id: '/api/public/inbound-email'
+      path: '/api/public/inbound-email'
+      fullPath: '/api/public/inbound-email'
+      preLoaderRoute: typeof ApiPublicInboundEmailRouteImport
+      parentRoute: typeof rootRouteImport
     }
   }
 }
@@ -508,6 +528,7 @@ const rootRouteChildren: RootRouteChildren = {
   SitemapDotxmlRoute: SitemapDotxmlRoute,
   SsnRoute: SsnRoute,
   TermsRoute: TermsRoute,
+  ApiHelperChatRoute: ApiHelperChatRoute,
   ApiPublicInboundEmailRoute: ApiPublicInboundEmailRoute,
 }
 export const routeTree = rootRouteImport
