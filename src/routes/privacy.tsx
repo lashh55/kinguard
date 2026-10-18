@@ -88,6 +88,7 @@ function PrivacyPage() {
         <ul className="list-disc pl-5 space-y-1">
           <li>{t("Passwords encrypted, never plain text")}</li>
           <li>{t("All data transmitted over HTTPS")}</li>
+          <li>{es ? "Los chats con el asistente de KinGuard no se guardan." : "KinGuard Helper chats are not saved."}</li>
           <li>{t("Your data is locked to your account only — no other user can see it")}</li>
           <li>{t("Guardians see only what you permit")}</li>
           <li>{t("Submitted messages not shared externally")}</li>
