@@ -7,6 +7,7 @@ import { Toaster } from "@/components/ui/sonner";
 import { initAnalytics } from "@/lib/analytics";
 import { SiteNavigation } from "@/components/SiteNavigation";
 import { BackToTop } from "@/components/BackToTop";
+import { HelperChat } from "@/components/HelperChat";
 
 function NotFoundComponent() {
   const { t } = useI18n();
@@ -60,6 +61,7 @@ function RootComponent() {
         <SiteNavigation />
         <Outlet />
         <BackToTop />
+        <HelperChat />
         <Toaster
           position="top-center"
           duration={3000}
