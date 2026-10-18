@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from "react";
+import { useRouterState } from "@tanstack/react-router";
 import { useChat } from "@ai-sdk/react";
 import { DefaultChatTransport } from "ai";
 import ReactMarkdown from "react-markdown";
@@ -61,9 +62,11 @@ const STRINGS = {
 
 export function HelperChat() {
   const { lang } = useI18n();
+  const pathname = useRouterState({ select: (s) => s.location.pathname });
   const [open, setOpen] = useState(false);
   const [session, setSession] = useState(0);
   const s = STRINGS[lang === "es" ? "es" : "en"];
+  if (pathname.startsWith("/admin")) return null;
   return (
     <>
       <button
