@@ -10,6 +10,7 @@ import faithAvatar from "@/assets/helper/faith-avatar.png.asset.json";
 const STRINGS = {
   en: {
     needHelp: "Need help?",
+    help: "Help",
     close: "Close",
     automated: "Automated helper · not a live person",
     greeting: "Hi, I'm Faith, KinGuard's automated helper. How can I help you today?",
@@ -24,7 +25,14 @@ const STRINGS = {
       "How do I add family?",
       "How do I check a suspicious email?",
       "What is the Family Safety Code?",
+      "Should I share my password?",
       "I think I'm being scammed",
+    ],
+    startersSignedOut: [
+      "How do I create an account?",
+      "How do I connect with my parent?",
+      "How do invite codes work?",
+      "Is KinGuard free?",
     ],
     startersOther: [
       "How do I connect with my parent?",
@@ -35,6 +43,7 @@ const STRINGS = {
   },
   es: {
     needHelp: "¿Necesita ayuda?",
+    help: "Ayuda",
     close: "Cerrar",
     automated: "Asistente automático · no es una persona",
     greeting: "Hola, soy Faith, la asistente automática de KinGuard. ¿Cómo puedo ayudarle hoy?",
@@ -49,7 +58,14 @@ const STRINGS = {
       "¿Cómo agrego a mi familia?",
       "¿Cómo reviso un correo sospechoso?",
       "¿Qué es la palabra clave familiar?",
+      "¿Debo compartir mi contraseña?",
       "Creo que me están estafando",
+    ],
+    startersSignedOut: [
+      "¿Cómo creo una cuenta?",
+      "¿Cómo me conecto con mi padre o madre?",
+      "¿Cómo funcionan los códigos de invitación?",
+      "¿KinGuard es gratis?",
     ],
     startersOther: [
       "¿Cómo me conecto con mi padre o madre?",
@@ -67,20 +83,32 @@ export function HelperChat() {
   const [session, setSession] = useState(0);
   const s = STRINGS[lang === "es" ? "es" : "en"];
   if (pathname.startsWith("/admin")) return null;
+  const openChat = () => {
+    setOpen(true);
+    setSession((n) => n + 1); // fresh chat each time it opens
+  };
   return (
     <>
+      <style>{`.kg-helper-fab-small { display: none; } @media (max-width: 479px) { .kg-helper-fab { display: none !important; } .kg-helper-fab-small { display: flex; } } body { padding-bottom: 180px; }`}</style>
       <button
         type="button"
-        onClick={() => {
-          setOpen(true);
-          setSession((n) => n + 1); // fresh chat each time it opens
-        }}
+        onClick={openChat}
         aria-label={s.needHelp}
-        className="fixed right-4 z-40 flex items-center gap-2 rounded-full pr-4 pl-1 py-1 shadow-lg"
+        className="kg-helper-fab fixed right-4 z-40 flex items-center gap-2 rounded-full pr-4 pl-1 py-1 shadow-lg"
         style={{ bottom: "calc(env(safe-area-inset-bottom, 0px) + 104px)", background: "#fff", border: "3px solid var(--color-tan)", minHeight: 64 }}
       >
         <img src={faithAvatar.url} alt="" aria-hidden="true" width={52} height={52} className="rounded-full" />
         <span className="font-bold" style={{ color: "var(--color-brown)", fontSize: 18 }}>{s.needHelp}</span>
+      </button>
+      <button
+        type="button"
+        onClick={openChat}
+        aria-label={s.needHelp}
+        className="kg-helper-fab-small fixed right-3 z-40 flex-col items-center"
+        style={{ bottom: "calc(env(safe-area-inset-bottom, 0px) + 96px)" }}
+      >
+        <img src={faithAvatar.url} alt="" aria-hidden="true" width={64} height={64} className="rounded-full shadow-lg" style={{ width: 64, height: 64 }} />
+        <span className="font-bold rounded-full px-2 mt-0.5" style={{ color: "var(--color-brown)", fontSize: 13, background: "#fff" }}>{s.help}</span>
       </button>
       {open && <HelperPanel key={session} onClose={() => setOpen(false)} />}
     </>
@@ -92,10 +120,11 @@ function HelperPanel({ onClose }: { onClose: () => void }) {
   const { profile } = useAuth();
   const es = lang === "es";
   const s = STRINGS[es ? "es" : "en"];
-  const starters = profile?.role === "senior" ? s.startersSenior : s.startersOther;
+  const role = profile?.role === "senior" ? "senior" : profile ? "guardian" : undefined;
+  const starters = role === "senior" ? s.startersSenior : role ? s.startersOther : s.startersSignedOut;
 
   const { messages, sendMessage, status, error } = useChat({
-    transport: new DefaultChatTransport({ api: "/api/helper-chat", body: { lang: es ? "es" : "en" } }),
+    transport: new DefaultChatTransport({ api: "/api/helper-chat", body: { lang: es ? "es" : "en", role } }),
   });
   const busy = status === "submitted" || status === "streaming";
 
