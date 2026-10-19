@@ -1,6 +1,18 @@
 import { createFileRoute, Link, notFound } from "@tanstack/react-router";
 import { MarketingShell } from "@/components/MarketingShell";
 import { useI18n } from "@/lib/i18n";
+import iconGuideGrandparent from "@/assets/learn-icons/icon-guide-grandparent.png.asset.json";
+import iconGuideSocialSecurity from "@/assets/learn-icons/icon-guide-social-security.png.asset.json";
+import iconMedicareHealth from "@/assets/learn-icons/icon-medicare-health.png.asset.json";
+import iconIrsSsa from "@/assets/kinguard-check-irs-ssa.webp.asset.json";
+
+// Same artwork as each guide's card on the Common scams page.
+const GUIDE_ICONS: Record<string, { url: string; circled: boolean }> = {
+  grandparent: { url: iconGuideGrandparent.url, circled: false },
+  medicare: { url: iconMedicareHealth.url, circled: true },
+  irs: { url: iconIrsSsa.url, circled: true },
+  ssn: { url: iconGuideSocialSecurity.url, circled: false },
+};
 
 type Guide = {
   title: string;
@@ -191,13 +203,25 @@ function ErrorContent({ errorMessage, reset }: { errorMessage: string; reset: ()
 
 function ScamGuide() {
   const { guide } = Route.useLoaderData();
+  const { slug } = Route.useParams();
+  const icon = GUIDE_ICONS[slug];
   const { t } = useI18n();
   return (
     <MarketingShell>
       <p className="text-sm font-bold uppercase tracking-wider" style={{ color: "var(--color-rose)" }}>
         <Link to="/scams">{t("← All scam guides")}</Link>
       </p>
-      <div className="text-5xl mt-4">{guide.emoji}</div>
+      {icon && (
+        <div className="mt-4">
+          {icon.circled ? (
+            <span className="kg-guide-circle" style={{ width: 96, height: 96, minWidth: 96, minHeight: 96 }}>
+              <img src={icon.url} alt="" style={{ width: 58, height: 58, objectFit: "contain" }} />
+            </span>
+          ) : (
+            <img src={icon.url} alt="" style={{ width: 96, height: 96, objectFit: "contain", display: "block" }} />
+          )}
+        </div>
+      )}
       <h1 className="mt-2">{t(guide.title)}</h1>
       <p className="mt-3" style={{ fontSize: 18 }}>{t(guide.description)}</p>
 

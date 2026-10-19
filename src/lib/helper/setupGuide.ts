@@ -65,7 +65,7 @@ export const SETUP_GUIDE_ES = `
 CREAR UNA CUENTA — ADULTO MAYOR ("Quiero estar protegido/a"):
 1. Vaya a la página principal de KinGuard (getkinguard.com).
 2. Toque el botón "Quiero estar protegido/a".
-3. Escriba su nombre y la inicial de su apellido, su correo electrónico y una contraseña de al menos 10 caracteres. Puede tocar "Generar una contraseña segura".
+3. Escriba su nombre y la inicial de su apellido, su correo electrónico y una contraseña de al menos 10 caracteres. Puede tocar "Generar una contraseña segura por mí".
 4. Toque "Crear cuenta" y espere un momento.
 5. Verá su página de Inicio. Su código de invitación está en su página de Perfil.
 
@@ -78,9 +78,9 @@ CREAR UNA CUENTA — FAMILIAR / GUARDIÁN ("Quiero proteger a alguien"):
 
 ENCONTRAR Y COMPARTIR EL CÓDIGO DE INVITACIÓN (adulto mayor):
 1. Abra su página de Perfil.
-2. Busque "Su código de invitación:" y toque el botón de copiar.
+2. Busque "Tu código de invitación:" y toque el botón de copiar.
 3. Envíe el código a alguien de confianza por mensaje o correo, o léaselo. Un código sirve para hasta 3 personas.
-4. El código vence 24 horas después de crearse. Toque "Generar código nuevo" para uno nuevo. Un código nuevo nunca quita a sus guardianes actuales.
+4. El código vence 24 horas después de crearse. Toque "Generar nuevo código" para uno nuevo. Un código nuevo nunca quita a sus guardianes actuales.
 
 CONECTAR O AGREGAR UN GUARDIÁN:
 - Adulto mayor: comparta su código de invitación. Puede tener hasta 3 guardianes. Cuando alguien se conecte, verá un aviso; marque la casilla "Entiendo. Yo elegí a este guardián."
@@ -97,13 +97,13 @@ INICIAR SESIÓN:
 
 OLVIDÉ MI CONTRASEÑA:
 1. En la pantalla de inicio de sesión, escriba primero su correo electrónico.
-2. Toque "¿Olvidó su contraseña?".
+2. Toque "¿Olvidaste tu contraseña?".
 3. Abra el correo de KinGuard y toque el enlace.
 4. Escriba una contraseña nueva (al menos 10 caracteres) y guárdela.
 
 CREAR LA PALABRA CLAVE FAMILIAR (adulto mayor):
-1. Abra su Perfil y busque "Palabra clave familiar".
-2. Toque "Crear mi palabra clave". KinGuard crea una frase única; toque "Generar otra" si quiere una diferente.
+1. Abra su Perfil y busque "Código de seguridad familiar".
+2. Toque "Crear mi palabra clave". KinGuard crea una frase única; toque "Generar una nueva" si quiere una diferente.
 3. Guárdela y compártala en persona solo con su familia real.
 Recuerde: quien dice ser familiar debe decir la palabra primero. Nunca dé ejemplos de palabras clave.
 
@@ -111,7 +111,7 @@ REENVIAR UN CORREO SOSPECHOSO:
 1. Abra el correo sospechoso. No toque ningún enlace.
 2. Toque "Reenviar".
 3. Envíelo a check@check.getkinguard.com (puede copiar esta dirección en la página Revisar).
-4. KinGuard lo revisa y le muestra el resultado en la aplicación. También puede pegar un mensaje en la página Revisar y tocar "Revisar ahora".
+4. KinGuard lo revisa y le muestra el resultado en la aplicación. También puede pegar un mensaje en la página Revisar y tocar "Verificar ahora".
 
 CAMBIAR DE IDIOMA:
 1. Busque arriba en la página los botones pequeños "EN | ES".
