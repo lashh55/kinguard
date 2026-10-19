@@ -1,4 +1,4 @@
-import { createFileRoute, Link } from "@tanstack/react-router";
+import { createFileRoute, Link, Outlet, useRouterState } from "@tanstack/react-router";
 import { MarketingShell } from "@/components/MarketingShell";
 import { useI18n } from "@/lib/i18n";
 import iconGuideGrandparent from "@/assets/learn-icons/icon-guide-grandparent.png.asset.json";
@@ -31,6 +31,9 @@ export const Route = createFileRoute("/scams")({
 
 function ScamsHub() {
   const { t } = useI18n();
+  // /scams is also the parent of /scams/$slug; show the guide when a child is matched
+  const isIndex = useRouterState({ select: (s) => s.location.pathname === "/scams" });
+  if (!isIndex) return <Outlet />;
   return (
     <MarketingShell>
       <h1>{t("Common scams targeting seniors")}</h1>
