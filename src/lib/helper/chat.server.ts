@@ -5,6 +5,7 @@ import {
   getLovableAiGatewayRunId,
   withLovableAiGatewayRunIdHeader,
 } from "./run-id";
+import { SETUP_GUIDE_EN, SETUP_GUIDE_ES } from "./setupGuide";
 
 const GATEWAY_URL = "https://ai.gateway.lovable.dev/v1";
 const MODEL = "openai/gpt-6-astra";
