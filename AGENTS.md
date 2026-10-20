@@ -23,3 +23,4 @@
 - Store generated scam results with parallel English and Spanish fields and select display text through scamLanguage; this preserves dynamic categories without translating user-authored content.
 - Handle scam alerts through the self-scoped row-locking guardian RPC; protect attribution against direct writes, refresh status live plus read-back, and derive seven-day banner expiry without deleting history or inventing resolution.
 - Serve the KinGuard Helper chat through /api/helper-chat (Responses, gpt-6-astra, store:false) with per-IP 30/hour in-memory limiting; the floating widget keeps bilingual strings locally, never persists messages, and is hidden on /admin.
+- Faith setup steps live in src/lib/helper/setupGuide.ts (EN+ES) and are injected into the system prompt with the signed-in role only; keep button names in sync with the real pages.

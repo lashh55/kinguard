@@ -5,6 +5,7 @@ import {
   getLovableAiGatewayRunId,
   withLovableAiGatewayRunIdHeader,
 } from "./run-id";
+import { SETUP_GUIDE_EN, SETUP_GUIDE_ES } from "./setupGuide";
 
 const GATEWAY_URL = "https://ai.gateway.lovable.dev/v1";
 const MODEL = "openai/gpt-6-astra";
@@ -84,7 +85,7 @@ const UNAVAILABLE: Record<string, string> = {
 
 export async function handleHelperChat(request: Request): Promise<Response> {
   const key = visitorKey(request);
-  let body: { messages?: UIMessage[]; lang?: string };
+  let body: { messages?: UIMessage[]; lang?: string; role?: string };
   try {
     body = await request.json();
   } catch {
@@ -121,7 +122,7 @@ export async function handleHelperChat(request: Request): Promise<Response> {
 
   const result = streamText({
     model: provider.responses(MODEL),
-    system: SYSTEM_PROMPT,
+    system: SYSTEM_PROMPT + roleNote(body.role),
     messages: modelMessages,
     abortSignal: request.signal,
     providerOptions: {
