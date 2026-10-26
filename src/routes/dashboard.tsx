@@ -1,4 +1,5 @@
 import { useRequireAccount } from "@/lib/requireAccount";
+import { MoneyCheck } from "@/components/MoneyCheck";
 import { GuardianRequests, GuardianNotices, SeniorGuardianNotice } from "@/components/GuardianRequests";
 import { pageHead } from "@/lib/pageHead";
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
@@ -311,6 +312,7 @@ function SeniorDashboard() {
       </section>
 
       <section className="px-5 mt-5 space-y-3">
+        <MoneyCheck guardianCount={guardianCount} />
         <Link to="/check" className="btn-base btn-primary w-full">🔍 {t("Check a Suspicious Message")}</Link>
         <Link to="/ssn" className="btn-base btn-primary w-full h-auto whitespace-normal"><img src={shieldBadge.url} alt="" width={32} height={32} className="kinguard-badge-icon" /> {t("Protect My SSN")}</Link>
         <Button variant="destructive" className="w-full h-auto min-h-14 rounded-2xl py-3.5 px-5 text-xl font-bold whitespace-normal bg-destructive text-destructive-foreground" disabled={sendingHelp} onClick={async () => {
