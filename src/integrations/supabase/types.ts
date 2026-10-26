@@ -753,6 +753,7 @@ export type Database = {
         Args: { _alert_id: string; _message?: string; _reply_key?: string }
         Returns: undefined
       }
+      request_money_check: { Args: never; Returns: number }
       request_sos: {
         Args: never
         Returns: {
