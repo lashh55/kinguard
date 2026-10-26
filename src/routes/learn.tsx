@@ -27,7 +27,10 @@ const STYLED_CARDS: Record<string, { image?: string; border: string; es: string 
   grand: { image: grandIcon.url, border: "var(--learn-accordion-border)", es: "Estafas a abuelos" },
   med: { image: medicareIcon.url, border: "var(--learn-accordion-border)", es: "Estafas de Medicare / salud" },
   rom: { image: romanceIcon.url, border: "var(--learn-romance-border)", es: "Estafas románticas" },
+  phone: { border: "var(--learn-accordion-border)", es: "Falso corte de teléfono y 'transferencia a la policía'" },
+  govsite: { border: "var(--learn-accordion-border)", es: "Sitios falsos del gobierno en los resultados de búsqueda" },
 };
+const NEW_LESSON_IDS = ["phone", "govsite"];
 import { useI18n } from "@/lib/i18n";
 import { BadgeGrid } from "@/components/BadgeGrid";
 import { track } from "@/lib/analytics";
@@ -49,6 +52,8 @@ const SCAM_CARDS = [
   { id: "med", icon: "🏥", title: "Medicare / Health Scams", look: "Someone calls offering free equipment or asking for your Medicare number to keep benefits active.", flags: ["Asks for Medicare number", "Free equipment", "Benefits cancellation threat"], doIt: "Medicare never calls asking for your number unexpectedly.", accent: "var(--color-sky)" },
   { id: "rom", icon: "💔", title: "Romance Scams", look: "Someone meets you online — on Facebook, a dating app, or by text — and quickly says they love you. They seem perfect but always have an excuse not to meet in person. Eventually they ask for money.", flags: ["Never met in person", "Professes love very quickly", "Always has an emergency", "Asks for gift cards or wire transfer", "Too good to be true"], doIt: "Never send money to someone you have not met in person. Talk to a trusted family member before doing anything.", accent: "var(--color-rose)" },
   { id: "ssn", icon: "🛡️", title: "SSN Theft Scams", look: "Someone calls, emails, or texts claiming they need your Social Security Number to verify your identity or prevent account suspension.", flags: ["Unexpected contact", "Urgency", "Asks for full SSN", "Threatens consequences"], doIt: "Never share your SSN with someone who contacted you first. Use the SSN Shield in this app.", accent: "var(--color-rose)", linkSsn: true },
+  { id: "phone", icon: "", title: "Fake phone shutoff & 'police' transfer", look: "A caller says your phone will be disconnected or your identity was used in a crime overseas. They transfer you to a 'police officer' who gives a badge or case number and asks for a security deposit. These are skilled criminals, and their stories can sound very real.", flags: ["Threat to disconnect your phone", "Claims your identity was used in crimes overseas", "Transfer to 'police' or an 'official'", "Badge or case number offered as proof", "Asks for a security deposit or gift cards, wire, crypto, or cash", "Tells you not to tell anyone"], doIt: "End the contact. Find the real number yourself. Verify with someone you trust.", accent: "var(--color-sky)" },
+  { id: "govsite", icon: "", title: "Fake government websites in search results", look: "You search online for a government office, and the first result looks official. It is a fake site run by skilled criminals who ask for fees or personal information. Anyone can be fooled by a well-made copy.", flags: ["First search result is not always the government", "Charges a fee for a free service", "Asks for your Social Security or bank number", "Web address does not end in .gov (one clue, not full proof)"], doIt: "End the contact. Find the real number yourself. Verify with someone you trust.", accent: "var(--color-sky)" },
 ];
 
 const VIDEOS = [
@@ -198,7 +203,7 @@ function Cards() {
     next.add(id);
     setOpened(next);
     if (!profile || profile.role !== "senior") return;
-    if (next.size >= SCAM_CARDS.length) {
+    if (SCAM_CARDS.every((c) => NEW_LESSON_IDS.includes(c.id) || next.has(c.id))) {
       const stats = normalizeStats(profile.challenge_stats);
       if (!stats.badges_earned.includes("scholar")) {
         const updated = { ...stats, badges_earned: [...stats.badges_earned, "scholar"] };
