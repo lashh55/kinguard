@@ -87,6 +87,16 @@ function ForGuardians() {
         </ol>
       </section>
 
+      <section className="mt-12">
+        <h2>{t("Help report a scam")}</h2>
+        <p className="mt-2" style={{ fontSize: 18 }}>{t("Family members can file a report for a loved one.")} {t("Use these official sites to prepare a report. KinGuard does not file reports for you.")}</p>
+        <ul className="mt-4 space-y-3" style={{ fontSize: 18 }}>
+          <li className="card-soft"><a className="font-bold underline" href="https://reportfraud.ftc.gov" target="_blank" rel="noopener noreferrer">{t("Prepare a report with the FTC")}</a> — ReportFraud.ftc.gov</li>
+          <li className="card-soft"><a className="font-bold underline" href="https://www.ic3.gov" target="_blank" rel="noopener noreferrer">{t("Prepare a report with the FBI (online crimes)")}</a> — ic3.gov</li>
+          <li className="card-soft"><span className="font-bold">{t("DOJ National Elder Fraud Hotline")}</span>: <a className="font-bold underline" href="tel:18333728311">1-833-372-8311</a></li>
+        </ul>
+      </section>
+
       <section className="mt-10">
 
         <h2>{t("Common questions")}</h2>
