@@ -174,7 +174,9 @@ export function GuardianNotices() {
       {items.map((n) => (
         <div key={n.id} className="card-soft flex items-center gap-3">
           <p className="flex-1 font-bold">
-            {n.notice_kind === "removed"
+            {n.notice_kind === "money_check"
+              ? (es ? `${n.senior_name.replace(/\.$/, "")} quiere consultar con usted antes de enviar dinero. Por favor llámele.` : `${n.senior_name} wants to check with you before sending money. Please call them.`)
+              : n.notice_kind === "removed"
               ? (es ? `Se quitó a un guardián de la cuenta de ${n.senior_name}${n.senior_name.endsWith(".") ? "" : "."}` : `A guardian was removed from ${n.senior_name}'s account.`)
               : (es ? `${n.new_guardian_name} fue agregado como guardián de ${n.senior_name}${n.senior_name.endsWith(".") ? "" : "."}` : `${n.new_guardian_name} was added as a guardian for ${n.senior_name}${n.senior_name.endsWith(".") ? "" : "."}`)}
           </p>

@@ -203,6 +203,7 @@
 
 /* KinGuard Lessons slides: real text panel (left) + photo (right) */
 :root { --lesson-gold: #B08A3E; --lesson-ink: #2B2116; --lesson-green: #2F5D3A; --lesson-red: #8A2A2A; --lesson-cream: #F3ECE0; }
+:root { --money-amber: #F2C46D; }
 .lesson-slide { display: grid; grid-template-columns: 62% 38%; min-height: 330px; background: var(--lesson-cream); color: var(--lesson-ink); }
 .lesson-slide__text { position: relative; padding: clamp(14px, 4vw, 28px); display: flex; flex-direction: column; justify-content: center; gap: 8px; }
 .lesson-slide__title { font-family: var(--font-display, "Fraunces", serif); font-weight: 700; line-height: 1.05; font-size: clamp(20px, 5.4vw, 34px); color: var(--lesson-ink); margin: 0; }
