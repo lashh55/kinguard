@@ -56,7 +56,7 @@ export function seasonalWarnings(content: string) {
   return { enrollment, sensitiveRequest, prizeFee: prize && fee && paymentRequest };
 }
 
-export function applySeasonalRules<T extends { score: number; urgency: "low" | "medium" | "high" | "critical"; flags: string[]; flags_es: string[] }>(result: T, content: string): T {
+export function applySeasonalRules<T extends { score: number; urgency: "low" | "medium" | "high" | "critical"; flags: string[]; flags_es: string[] }>(result: T, content: string): Omit<T, "urgency"> & { urgency: "low" | "medium" | "high" | "critical" } {
   const signals = seasonalWarnings(content);
   const flags = [...result.flags];
   const flags_es = [...result.flags_es];
