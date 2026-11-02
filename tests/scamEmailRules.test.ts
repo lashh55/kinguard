@@ -1,6 +1,5 @@
-/// <reference types="bun" />
 import { describe, expect, it } from "bun:test";
-import { applySeasonalRules, inspectEmailLinks, isGovernmentAddress, seasonalWarnings } from "./scamEmailRules";
+import { applySeasonalRules, inspectEmailLinks, isGovernmentAddress, seasonalWarnings } from "../src/lib/scamEmailRules";
 
 describe("seasonal enrollment warnings", () => {
   for (const phrase of ["open enrollment", "Medicare plan", "benefits card", "free rebate", "medical discount card"]) {
