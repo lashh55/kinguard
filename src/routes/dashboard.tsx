@@ -107,7 +107,7 @@ function SeniorDashboard() {
     (async () => {
       const { data } = await supabase
         .from("scam_alerts")
-        .select("id,channel,scam_type,scam_type_es,ai_recommendation,ai_recommendation_es,scam_score,content_preview,status,created_at,senior_id,senior_viewed_at,handled_at,handled_by_name,handled_note")
+        .select("id,channel,scam_type,scam_type_es,ai_recommendation,ai_recommendation_es,scam_score,content_preview,status,created_at,senior_id,senior_viewed_at,handled_at,handled_by_name,handled_note,scam_links")
         .eq("senior_id", profile.id)
         .order("created_at", { ascending: false })
         .limit(100);
@@ -538,7 +538,7 @@ function GuardianDashboard() {
 
       const { data: alerts } = await supabase
         .from("scam_alerts")
-        .select("id,channel,scam_type,scam_type_es,ai_recommendation,ai_recommendation_es,scam_score,content_preview,status,created_at,senior_id,senior_viewed_at,handled_at,handled_by_name,handled_note")
+        .select("id,channel,scam_type,scam_type_es,ai_recommendation,ai_recommendation_es,scam_score,content_preview,status,created_at,senior_id,senior_viewed_at,handled_at,handled_by_name,handled_note,scam_links")
         .in("senior_id", ids)
         .order("created_at", { ascending: false })
         .limit(10);

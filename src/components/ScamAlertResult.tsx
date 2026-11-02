@@ -5,6 +5,8 @@ import { Button } from "@/components/ui/button";
 import { scamTypeFor, recommendationFor } from "@/lib/scamLanguage";
 import type { HandledScam } from "@/lib/scamStatus";
 import { Dialog, DialogContent, DialogTitle, DialogDescription } from "@/components/ui/dialog";
+import { ScamLinkAddresses } from "@/components/ScamLinkAddresses";
+import type { ScamLink } from "@/lib/scamEmailRules";
 
 export type ScanAlert = HandledScam & {
   id: string;
@@ -16,6 +18,7 @@ export type ScanAlert = HandledScam & {
   scam_score: number;
   created_at: string;
   senior_viewed_at?: string | null;
+  scam_links?: unknown;
 };
 export type ScanReceipt = {
   alert_id: string;
@@ -67,6 +70,7 @@ function ScanDetails({ alert }: { alert: ScanAlert }) {
     <p className="font-bold break-words">{es ? "Qué era:" : "What it was:"} {scamTypeFor(alert, lang)}</p>
     <p className="font-bold">{es ? "Riesgo:" : "Risk:"} {alert.scam_score}/100</p>
     <p>{es ? "Qué hacer:" : "What to do:"} {recommendationFor(alert, lang)}</p>
+    <ScamLinkAddresses links={Array.isArray(alert.scam_links) ? alert.scam_links as ScamLink[] : null} />
   </div>;
 }
 

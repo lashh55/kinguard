@@ -12,6 +12,8 @@ import { useI18n } from "@/lib/i18n";
 import { track } from "@/lib/analytics";
 import copyEmailIcon from "@/assets/kinguard-check-copy-email.webp.asset.json";
 import checkNowIcon from "@/assets/kinguard-nav-check.webp.asset.json";
+import { ScamLinkAddresses } from "@/components/ScamLinkAddresses";
+import type { ScamLink } from "@/lib/scamEmailRules";
 
 export const Route = createFileRoute("/check")({
   head: () => pageHead("Check a suspicious message", "Check suspicious texts and emails with KinGuard and review scam risk and safety recommendations."),
@@ -28,6 +30,7 @@ type Result = {
   recommendation_es: string;
   urgency: string;
   ssn_requested: boolean;
+  links: ScamLink[];
 };
 
 function CheckScreen() {
@@ -62,6 +65,7 @@ function CheckScreen() {
           scam_type_es: r.type_es,
           scam_flags: r.flags,
           scam_flags_es: r.flags_es,
+          scam_links: r.links,
           ai_recommendation: r.recommendation,
           ai_recommendation_es: r.recommendation_es,
           ai_urgency: r.urgency,
@@ -205,6 +209,7 @@ function CheckScreen() {
             </div>
           )}
 
+          <ScamLinkAddresses links={result.links} />
           <div className="card-soft" style={{ background: "var(--color-sky)" }}>
             <p className="font-bold mb-1">{t("What to do:")}</p>
             <p style={{ fontSize: 19 }}>{lang === "es" ? result.recommendation_es : result.recommendation}</p>
