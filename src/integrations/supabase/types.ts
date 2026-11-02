@@ -425,6 +425,7 @@ export type Database = {
           id: string
           scam_flags: Json
           scam_flags_es: Json | null
+          scam_links: Json | null
           scam_score: number
           scam_type: string | null
           scam_type_es: string | null
@@ -447,6 +448,7 @@ export type Database = {
           id?: string
           scam_flags?: Json
           scam_flags_es?: Json | null
+          scam_links?: Json | null
           scam_score?: number
           scam_type?: string | null
           scam_type_es?: string | null
@@ -469,6 +471,7 @@ export type Database = {
           id?: string
           scam_flags?: Json
           scam_flags_es?: Json | null
+          scam_links?: Json | null
           scam_score?: number
           scam_type?: string | null
           scam_type_es?: string | null
@@ -734,6 +737,7 @@ export type Database = {
           id: string
           scam_flags: Json
           scam_flags_es: Json | null
+          scam_links: Json | null
           scam_score: number
           scam_type: string | null
           scam_type_es: string | null
