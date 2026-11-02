@@ -21,6 +21,7 @@ export function inspectEmailLinks(content: string, html = ""): { text: string; l
   };
   let text = "";
   let anchor: { href: string; label: string } | undefined;
+  const anchors: { href: string; label: string }[] = [];
   let hiddenDepth = 0;
   const parser = new Parser({
     onopentag(name, attrs) {
@@ -30,7 +31,7 @@ export function inspectEmailLinks(content: string, html = ""): { text: string; l
     },
     ontext(value) { if (!hiddenDepth) { text += value; if (anchor) anchor.label += value; } },
     onclosetag(name) {
-      if (name === "a" && anchor) { add(anchor.href, `${anchor.label} ${content}`); anchor = undefined; }
+      if (name === "a" && anchor) { anchors.push(anchor); anchor = undefined; }
       if (name === "script" || name === "style") hiddenDepth = Math.max(0, hiddenDepth - 1);
       if (["p", "div", "li"].includes(name)) text += "\n";
     },
@@ -38,9 +39,9 @@ export function inspectEmailLinks(content: string, html = ""): { text: string; l
   parser.write(html || (/<[a-z][\s\S]*>/i.test(content) ? content : ""));
   parser.end();
   const visible = text.trim() || content;
-  for (const match of `${content}\n${visible}`.matchAll(/(?:https?:\/\/|www\.)[^\s<>"']+/gi)) {
-    // Ignore href source literals here: the HTML parser already decoded them.
-    if (/<[a-z][\s\S]*>/i.test(content) && content.includes(match[0])) continue;
+  for (const item of anchors) add(item.href, `${item.label} ${visible} ${content}`);
+  const plain = /<[a-z][\s\S]*>/i.test(content) ? visible : `${content}\n${visible}`;
+  for (const match of plain.matchAll(/(?:https?:\/\/|www\.)[^\s<>"']+/gi)) {
     add(match[0].replace(/[.,;!?)\]}]+$/, ""), `${visible} ${content}`);
   }
   return { text: visible, links: [...found.values()] };

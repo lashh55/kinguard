@@ -1,3 +1,4 @@
+/// <reference types="bun" />
 import { describe, expect, it } from "bun:test";
 import { applySeasonalRules, inspectEmailLinks, isGovernmentAddress, seasonalWarnings } from "./scamEmailRules";
 
