@@ -24,3 +24,5 @@
 - Handle scam alerts through the self-scoped row-locking guardian RPC; protect attribution against direct writes, refresh status live plus read-back, and derive seven-day banner expiry without deleting history or inventing resolution.
 - Serve the KinGuard Helper chat through /api/helper-chat (Responses, gpt-6-astra, store:false) with per-IP 30/hour in-memory limiting; the floating widget keeps bilingual strings locally, never persists messages, and is hidden on /admin.
 - Faith setup steps live in src/lib/helper/setupGuide.ts (EN+ES) and are injected into the system prompt with the signed-in role only; keep button names in sync with the real pages.
+- Parse email destinations with htmlparser2 independently of model output; persist them in scam_links, render non-clickable full addresses in shared scam results, and clear them with purged message content to preserve privacy retention.
+- Apply seasonal enrollment warnings and prize-fee high-risk floors in the shared analyzer so pasted messages and forwarded emails follow the same rules.

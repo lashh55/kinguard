@@ -1,6 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { supabaseAdmin } from "@/integrations/supabase/client.server";
 import { analyzeScamServer } from "@/lib/scam-analyzer.server";
+import { inspectEmailLinks } from "@/lib/scamEmailRules";
 
 // SendGrid Inbound Parse webhook.
 // Every request is recorded in public.inbound_email_logs for debugging.
@@ -82,7 +83,7 @@ export const Route = createFileRoute("/api/public/inbound-email")({
           }
           senderEmail = senderEmail.toLowerCase().trim();
 
-          const bodyContent = text || html.replace(/<[^>]+>/g, " ");
+          const bodyContent = text || inspectEmailLinks("", html).text;
           bodyPreview = bodyContent.slice(0, 500);
 
           if (!senderEmail) {
@@ -165,7 +166,7 @@ export const Route = createFileRoute("/api/public/inbound-email")({
             return new Response("ok", { status: 200 });
           }
 
-          const result = await analyzeScamServer(content, "email_forward");
+          const result = await analyzeScamServer(content, "email_forward", html);
 
           const { error: insErr } = await supabaseAdmin.from("scam_alerts").insert({
             senior_id: profile.id,
@@ -176,6 +177,7 @@ export const Route = createFileRoute("/api/public/inbound-email")({
             scam_type_es: result.type_es,
             scam_flags: result.flags,
             scam_flags_es: result.flags_es,
+            scam_links: result.links,
             ai_recommendation: result.recommendation,
             ai_recommendation_es: result.recommendation_es,
             ai_urgency: result.urgency,

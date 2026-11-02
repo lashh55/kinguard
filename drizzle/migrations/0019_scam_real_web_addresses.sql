@@ -1,0 +1,4 @@
+ALTER TABLE public.scam_alerts ADD COLUMN scam_links jsonb;
+COMMENT ON COLUMN public.scam_alerts.scam_links IS 'Parsed HTTP(S) link destinations with government-claim warnings; never executable HTML. Cleared when stored message content is purged.';
+CREATE FUNCTION public.clear_purged_scam_links() RETURNS trigger LANGUAGE plpgsql SET search_path = public AS $$ BEGIN IF NEW.content_preview IS NULL THEN NEW.scam_links := NULL; END IF; RETURN NEW; END; $$;
+CREATE TRIGGER clear_purged_scam_links BEFORE UPDATE OF content_preview ON public.scam_alerts FOR EACH ROW EXECUTE FUNCTION public.clear_purged_scam_links();
